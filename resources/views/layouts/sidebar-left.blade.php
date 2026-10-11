@@ -62,12 +62,13 @@
                     <nav class="space-y-1">
                         @foreach($section->children as $child)
                             @php
+                                $childTargetUrl = $child->is_maintenance ? route('maintenance', ['page' => $child->name]) : $child->url;
                                 $isChildActive = ($child->url === '/' && request()->is('/')) || ($child->url !== '#' && $child->url !== '/' && (request()->is(trim($child->url, '/')) || request()->fullUrlIs(url($child->url))));
                             @endphp
                             @php
-                                $isExternal = str_starts_with($child->url, 'http://') || str_starts_with($child->url, 'https://');
+                                $isExternal = !$child->is_maintenance && (str_starts_with($child->url, 'http://') || str_starts_with($child->url, 'https://'));
                             @endphp
-                            <a href="{{ $child->url }}" 
+                            <a href="{{ $childTargetUrl }}" 
                                @if($isExternal) target="_blank" rel="noopener noreferrer" @endif
                                class="flex items-center justify-between px-3.5 py-1.5 text-xs {{ $isChildActive ? 'font-bold text-blue-600' : 'text-slate-600 hover:text-slate-900' }} hover:bg-blue-50 rounded-none transition-colors">
                                 <div class="flex items-center space-x-3">
