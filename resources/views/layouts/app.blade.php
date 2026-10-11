@@ -5,6 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Dyanaf Creative — Digital Marketplace</title>
     
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="{{ asset('image/dyanaf-logo-circle.png') }}">
+    <link rel="apple-touch-icon" href="{{ asset('image/dyanaf-logo-circle.png') }}">
+    
     <!-- Vite Assets (Tailwind CSS, Outfit Fonts & Font Awesome Icons bundle offline) -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
