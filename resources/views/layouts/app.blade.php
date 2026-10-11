@@ -40,5 +40,8 @@
     <!-- Global Toast Alert Notifications (Bottom-Right Floating) -->
     @include('components.alert')
 
+    <!-- Global Page Transition Loader -->
+    @include('components.loader')
+
 </body>
 </html>
