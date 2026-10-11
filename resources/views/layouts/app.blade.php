@@ -14,6 +14,9 @@
 </head>
 <body class="bg-[#f0f4f8] text-slate-800 font-sans antialiased min-h-screen selection:bg-blue-500 selection:text-white">
 
+    <!-- Global Page Transition Loader (Immediately rendered first) -->
+    @include('components.loader')
+
     <!-- Top Navbar -->
     @include('components.navbar')
 
@@ -39,9 +42,6 @@
 
     <!-- Global Toast Alert Notifications (Bottom-Right Floating) -->
     @include('components.alert')
-
-    <!-- Global Page Transition Loader -->
-    @include('components.loader')
 
 </body>
 </html>
