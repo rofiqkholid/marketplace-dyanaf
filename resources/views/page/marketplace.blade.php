@@ -265,82 +265,86 @@
             </p>
         </div>
 
-        <!-- Portfolio & Profile Section: Rofiq Kholid (Layout Elegan & Rapi) -->
-        <div class="py-2 px-2 max-w-4xl mx-auto space-y-6">
-            
-            <!-- Top Identity Block: Centered Avatar, Name, Title, and Direct Social Actions -->
-            <div class="flex flex-col items-center text-center space-y-3">
-                <!-- Silhouette Avatar -->
-                <div class="w-14 h-14 rounded-full bg-white border border-slate-300/80 text-slate-400 flex items-center justify-center shrink-0 shadow-sm">
-                    <i class="fa-solid fa-user text-2xl text-slate-400"></i>
+        <!-- Portfolio & Profile Section: Rofiq Kholid (Layout Rapi, Terstruktur & Menarik) -->
+        <div class="py-4 px-3 sm:px-4 max-w-4xl mx-auto">
+            <div class="grid grid-cols-1 md:grid-cols-12 gap-7 md:gap-8 items-center">
+                
+                <!-- Sisi Kiri: Profil, Info Singkat & Tombol Tautan -->
+                <div class="md:col-span-6 flex flex-col items-center md:items-start text-center md:text-left space-y-3.5">
+                    <div class="flex flex-col sm:flex-row items-center sm:space-x-3.5 space-y-2.5 sm:space-y-0 text-center sm:text-left">
+                        <!-- Silhouette Avatar Bulat -->
+                        <div class="w-14 h-14 rounded-full bg-white border border-slate-300 text-slate-400 flex items-center justify-center shrink-0 shadow-sm mx-auto sm:mx-0">
+                            <i class="fa-solid fa-user text-2xl text-slate-400"></i>
+                        </div>
+                        <div>
+                            <h4 class="text-lg sm:text-xl font-bold text-slate-900 font-['Outfit'] leading-tight">Rofiq Kholid</h4>
+                            <p class="text-xs text-slate-500 font-medium mt-1">Software Engineer • Cybersecurity Enthusiast • DevOps</p>
+                        </div>
+                    </div>
+
+                    <!-- Ringkasan Bio -->
+                    <p class="text-xs sm:text-sm text-slate-600 leading-relaxed max-w-md sm:max-w-none">
+                        Building responsive, high-performance, secure, and user-friendly web systems powered by modern technologies.
+                    </p>
+
+                    <!-- Tombol Link Sosial & Portfolio Resmi -->
+                    <div class="flex flex-wrap items-center justify-center md:justify-start gap-2 pt-1 w-full sm:w-auto">
+                        <a href="https://rofiqkholid.dyanaf.com" 
+                           target="_blank" 
+                           rel="noopener noreferrer"
+                           class="inline-flex items-center justify-center space-x-1.5 px-3 py-1.5 bg-white text-slate-800 border border-slate-300 text-xs font-semibold rounded-none shadow-none">
+                            <i class="fa-solid fa-globe text-xs"></i>
+                            <span>rofiqkholid.Dyanaf.com</span>
+                            <i class="fa-solid fa-arrow-up-right-from-square text-[9px] ml-0.5"></i>
+                        </a>
+
+                        <a href="https://www.linkedin.com/in/rofiq-kholid/" 
+                           target="_blank" 
+                           rel="noopener noreferrer"
+                           title="LinkedIn Rofiq Kholid"
+                           class="inline-flex items-center justify-center space-x-1.5 px-3 py-1.5 bg-white text-slate-800 border border-slate-300 text-xs font-semibold rounded-none shadow-none">
+                            <i class="fa-brands fa-linkedin text-blue-600 text-sm"></i>
+                            <span>LinkedIn</span>
+                        </a>
+
+                        <a href="https://instagram.com/dhenrofiq" 
+                           target="_blank" 
+                           rel="noopener noreferrer"
+                           title="Instagram @dhenrofiq"
+                           class="inline-flex items-center justify-center space-x-1.5 px-3 py-1.5 bg-white text-slate-800 border border-slate-300 text-xs font-semibold rounded-none shadow-none">
+                            <i class="fa-brands fa-instagram text-rose-500 text-sm"></i>
+                            <span>@dhenrofiq</span>
+                        </a>
+                    </div>
                 </div>
 
-                <!-- Name & Roles -->
-                <div>
-                    <h4 class="text-lg sm:text-xl font-bold text-slate-900 font-['Outfit']">Rofiq Kholid</h4>
-                    <p class="text-xs text-slate-500 font-medium mt-0.5">Software Engineer • Cybersecurity Enthusiast • DevOps</p>
+                <!-- Sisi Kanan: Metrik & Statistik Profesional (Bersih, Berdampingan) -->
+                <div class="md:col-span-6 border-t md:border-t-0 md:border-l border-slate-200/90 pt-6 md:pt-2 md:pl-8">
+                    <div class="grid grid-cols-2 gap-y-5 gap-x-4 text-center md:text-left">
+                        <div class="p-1">
+                            <span class="text-xl sm:text-2xl font-semibold text-slate-800 font-['Outfit'] block leading-none">8+</span>
+                            <span class="text-[11px] sm:text-xs text-slate-500 mt-1 block">Years in IT</span>
+                        </div>
+                        <div class="p-1">
+                            <span class="text-xl sm:text-2xl font-semibold text-slate-800 font-['Outfit'] block leading-none">3+</span>
+                            <span class="text-[11px] sm:text-xs text-slate-500 mt-1 block">Years in Cybersecurity</span>
+                        </div>
+                        <div class="p-1">
+                            <span class="text-xl sm:text-2xl font-semibold text-slate-800 font-['Outfit'] block leading-none">150+</span>
+                            <span class="text-[11px] sm:text-xs text-slate-500 mt-1 block">Projects Completed</span>
+                        </div>
+                        <div class="p-1">
+                            <span class="text-xl sm:text-2xl font-semibold text-slate-800 font-['Outfit'] block leading-none">100%</span>
+                            <span class="text-[11px] sm:text-xs text-slate-500 mt-1 block">Security & Performance</span>
+                        </div>
+                        <div class="col-span-2 pt-3 border-t border-slate-100 flex items-center justify-center md:justify-start space-x-2">
+                            <span class="text-xl sm:text-2xl font-semibold text-slate-800 font-['Outfit'] leading-none">99%</span>
+                            <span class="text-[11px] sm:text-xs text-slate-500 leading-tight">UI/UX Satisfaction Rating</span>
+                        </div>
+                    </div>
                 </div>
 
-                <!-- Clean Link Buttons -->
-                <div class="flex flex-wrap items-center justify-center gap-2 pt-1">
-                    <a href="https://rofiqkholid.dyanaf.com" 
-                       target="_blank" 
-                       rel="noopener noreferrer"
-                       class="inline-flex items-center space-x-1.5 px-3 py-1.5 bg-white text-slate-800 border border-slate-300 text-xs font-semibold rounded-none shadow-none">
-                        <i class="fa-solid fa-globe text-xs"></i>
-                        <span>rofiqkholid.Dyanaf.com</span>
-                        <i class="fa-solid fa-arrow-up-right-from-square text-[9px] ml-0.5"></i>
-                    </a>
-
-                    <a href="https://www.linkedin.com/in/rofiq-kholid/" 
-                       target="_blank" 
-                       rel="noopener noreferrer"
-                       title="LinkedIn Rofiq Kholid"
-                       class="inline-flex items-center space-x-1.5 px-3 py-1.5 bg-white text-slate-800 border border-slate-300 text-xs font-semibold rounded-none shadow-none">
-                        <i class="fa-brands fa-linkedin text-blue-600 text-sm"></i>
-                        <span>LinkedIn</span>
-                    </a>
-
-                    <a href="https://instagram.com/dhenrofiq" 
-                       target="_blank" 
-                       rel="noopener noreferrer"
-                       title="Instagram @dhenrofiq"
-                       class="inline-flex items-center space-x-1.5 px-3 py-1.5 bg-white text-slate-800 border border-slate-300 text-xs font-semibold rounded-none shadow-none">
-                        <i class="fa-brands fa-instagram text-rose-500 text-sm"></i>
-                        <span>@dhenrofiq</span>
-                    </a>
-                </div>
-
-                <!-- Bio Statement -->
-                <p class="text-xs sm:text-sm text-slate-600 leading-relaxed max-w-2xl pt-1">
-                    Building responsive, high-performance, secure, and user-friendly web systems powered by modern technologies.
-                </p>
             </div>
-
-            <!-- Stats Bar with subtle dividers -->
-            <div class="border-t border-slate-200/90 pt-5 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-y-4 gap-x-2 text-center">
-                <div class="px-2">
-                    <span class="text-xl sm:text-2xl font-semibold text-slate-800 font-['Outfit'] block leading-none">8+</span>
-                    <span class="text-[11px] text-slate-500 mt-1.5 block leading-tight">Years in IT</span>
-                </div>
-                <div class="px-2">
-                    <span class="text-xl sm:text-2xl font-semibold text-slate-800 font-['Outfit'] block leading-none">3+</span>
-                    <span class="text-[11px] text-slate-500 mt-1.5 block leading-tight">Years in Cybersecurity</span>
-                </div>
-                <div class="px-2">
-                    <span class="text-xl sm:text-2xl font-semibold text-slate-800 font-['Outfit'] block leading-none">150+</span>
-                    <span class="text-[11px] text-slate-500 mt-1.5 block leading-tight">Projects Completed</span>
-                </div>
-                <div class="px-2">
-                    <span class="text-xl sm:text-2xl font-semibold text-slate-800 font-['Outfit'] block leading-none">100%</span>
-                    <span class="text-[11px] text-slate-500 mt-1.5 block leading-tight">Security & Performance</span>
-                </div>
-                <div class="col-span-2 sm:col-span-1 px-2">
-                    <span class="text-xl sm:text-2xl font-semibold text-slate-800 font-['Outfit'] block leading-none">99%</span>
-                    <span class="text-[11px] text-slate-500 mt-1.5 block leading-tight">UI/UX Satisfaction</span>
-                </div>
-            </div>
-
         </div>
 
         <!-- Full Horizontal Divider Line (Edge to Edge) -->
