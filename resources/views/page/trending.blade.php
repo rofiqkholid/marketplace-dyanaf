@@ -26,7 +26,7 @@
                         <a href="{{ route('brand.detail', $brand->slug) }}" 
                            class="group relative flex flex-col justify-between p-3.5 bg-white hover:bg-slate-50 border border-slate-300/80 transition-colors">
                             <!-- Trending Badge -->
-                            <div class="absolute top-2 right-2">
+                            <div class="absolute top-[3px] right-[8px]">
                                 <span class="inline-flex items-center px-1.5 py-0.5 bg-rose-600 text-white text-[9px] font-bold rounded-none">
                                     <i class="fa-solid fa-fire text-[8px] mr-1"></i> HOT
                                 </span>

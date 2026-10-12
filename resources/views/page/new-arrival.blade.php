@@ -24,17 +24,17 @@
                 <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
                     @foreach($newBrands as $brand)
                         <a href="{{ route('brand.detail', $brand->slug) }}" 
-                           class="group relative flex flex-col justify-between p-3.5 bg-white hover:bg-slate-50 border border-slate-300/80 transition-colors">
-                            <!-- Badge -->
-                            <div class="absolute top-2 right-2">
+                           class="group relative overflow-hidden flex flex-col justify-between p-3.5 bg-white hover:bg-slate-50 border border-slate-300/80 transition-colors">
+                            <!-- Diagonal Badge / Ribbon Miring -->
+                            <div class="absolute top-0 right-0 w-20 h-20 overflow-hidden pointer-events-none z-10">
                                 @if($brand->stock > 0)
-                                    <span class="inline-flex items-center px-2 py-0.5 bg-blue-600 text-white text-[10px] font-medium leading-normal">
-                                        New
-                                    </span>
+                                    <div class="absolute top-[14px] right-[-28px] w-28 bg-blue-600 text-white text-[9px] font-extrabold uppercase tracking-wider text-center py-0.5 rotate-45 shadow-sm">
+                                        NEW
+                                    </div>
                                 @else
-                                    <span class="inline-flex items-center px-2 py-0.5 bg-slate-500 text-white text-[10px] font-medium leading-normal">
-                                        Restock
-                                    </span>
+                                    <div class="absolute top-[14px] right-[-28px] w-28 bg-slate-600 text-white text-[9px] font-extrabold uppercase tracking-wider text-center py-0.5 rotate-45 shadow-sm">
+                                        RESTOCK
+                                    </div>
                                 @endif
                             </div>
 

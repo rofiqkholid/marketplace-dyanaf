@@ -153,47 +153,5 @@
                 hideLoader();
             }
         });
-
-        // Intercept link clicks to show loader before page changes
-        document.addEventListener('click', function(e) {
-            if (e.defaultPrevented) return;
-
-            const link = e.target.closest('a');
-            if (!link) return;
-
-            // Skip table pagination and AJAX containers
-            if (link.closest('#table-card-container, .table-card-container, [data-no-loader]')) {
-                return;
-            }
-
-            const href = link.getAttribute('href');
-            const target = link.getAttribute('target');
-
-            if (!href || href.startsWith('#') || href.startsWith('javascript:') || href.startsWith('mailto:') || href.startsWith('tel:') || target === '_blank') {
-                return;
-            }
-
-            if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) {
-                return;
-            }
-
-            try {
-                const url = new URL(link.href, window.location.href);
-                if (url.origin === window.location.origin || url.hostname.includes('google.com') || url.hostname.includes('dyanaf.com')) {
-                    showLoader();
-                }
-            } catch (err) {}
-        });
-
-        // Intercept form submissions
-        document.addEventListener('submit', function(e) {
-            if (e.defaultPrevented) return;
-
-            const form = e.target;
-            if (form.getAttribute('target') === '_blank') return;
-            if (form.closest('#table-card-container, .table-card-container, [data-no-loader]')) return;
-
-            showLoader();
-        });
     })();
 </script>

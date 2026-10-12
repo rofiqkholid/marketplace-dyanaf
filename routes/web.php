@@ -8,7 +8,8 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     $products = \App\Models\Product::where('is_active', true)->get();
-    return view('page.marketplace', compact('products'));
+    $brands = \App\Models\Brand::where('is_active', true)->get()->keyBy('slug');
+    return view('page.marketplace', compact('products', 'brands'));
 });
 
 // Trending Page Route (Filter Produk & Brand dengan is_trending = true dan is_active = true)

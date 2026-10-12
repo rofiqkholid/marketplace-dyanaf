@@ -81,77 +81,55 @@
         
         <!-- Quick Brand & Tools Bar Grid -->
         <div class="grid grid-cols-3 sm:grid-cols-9 gap-3 w-full">
-            <!-- Netflix -->
-            <a href="{{ route('brand.detail', 'netflix') }}" class="flex flex-col items-center justify-center p-3 rounded-none bg-white hover:bg-slate-50 border border-slate-300/70 transition-colors group aspect-square w-full">
-                <div class="w-full h-10 sm:h-12 flex items-center justify-center mb-1 group-hover:scale-105 transition-transform px-1">
-                    <img src="{{ asset('assets/logo/Netflix_2015_logo.svg') }}" alt="Netflix" class="h-8 sm:h-10 max-w-full object-contain">
-                </div>
-                <span class="text-[11px] font-semibold text-slate-700 truncate max-w-full">Netflix</span>
-            </a>
+            @php
+                $quickBrandSlugs = ['netflix', 'chatgpt', 'claude', 'gemini', 'spotify', 'canva', 'instagram', 'copilot', 'figma'];
+                $defaultLogos = [
+                    'netflix' => 'assets/logo/Netflix_2015_logo.svg',
+                    'chatgpt' => 'assets/logo/OpenAI_logo_2025_(symbol).svg',
+                    'claude' => 'assets/logo/Claude_AI_logo.svg',
+                    'gemini' => 'assets/logo/Google_Gemini_logo.svg',
+                    'spotify' => 'assets/logo/2024_Spotify_Logo.svg',
+                    'canva' => 'assets/logo/Canva_logo.svg',
+                    'instagram' => 'assets/logo/Instagram_logo_2022.svg',
+                    'copilot' => 'assets/logo/Visual_Studio_Code_1.35_icon.svg',
+                    'figma' => 'assets/logo/figma-logo.svg',
+                ];
+                $defaultNames = [
+                    'netflix' => 'Netflix',
+                    'chatgpt' => 'ChatGPT',
+                    'claude' => 'Claude',
+                    'gemini' => 'Gemini',
+                    'spotify' => 'Spotify',
+                    'canva' => 'Canva',
+                    'instagram' => 'Instagram',
+                    'copilot' => 'Copilot',
+                    'figma' => 'Figma',
+                ];
+            @endphp
 
-            <!-- ChatGPT -->
-            <a href="{{ route('brand.detail', 'chatgpt') }}" class="flex flex-col items-center justify-center p-3 rounded-none bg-white hover:bg-slate-50 border border-slate-300/70 transition-colors group aspect-square w-full">
-                <div class="w-full h-10 sm:h-12 flex items-center justify-center mb-1 group-hover:scale-105 transition-transform px-1">
-                    <img src="{{ asset('assets/logo/OpenAI_logo_2025_(symbol).svg') }}" alt="ChatGPT" class="h-8 sm:h-10 max-w-full object-contain">
-                </div>
-                <span class="text-[11px] font-semibold text-slate-700 truncate max-w-full">ChatGPT</span>
-            </a>
+            @foreach($quickBrandSlugs as $slug)
+                @php
+                    $brandItem = $brands->get($slug);
+                    $brandName = $brandItem ? $brandItem->name : ($defaultNames[$slug] ?? ucfirst($slug));
+                    $brandLogo = ($brandItem && $brandItem->logo) ? asset($brandItem->logo) : asset($defaultLogos[$slug]);
+                    $isOutOfStock = $brandItem ? ($brandItem->stock <= 0) : false;
+                @endphp
+                <a href="{{ route('brand.detail', $slug) }}" class="relative overflow-hidden flex flex-col items-center justify-center p-3 rounded-none bg-white hover:bg-slate-50 border border-slate-300/70 transition-colors group aspect-square w-full {{ $isOutOfStock ? 'max-sm:opacity-85' : '' }}">
+                    @if($isOutOfStock)
+                        <!-- Diagonal Sold Badge / Ribbon Miring (Hanya di Mobile) -->
+                        <div class="sm:hidden absolute top-0 right-0 w-16 h-16 overflow-hidden pointer-events-none z-10">
+                            <div class="absolute top-[10px] right-[-26px] w-24 bg-red-600 text-white text-[8px] font-extrabold uppercase tracking-wider text-center py-0.5 rotate-45 shadow-sm">
+                                HABIS
+                            </div>
+                        </div>
+                    @endif
 
-            <!-- Claude -->
-            <a href="{{ route('brand.detail', 'claude') }}" class="flex flex-col items-center justify-center p-3 rounded-none bg-white hover:bg-slate-50 border border-slate-300/70 transition-colors group aspect-square w-full">
-                <div class="w-full h-10 sm:h-12 flex items-center justify-center mb-1 group-hover:scale-105 transition-transform px-1">
-                    <img src="{{ asset('assets/logo/Claude_AI_logo.svg') }}" alt="Claude" class="h-8 sm:h-10 max-w-full object-contain">
-                </div>
-                <span class="text-[11px] font-semibold text-slate-700 truncate max-w-full">Claude</span>
-            </a>
-
-            <!-- Gemini -->
-            <a href="{{ route('brand.detail', 'gemini') }}" class="flex flex-col items-center justify-center p-3 rounded-none bg-white hover:bg-slate-50 border border-slate-300/70 transition-colors group aspect-square w-full">
-                <div class="w-full h-10 sm:h-12 flex items-center justify-center mb-1 group-hover:scale-105 transition-transform px-1">
-                    <img src="{{ asset('assets/logo/Google_Gemini_logo.svg') }}" alt="Gemini" class="h-8 sm:h-10 max-w-full object-contain">
-                </div>
-                <span class="text-[11px] font-semibold text-slate-700 truncate max-w-full">Gemini</span>
-            </a>
-
-            <!-- Spotify -->
-            <a href="{{ route('brand.detail', 'spotify') }}" class="flex flex-col items-center justify-center p-3 rounded-none bg-white hover:bg-slate-50 border border-slate-300/70 transition-colors group aspect-square w-full">
-                <div class="w-full h-10 sm:h-12 flex items-center justify-center mb-1 group-hover:scale-105 transition-transform px-1">
-                    <img src="{{ asset('assets/logo/2024_Spotify_Logo.svg') }}" alt="Spotify" class="h-8 sm:h-10 max-w-full object-contain">
-                </div>
-                <span class="text-[11px] font-semibold text-slate-700 truncate max-w-full">Spotify</span>
-            </a>
-
-            <!-- Canva -->
-            <a href="{{ route('brand.detail', 'canva') }}" class="flex flex-col items-center justify-center p-3 rounded-none bg-white hover:bg-slate-50 border border-slate-300/70 transition-colors group aspect-square w-full">
-                <div class="w-full h-10 sm:h-12 flex items-center justify-center mb-1 group-hover:scale-105 transition-transform px-1">
-                    <img src="{{ asset('assets/logo/Canva_logo.svg') }}" alt="Canva" class="h-8 sm:h-10 max-w-full object-contain">
-                </div>
-                <span class="text-[11px] font-semibold text-slate-700 truncate max-w-full">Canva</span>
-            </a>
-
-            <!-- Instagram -->
-            <a href="{{ route('brand.detail', 'instagram') }}" class="flex flex-col items-center justify-center p-3 rounded-none bg-white hover:bg-slate-50 border border-slate-300/70 transition-colors group aspect-square w-full">
-                <div class="w-full h-10 sm:h-12 flex items-center justify-center mb-1 group-hover:scale-105 transition-transform px-1">
-                    <img src="{{ asset('assets/logo/Instagram_logo_2022.svg') }}" alt="Instagram" class="h-8 sm:h-10 max-w-full object-contain">
-                </div>
-                <span class="text-[11px] font-semibold text-slate-700 truncate max-w-full">Instagram</span>
-            </a>
-
-            <!-- VS Code / Copilot -->
-            <a href="{{ route('brand.detail', 'copilot') }}" class="flex flex-col items-center justify-center p-3 rounded-none bg-white hover:bg-slate-50 border border-slate-300/70 transition-colors group aspect-square w-full">
-                <div class="w-full h-10 sm:h-12 flex items-center justify-center mb-1 group-hover:scale-105 transition-transform px-1">
-                    <img src="{{ asset('assets/logo/Visual_Studio_Code_1.35_icon.svg') }}" alt="VS Code" class="h-8 sm:h-10 max-w-full object-contain">
-                </div>
-                <span class="text-[11px] font-semibold text-slate-700 truncate max-w-full">Copilot</span>
-            </a>
-
-            <!-- Figma -->
-            <a href="{{ route('brand.detail', 'figma') }}" class="flex flex-col items-center justify-center p-3 rounded-none bg-white hover:bg-slate-50 border border-slate-300/70 transition-colors group aspect-square w-full">
-                <div class="w-full h-10 sm:h-12 flex items-center justify-center mb-1 group-hover:scale-105 transition-transform px-1">
-                    <img src="{{ asset('assets/logo/figma-logo.svg') }}" alt="Figma" class="h-8 sm:h-10 max-w-full object-contain">
-                </div>
-                <span class="text-[11px] font-semibold text-slate-700 truncate max-w-full">Figma</span>
-            </a>
+                    <div class="w-full h-10 sm:h-12 flex items-center justify-center mb-1 group-hover:scale-105 transition-transform px-1">
+                        <img src="{{ $brandLogo }}" alt="{{ $brandName }}" class="h-8 sm:h-10 max-w-full object-contain">
+                    </div>
+                    <span class="text-[11px] font-semibold text-slate-700 truncate max-w-full text-center">{{ $defaultNames[$slug] ?? $brandName }}</span>
+                </a>
+            @endforeach
         </div>
 
         <!-- Full Horizontal Divider Line (Edge to Edge) -->
