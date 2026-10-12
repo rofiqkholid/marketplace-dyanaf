@@ -64,8 +64,8 @@
                 'CV ATS-Friendly' => 84000,
                 'Surat Lamaran Kerja' => 28000,
                 'Gabung & Rapikan PDF' => 14000,
-                'Web Statis (Profile / Portfolio)' => 840000,
-                'Web Dinamis (Business / Custom System)' => 2100000,
+                'Website Landing Page' => 2000000,
+                'Web Operasional & POS' => 10000000,
                 'Desain Grafis & Promo' => 140000,
                 'Data Entry & Spreadsheet' => 210000,
                 'Jasa Ketik Word' => 140000,
@@ -134,11 +134,7 @@
                                     <span class="text-[10px] text-slate-500 block font-medium leading-none mb-1">Harga</span>
                                 @endif
                                 <span class="text-sm font-bold text-[#1e293b] leading-none">
-                                    @if($product->price >= 1000000)
-                                        Rp {{ rtrim(rtrim(number_format($product->price / 1000000, 1, ',', '.'), '0'), ',') }}JT
-                                    @else
-                                        Rp {{ number_format($product->price, 0, ',', '.') }}
-                                    @endif
+                                    Rp {{ number_format($product->price, 0, ',', '.') }}
                                 </span>
                             </div>
                             <a href="https://wa.me/6285881721193?text={{ urlencode('Halo Dyanaf Creative, saya tertarik memesan ' . $product->name) }}"

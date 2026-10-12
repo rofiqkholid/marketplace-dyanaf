@@ -7,7 +7,9 @@ use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
-    $products = \App\Models\Product::where('is_active', true)->get();
+    $products = \App\Models\Product::where('is_active', true)
+        ->where('is_trending', true)
+        ->get();
     $brands = \App\Models\Brand::where('is_active', true)->get()->keyBy('slug');
     return view('page.marketplace', compact('products', 'brands'));
 });

@@ -157,8 +157,8 @@
                     'CV ATS-Friendly' => 84000,
                     'Surat Lamaran Kerja' => 28000,
                     'Gabung & Rapikan PDF' => 14000,
-                    'Web Statis (Profile / Portfolio)' => 840000,
-                    'Web Dinamis (Business / Custom System)' => 2100000,
+                    'Website Landing Page' => 2000000,
+                    'Web Operasional & POS' => 10000000,
                     'Desain Grafis & Promo' => 140000,
                     'Data Entry & Spreadsheet' => 210000,
                     'Jasa Ketik Word' => 140000,
@@ -166,7 +166,7 @@
                 ];
             @endphp
 
-            @forelse($products as $product)
+            @forelse($products->where('is_trending', true) as $product)
                 @php
                     $originalPrice = $originalPrices[$product->name] ?? null;
                 @endphp
@@ -202,11 +202,7 @@
                                 <span class="text-[10px] text-slate-500 block font-medium leading-none mb-1">Harga</span>
                             @endif
                             <span class="text-sm font-bold text-[#1e293b] leading-none">
-                                @if($product->price >= 1000000)
-                                    Rp {{ rtrim(rtrim(number_format($product->price / 1000000, 1, ',', '.'), '0'), ',') }}JT
-                                @else
-                                    Rp {{ number_format($product->price, 0, ',', '.') }}
-                                @endif
+                                Rp {{ number_format($product->price, 0, ',', '.') }}
                             </span>
                         </div>
                         <a href="https://wa.me/6285881721193?text={{ urlencode('Halo Dyanaf Creative, saya tertarik memesan ' . $product->name) }}"
@@ -222,6 +218,259 @@
                     Belum ada produk yang tersedia.
                 </div>
             @endforelse
+        </div>
+
+        <!-- Center Button: Lihat Semua Produk -->
+        <div class="mt-6 flex justify-center">
+            <a href="{{ route('all-product') }}" 
+               class="group inline-flex items-center justify-center space-x-2 px-6 py-2.5 bg-white text-slate-800 border border-slate-300 rounded-none text-xs font-semibold">
+                <span>Lihat Semua Produk</span>
+                <i class="fa-solid fa-arrow-right text-[11px] transition-transform duration-200 group-hover:translate-x-1"></i>
+            </a>
+        </div>
+
+        <!-- Full Width Rating & Trust Strip (Background Putih Ujung ke Ujung Tanpa Card) -->
+        <div class="bg-white border-y border-slate-300/80 mx-0 sm:-mx-3 my-8 py-10 sm:py-14 min-h-[110px] sm:min-h-[130px] px-6 flex flex-wrap items-center justify-center gap-y-4 gap-x-8 sm:gap-x-12 text-sm sm:text-base text-slate-700">
+            <!-- Rating Information -->
+            <div class="flex items-center space-x-3 font-medium">
+                <i class="fa-solid fa-star text-amber-400 text-2xl sm:text-3xl"></i>
+                <span class="text-slate-900 font-extrabold text-lg sm:text-xl">4.9/5</span>
+                <span class="text-slate-600 text-sm sm:text-base">dari 250+ pengguna</span>
+            </div>
+
+            <!-- Dot separator on sm screens -->
+            <span class="hidden sm:inline-block text-slate-300 font-bold text-2xl">•</span>
+
+            <!-- Instant Delivery & 24/7 Support -->
+            <div class="flex items-center space-x-3 sm:space-x-5 font-semibold text-slate-800 text-sm sm:text-base">
+                <div class="flex items-center space-x-2">
+                    <i class="fa-solid fa-bolt text-blue-600 text-lg sm:text-xl"></i>
+                    <span>Instan</span>
+                </div>
+                <span class="text-slate-300 font-bold">•</span>
+                <div class="flex items-center space-x-2">
+                    <i class="fa-solid fa-headset text-emerald-600 text-lg sm:text-xl"></i>
+                    <span>Support 24/7</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section Header: Developer & Founder Portfolio (Centered) -->
+        <div class="text-center mb-5">
+            <h3 class="text-base sm:text-lg font-bold text-slate-900 font-['Outfit'] tracking-tight">
+                Meet the Founder & Developer
+            </h3>
+            <p class="text-xs text-slate-500 mt-1">
+                Portofolio resmi pengembang dan arsitek sistem platform <span class="font-semibold text-slate-700">Dyanaf Marketplace</span>.
+            </p>
+        </div>
+
+        <!-- Portfolio & Profile Section: Rofiq Kholid (Layout Elegan & Rapi) -->
+        <div class="py-2 px-2 max-w-4xl mx-auto space-y-6">
+            
+            <!-- Top Identity Block: Centered Avatar, Name, Title, and Direct Social Actions -->
+            <div class="flex flex-col items-center text-center space-y-3">
+                <!-- Silhouette Avatar -->
+                <div class="w-14 h-14 rounded-full bg-white border border-slate-300/80 text-slate-400 flex items-center justify-center shrink-0 shadow-sm">
+                    <i class="fa-solid fa-user text-2xl text-slate-400"></i>
+                </div>
+
+                <!-- Name & Roles -->
+                <div>
+                    <h4 class="text-lg sm:text-xl font-bold text-slate-900 font-['Outfit']">Rofiq Kholid</h4>
+                    <p class="text-xs text-slate-500 font-medium mt-0.5">Software Engineer • Cybersecurity Enthusiast • DevOps</p>
+                </div>
+
+                <!-- Clean Link Buttons -->
+                <div class="flex flex-wrap items-center justify-center gap-2 pt-1">
+                    <a href="https://rofiqkholid.dyanaf.com" 
+                       target="_blank" 
+                       rel="noopener noreferrer"
+                       class="inline-flex items-center space-x-1.5 px-3 py-1.5 bg-white text-slate-800 border border-slate-300 text-xs font-semibold rounded-none shadow-none">
+                        <i class="fa-solid fa-globe text-xs"></i>
+                        <span>rofiqkholid.Dyanaf.com</span>
+                        <i class="fa-solid fa-arrow-up-right-from-square text-[9px] ml-0.5"></i>
+                    </a>
+
+                    <a href="https://www.linkedin.com/in/rofiq-kholid/" 
+                       target="_blank" 
+                       rel="noopener noreferrer"
+                       title="LinkedIn Rofiq Kholid"
+                       class="inline-flex items-center space-x-1.5 px-3 py-1.5 bg-white text-slate-800 border border-slate-300 text-xs font-semibold rounded-none shadow-none">
+                        <i class="fa-brands fa-linkedin text-blue-600 text-sm"></i>
+                        <span>LinkedIn</span>
+                    </a>
+
+                    <a href="https://instagram.com/dhenrofiq" 
+                       target="_blank" 
+                       rel="noopener noreferrer"
+                       title="Instagram @dhenrofiq"
+                       class="inline-flex items-center space-x-1.5 px-3 py-1.5 bg-white text-slate-800 border border-slate-300 text-xs font-semibold rounded-none shadow-none">
+                        <i class="fa-brands fa-instagram text-rose-500 text-sm"></i>
+                        <span>@dhenrofiq</span>
+                    </a>
+                </div>
+
+                <!-- Bio Statement -->
+                <p class="text-xs sm:text-sm text-slate-600 leading-relaxed max-w-2xl pt-1">
+                    Building responsive, high-performance, secure, and user-friendly web systems powered by modern technologies.
+                </p>
+            </div>
+
+            <!-- Stats Bar with subtle dividers -->
+            <div class="border-t border-slate-200/90 pt-5 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-y-4 gap-x-2 text-center">
+                <div class="px-2">
+                    <span class="text-xl sm:text-2xl font-semibold text-slate-800 font-['Outfit'] block leading-none">8+</span>
+                    <span class="text-[11px] text-slate-500 mt-1.5 block leading-tight">Years in IT</span>
+                </div>
+                <div class="px-2">
+                    <span class="text-xl sm:text-2xl font-semibold text-slate-800 font-['Outfit'] block leading-none">3+</span>
+                    <span class="text-[11px] text-slate-500 mt-1.5 block leading-tight">Years in Cybersecurity</span>
+                </div>
+                <div class="px-2">
+                    <span class="text-xl sm:text-2xl font-semibold text-slate-800 font-['Outfit'] block leading-none">150+</span>
+                    <span class="text-[11px] text-slate-500 mt-1.5 block leading-tight">Projects Completed</span>
+                </div>
+                <div class="px-2">
+                    <span class="text-xl sm:text-2xl font-semibold text-slate-800 font-['Outfit'] block leading-none">100%</span>
+                    <span class="text-[11px] text-slate-500 mt-1.5 block leading-tight">Security & Performance</span>
+                </div>
+                <div class="col-span-2 sm:col-span-1 px-2">
+                    <span class="text-xl sm:text-2xl font-semibold text-slate-800 font-['Outfit'] block leading-none">99%</span>
+                    <span class="text-[11px] text-slate-500 mt-1.5 block leading-tight">UI/UX Satisfaction</span>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Full Horizontal Divider Line (Edge to Edge) -->
+        <div class="border-b border-slate-300/80 mx-0 sm:-mx-3 my-5"></div>
+
+        <!-- Section Header: FAQ (Centered di atas sama seperti yang lain) -->
+        <div class="text-center mb-5">
+            <h3 class="text-base sm:text-lg font-bold text-slate-900 font-['Outfit'] tracking-tight">
+                Pertanyaan Yang Sering Diajukan
+            </h3>
+            <p class="text-xs text-slate-500 mt-1">
+                Jawaban seputar layanan, akun premium, pengerjaan tugas, dan keamanan transaksi di Dyanaf Marketplace.
+            </p>
+        </div>
+
+        <!-- FAQ Section (Accordion List & Note) -->
+        <div class="py-2 px-1" x-data="{ activeFaq: null }">
+            <div class="max-w-3xl mx-auto space-y-2.5">
+                    
+                    <!-- FAQ 1 -->
+                    <div class="bg-white border border-slate-300/80 rounded-none overflow-hidden transition-colors">
+                        <button type="button" 
+                                @click="activeFaq = (activeFaq === 1 ? null : 1)" 
+                                class="w-full py-3.5 px-4 flex items-center justify-between text-left cursor-pointer transition-colors hover:bg-slate-50/80">
+                            <span class="text-xs sm:text-sm font-bold text-slate-900">Dyanaf Marketplace itu apa?</span>
+                            <i class="fa-solid fa-chevron-down text-xs text-slate-400 transition-transform duration-200 shrink-0 ml-3"
+                               :class="activeFaq === 1 ? 'rotate-180 text-blue-600' : ''"></i>
+                        </button>
+                        <div x-show="activeFaq === 1" 
+                             x-collapse 
+                             x-cloak 
+                             class="px-4 pb-3.5 pt-1 text-xs text-slate-600 leading-relaxed border-t border-slate-100 bg-slate-50/40">
+                            Dyanaf Marketplace adalah platform penyedia layanan digital kreatif, software dan tools AI premium (Netflix, ChatGPT, Canva, Spotify, dll.), jasa pembuatan web responsif, hingga bantuan pengerjaan tugas akademik terpercaya dengan proses cepat.
+                        </div>
+                    </div>
+
+                    <!-- FAQ 2 -->
+                    <div class="bg-white border border-slate-300/80 rounded-none overflow-hidden transition-colors">
+                        <button type="button" 
+                                @click="activeFaq = (activeFaq === 2 ? null : 2)" 
+                                class="w-full py-3.5 px-4 flex items-center justify-between text-left cursor-pointer transition-colors hover:bg-slate-50/80">
+                            <span class="text-xs sm:text-sm font-bold text-slate-900">Apakah layanan dan akun ini aman & legal?</span>
+                            <i class="fa-solid fa-chevron-down text-xs text-slate-400 transition-transform duration-200 shrink-0 ml-3"
+                               :class="activeFaq === 2 ? 'rotate-180 text-blue-600' : ''"></i>
+                        </button>
+                        <div x-show="activeFaq === 2" 
+                             x-collapse 
+                             x-cloak 
+                             class="px-4 pb-3.5 pt-1 text-xs text-slate-600 leading-relaxed border-t border-slate-100 bg-slate-50/40">
+                            Sangat aman. Setiap akun premium dan lisensi software diaktifkan secara resmi (invite email pribadi / shared private profile PIN) serta dilengkapi garansi penuh selama masa aktif paket yang Anda pilih.
+                        </div>
+                    </div>
+
+                    <!-- FAQ 3 -->
+                    <div class="bg-white border border-slate-300/80 rounded-none overflow-hidden transition-colors">
+                        <button type="button" 
+                                @click="activeFaq = (activeFaq === 3 ? null : 3)" 
+                                class="w-full py-3.5 px-4 flex items-center justify-between text-left cursor-pointer transition-colors hover:bg-slate-50/80">
+                            <span class="text-xs sm:text-sm font-bold text-slate-900">Bagaimana cara akses dan pemakaiannya setelah order?</span>
+                            <i class="fa-solid fa-chevron-down text-xs text-slate-400 transition-transform duration-200 shrink-0 ml-3"
+                               :class="activeFaq === 3 ? 'rotate-180 text-blue-600' : ''"></i>
+                        </button>
+                        <div x-show="activeFaq === 3" 
+                             x-collapse 
+                             x-cloak 
+                             class="px-4 pb-3.5 pt-1 text-xs text-slate-600 leading-relaxed border-t border-slate-100 bg-slate-50/40">
+                            Setelah pemesanan terkonfirmasi, instruksi akses (link invite email, login akun, atau dokumen pengerjaan) akan dikirimkan secara instan langsung melalui WhatsApp admin atau menu Download Asset di akun Anda.
+                        </div>
+                    </div>
+
+                    <!-- FAQ 4 -->
+                    <div class="bg-white border border-slate-300/80 rounded-none overflow-hidden transition-colors">
+                        <button type="button" 
+                                @click="activeFaq = (activeFaq === 4 ? null : 4)" 
+                                class="w-full py-3.5 px-4 flex items-center justify-between text-left cursor-pointer transition-colors hover:bg-slate-50/80">
+                            <span class="text-xs sm:text-sm font-bold text-slate-900">Bisa dipakai di perangkat apa saja?</span>
+                            <i class="fa-solid fa-chevron-down text-xs text-slate-400 transition-transform duration-200 shrink-0 ml-3"
+                               :class="activeFaq === 4 ? 'rotate-180 text-blue-600' : ''"></i>
+                        </button>
+                        <div x-show="activeFaq === 4" 
+                             x-collapse 
+                             x-cloak 
+                             class="px-4 pb-3.5 pt-1 text-xs text-slate-600 leading-relaxed border-t border-slate-100 bg-slate-50/40">
+                            Bisa digunakan di seluruh perangkat: Smartphone (Android & iOS), Tablet, Laptop, PC, hingga Smart TV tergantung jenis paket langganan yang Anda pilih.
+                        </div>
+                    </div>
+
+                    <!-- FAQ 5 -->
+                    <div class="bg-white border border-slate-300/80 rounded-none overflow-hidden transition-colors">
+                        <button type="button" 
+                                @click="activeFaq = (activeFaq === 5 ? null : 5)" 
+                                class="w-full py-3.5 px-4 flex items-center justify-between text-left cursor-pointer transition-colors hover:bg-slate-50/80">
+                            <span class="text-xs sm:text-sm font-bold text-slate-900">Kalau ada kendala atau akun error, hubungi ke mana?</span>
+                            <i class="fa-solid fa-chevron-down text-xs text-slate-400 transition-transform duration-200 shrink-0 ml-3"
+                               :class="activeFaq === 5 ? 'rotate-180 text-blue-600' : ''"></i>
+                        </button>
+                        <div x-show="activeFaq === 5" 
+                             x-collapse 
+                             x-cloak 
+                             class="px-4 pb-3.5 pt-1 text-xs text-slate-600 leading-relaxed border-t border-slate-100 bg-slate-50/40">
+                            Tim support kami aktif melayani 24/7. Anda cukup menghubungi customer support via WhatsApp resmi Dyanaf Creative untuk klaim garansi cepat, pergantian akun, atau bantuan teknis.
+                        </div>
+                    </div>
+
+                    <!-- FAQ 6 -->
+                    <div class="bg-white border border-slate-300/80 rounded-none overflow-hidden transition-colors">
+                        <button type="button" 
+                                @click="activeFaq = (activeFaq === 6 ? null : 6)" 
+                                class="w-full py-3.5 px-4 flex items-center justify-between text-left cursor-pointer transition-colors hover:bg-slate-50/80">
+                            <span class="text-xs sm:text-sm font-bold text-slate-900">Mengapa harganya bisa lebih terjangkau?</span>
+                            <i class="fa-solid fa-chevron-down text-xs text-slate-400 transition-transform duration-200 shrink-0 ml-3"
+                               :class="activeFaq === 6 ? 'rotate-180 text-blue-600' : ''"></i>
+                        </button>
+                        <div x-show="activeFaq === 6" 
+                             x-collapse 
+                             x-cloak 
+                             class="px-4 pb-3.5 pt-1 text-xs text-slate-600 leading-relaxed border-t border-slate-100 bg-slate-50/40">
+                            Kami memanfaatkan paket resmi skala grup/keluarga (*family plan* & *team subscription*) serta sistem manajemen otomatis yang efisien sehingga biaya langganan per orang menjadi jauh lebih hemat dan rasional.
+                        </div>
+                    </div>
+
+                    <!-- Bottom Note Box -->
+                    <div class="bg-slate-50 border border-slate-300/80 p-4 rounded-none text-left">
+                        <h4 class="text-xs font-bold text-slate-900">Catatan</h4>
+                        <p class="text-xs text-slate-600 mt-1 leading-relaxed">
+                            Dyanaf Marketplace dibuat untuk akses layanan digital yang rapi, simpel, legal, dan masuk akal. Gunakan sesuai kebutuhan dan aturan yang berlaku.
+                        </p>
+                    </div>
+
+                </div>
         </div>
 
     </div>
