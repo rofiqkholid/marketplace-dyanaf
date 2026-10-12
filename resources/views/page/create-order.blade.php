@@ -38,24 +38,44 @@
         'completed' => 'Selesai (Sudah Dikirim / Aktif)',
         'cancelled' => 'Dibatalkan',
     ];
+
+    $tableStatusOptions = [
+        'pending' => 'Pending',
+        'processing' => 'Diproses',
+        'completed' => 'Selesai',
+        'cancelled' => 'Dibatalkan',
+    ];
 @endphp
 
 <!-- Main Order Management Table Card -->
-    <div class="bg-white border border-slate-300/80 overflow-hidden">
+    <div id="table-card-container" class="table-card-container relative bg-white border border-slate-300/80 overflow-hidden">
         <div class="p-3 bg-white border-b border-slate-300/80 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
             <div>
                 <h2 class="text-sm font-bold text-slate-800 font-['Outfit']">Daftar Order Pelanggan</h2>
             </div>
 
             <!-- Search Input -->
-            <div class="relative w-full sm:w-64">
+            <form method="GET" action="{{ route('orders.admin') }}" 
+                  onsubmit="event.preventDefault(); window.navigateTable(this.action + '?' + new URLSearchParams(new FormData(this)).toString(), this.closest('.table-card-container') || 'table-card-container');"
+                  class="relative w-full sm:w-64">
+                @if(request('per_page'))
+                    <input type="hidden" name="per_page" value="{{ request('per_page') }}">
+                @endif
                 <input 
                     type="text" 
-                    x-model="searchQuery" 
+                    name="search"
+                    value="{{ request('search') }}"
                     placeholder="Cari no. order, customer, produk..." 
-                    class="w-full pl-8 pr-3 py-1.5 bg-white border border-slate-300 text-xs text-slate-800 focus:outline-none focus:border-blue-500">
+                    class="w-full pl-8 pr-8 py-1.5 bg-white border border-slate-300 text-xs text-slate-800 focus:outline-none focus:border-blue-500">
                 <i class="fa-solid fa-magnifying-glass absolute left-2.5 top-2.5 text-slate-400 text-xs"></i>
-            </div>
+                @if(request('search'))
+                    <a href="{{ request()->fullUrlWithQuery(['search' => null, 'page' => 1]) }}" 
+                       onclick="event.preventDefault(); window.navigateTable(this.getAttribute('href'), this.closest('.table-card-container') || 'table-card-container');"
+                       class="absolute right-2.5 top-2 text-slate-400 hover:text-slate-600 text-xs" title="Reset pencarian">
+                        <i class="fa-solid fa-xmark"></i>
+                    </a>
+                @endif
+            </form>
         </div>
 
         <div class="overflow-x-auto">
@@ -76,14 +96,11 @@
                 </thead>
                 <tbody class="divide-y divide-slate-200/80 text-xs whitespace-nowrap">
                     @forelse($orders as $order)
-                        <tr 
-                            x-show="matchesSearch('{{ strtolower($order->order_number) }}', '{{ strtolower($order->customer_name) }}', '{{ strtolower($order->item_name) }}')" 
-                            class="bg-white hover:bg-slate-50 transition-colors">
+                        <tr class="bg-white hover:bg-slate-50 transition-colors relative">
                             
                             <td class="py-2.5 px-3.5 font-mono font-bold text-blue-600 whitespace-nowrap">
-                                <a href="{{ route('tracking-order', ['order_number' => $order->order_number]) }}" target="_blank" class="hover:underline inline-flex items-center space-x-1.5" title="Lihat di Tracking">
-                                    <span class="whitespace-nowrap">{{ $order->order_number }}</span>
-                                    <i class="fa-solid fa-arrow-up-right-from-square text-[9px] text-slate-400 shrink-0"></i>
+                                <a href="{{ route('tracking-order', ['order_number' => $order->order_number]) }}" target="_blank" class="hover:underline" title="Lihat di Tracking">
+                                    {{ $order->order_number }}
                                 </a>
                             </td>
 
@@ -118,14 +135,13 @@
                             </td>
 
                             <td class="py-2.5 px-3.5 text-center whitespace-nowrap">
-                                <select 
-                                    @change="updateOrderStatus({{ $order->id }}, $event.target.value)" 
-                                    class="text-xs bg-slate-50 hover:bg-white border border-slate-300 text-slate-700 px-2.5 py-1 focus:outline-none focus:border-blue-500 cursor-pointer transition-colors whitespace-nowrap">
-                                    <option value="pending" {{ $order->status === 'pending' ? 'selected' : '' }}>Pending</option>
-                                    <option value="processing" {{ $order->status === 'processing' ? 'selected' : '' }}>Diproses</option>
-                                    <option value="completed" {{ $order->status === 'completed' ? 'selected' : '' }}>Selesai</option>
-                                    <option value="cancelled" {{ $order->status === 'cancelled' ? 'selected' : '' }}>Dibatalkan</option>
-                                </select>
+                                <div class="inline-block w-28 text-left relative z-20">
+                                    <x-select 
+                                        :options="$tableStatusOptions" 
+                                        :selected="$order->status" 
+                                        @change="updateOrderStatus({{ $order->id }}, $event.detail)" 
+                                    />
+                                </div>
                             </td>
 
                             <td class="py-2.5 px-3.5 text-center text-slate-500 text-[11px] whitespace-nowrap">
@@ -172,14 +188,21 @@
                     @empty
                         <tr>
                             <td colspan="10" class="py-8 text-center text-slate-400">
-                                <i class="fa-solid fa-receipt text-3xl mb-2"></i>
-                                <p class="text-xs">Belum ada data pesanan tersimpan.</p>
+                                @if(request('search'))
+                                    <i class="fa-solid fa-magnifying-glass text-2xl mb-2 block"></i>
+                                    <p class="text-xs">Tidak ada data pesanan yang sesuai dengan pencarian "{{ request('search') }}".</p>
+                                @else
+                                    <i class="fa-solid fa-receipt text-3xl mb-2 block"></i>
+                                    <p class="text-xs">Belum ada data pesanan tersimpan.</p>
+                                @endif
                             </td>
                         </tr>
                     @endforelse
                 </tbody>
             </table>
         </div>
+
+        <x-table-footer :paginator="$orders" />
     </div>
 
     <!-- Modal Form (Tambah / Edit Order) -->
@@ -262,7 +285,7 @@
                                     name="product_id" 
                                     bind="formData.product_id" 
                                     :options="$productOptions" 
-                                    placeholder="-- Pilih Produk --" 
+                                    placeholder="Pilih Produk" 
                                 />
                             </div>
 
@@ -273,7 +296,7 @@
                                     name="brand_id" 
                                     bind="formData.brand_id" 
                                     :options="$brandOptions" 
-                                    placeholder="-- Pilih Brand --" 
+                                    placeholder="Pilih Brand" 
                                 />
                             </div>
 
@@ -288,7 +311,7 @@
                                             type="button" 
                                             @click="open = !open" 
                                             class="w-full flex items-center justify-between p-2 text-xs bg-slate-50 border border-slate-300 text-slate-900 hover:bg-white focus:bg-white focus:border-blue-500 focus:outline-none transition-colors cursor-pointer">
-                                            <span x-text="formData.package_name || '-- Pilih Paket Layanan --'" :class="!formData.package_name ? 'text-slate-400' : 'text-slate-900 font-medium'"></span>
+                                            <span x-text="formData.package_name || 'Pilih Paket Layanan'" :class="!formData.package_name ? 'text-slate-400' : 'text-slate-900 font-medium'"></span>
                                             <i class="fa-solid fa-chevron-down text-[10px] text-slate-400 transition-transform duration-200" :class="open ? 'rotate-180 text-blue-600' : ''"></i>
                                         </button>
                                         <div 
@@ -351,7 +374,7 @@
                             name="status" 
                             bind="formData.status" 
                             :options="$statusOptions" 
-                            placeholder="-- Pilih Status --" 
+                            placeholder="Pilih Status" 
                         />
                     </div>
 
@@ -488,12 +511,6 @@
                 if (pkg.price) {
                     this.formData.price = parseFloat(pkg.price) || 0;
                 }
-            },
-
-            matchesSearch(number, customer, item) {
-                if (!this.searchQuery.trim()) return true;
-                const q = this.searchQuery.toLowerCase();
-                return number.includes(q) || customer.includes(q) || item.includes(q);
             },
 
             onItemTypeChange() {

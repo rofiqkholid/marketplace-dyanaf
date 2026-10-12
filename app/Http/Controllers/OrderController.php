@@ -28,6 +28,23 @@ class OrderController extends Controller
     }
 
     /**
+     * Halaman Publik: Download Asset Order.
+     */
+    public function downloadAsset(Request $request)
+    {
+        $orderNumber = trim($request->query('order_number', ''));
+        $order = null;
+        $searched = false;
+
+        if (!empty($orderNumber)) {
+            $searched = true;
+            $order = Order::with('assets')->where('order_number', $orderNumber)->first();
+        }
+
+        return view('page.download-asset', compact('order', 'orderNumber', 'searched'));
+    }
+
+    /**
      * Ensure only user with role 'pemilik' can access order management.
      */
     protected function checkRole()
@@ -40,11 +57,29 @@ class OrderController extends Controller
     /**
      * Halaman Pemilik: Daftar Order & Form Create Order.
      */
-    public function adminIndex()
+    public function adminIndex(Request $request)
     {
         $this->checkRole();
 
-        $orders = Order::orderBy('created_at', 'desc')->get();
+        $perPage = (int) $request->input('per_page', 10);
+        if (!in_array($perPage, [10, 50, 100])) {
+            $perPage = 10;
+        }
+
+        $query = Order::query();
+
+        if ($request->filled('search')) {
+            $search = trim($request->input('search'));
+            $query->where(function($q) use ($search) {
+                $q->where('order_number', 'like', "%{$search}%")
+                  ->orWhere('customer_name', 'like', "%{$search}%")
+                  ->orWhere('customer_phone', 'like', "%{$search}%")
+                  ->orWhere('item_name', 'like', "%{$search}%")
+                  ->orWhere('package_name', 'like', "%{$search}%");
+            });
+        }
+
+        $orders = $query->orderBy('created_at', 'desc')->paginate($perPage)->withQueryString();
         $products = Product::where('is_active', true)->orderBy('name', 'asc')->get();
         $brands = Brand::where('is_active', true)->orderBy('name', 'asc')->get();
 

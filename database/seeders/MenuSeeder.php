@@ -18,11 +18,10 @@ class MenuSeeder extends Seeder
         $mainNavs = [
             ['name' => 'Featured', 'url' => '/', 'icon' => 'fa-solid fa-star text-amber-600 text-sm', 'order' => 1],
             ['name' => 'Trending', 'url' => '/trending', 'icon' => 'fa-solid fa-chart-line text-rose-600 text-sm', 'order' => 2],
-            ['name' => 'New Arrival', 'url' => '#', 'icon' => 'fa-solid fa-wand-magic-sparkles text-blue-500 text-sm', 'order' => 3],
+            ['name' => 'New Arrival', 'url' => '/new-arrival', 'icon' => 'fa-solid fa-wand-magic-sparkles text-blue-500 text-sm', 'order' => 3],
             ['name' => 'Tracking Order', 'url' => '/tracking-order', 'icon' => 'fa-solid fa-truck-fast text-indigo-600 text-sm', 'order' => 4],
-            ['name' => 'Discount', 'url' => '#', 'icon' => 'fa-solid fa-tags text-emerald-600 text-sm', 'order' => 5],
-            ['name' => 'All Products', 'url' => '#', 'icon' => 'fa-solid fa-border-all text-cyan-600 text-sm', 'order' => 6],
-            ['name' => 'Download Asset', 'url' => '#', 'icon' => 'fa-solid fa-cloud-arrow-down text-purple-600 text-sm', 'order' => 7],
+            ['name' => 'All Products', 'url' => '/all-product', 'icon' => 'fa-solid fa-border-all text-cyan-600 text-sm', 'order' => 5],
+            ['name' => 'Download Asset', 'url' => '/download-asset', 'icon' => 'fa-solid fa-cloud-arrow-down text-purple-600 text-sm', 'order' => 6],
         ];
 
         foreach ($mainNavs as $nav) {
@@ -84,6 +83,7 @@ class MenuSeeder extends Seeder
             ['name' => 'User', 'url' => '/users', 'icon' => 'fa-solid fa-users text-blue-600 w-4 text-center', 'role' => 'pemilik', 'order' => 3],
             ['name' => 'Menu', 'url' => '/menus-master', 'icon' => 'fa-solid fa-list-check text-emerald-600 w-4 text-center', 'role' => 'pemilik', 'order' => 4],
             ['name' => 'Create Order', 'url' => '/orders-create', 'icon' => 'fa-solid fa-receipt text-indigo-600 w-4 text-center', 'role' => 'pemilik', 'order' => 5],
+            ['name' => 'Upload Asset', 'url' => '/assets-upload', 'icon' => 'fa-solid fa-cloud-arrow-up text-blue-600 w-4 text-center', 'role' => 'pemilik', 'order' => 6],
         ];
 
         foreach ($appSettingItems as $item) {

@@ -21,11 +21,28 @@ class BrandMasterController extends Controller
     /**
      * Display a listing of brands.
      */
-    public function index()
+    public function index(Request $request)
     {
         $this->checkRole();
 
-        $brands = Brand::orderBy('id', 'asc')->get();
+        $perPage = (int) $request->input('per_page', 10);
+        if (!in_array($perPage, [10, 50, 100])) {
+            $perPage = 10;
+        }
+
+        $query = Brand::query();
+
+        if ($request->filled('search')) {
+            $search = trim($request->input('search'));
+            $query->where(function($q) use ($search) {
+                $q->where('name', 'like', "%{$search}%")
+                  ->orWhere('category', 'like', "%{$search}%")
+                  ->orWhere('slug', 'like', "%{$search}%")
+                  ->orWhere('description', 'like', "%{$search}%");
+            });
+        }
+
+        $brands = $query->orderBy('id', 'asc')->paginate($perPage)->withQueryString();
 
         return view('page.brands-master', compact('brands'));
     }

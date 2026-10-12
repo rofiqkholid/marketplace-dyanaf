@@ -21,17 +21,33 @@ class MenuMasterController extends Controller
     /**
      * Display a listing of the menus.
      */
-    public function index()
+    public function index(Request $request)
     {
         $this->checkRole();
 
-        // Fetch root level menus (parent_id is null) with all child items
-        $menus = Menu::with(['children' => function ($q) {
+        $perPage = (int) $request->input('per_page', 10);
+        if (!in_array($perPage, [10, 50, 100])) {
+            $perPage = 10;
+        }
+
+        $query = Menu::with(['children' => function ($q) {
             $q->orderBy('order');
-        }])
-        ->whereNull('parent_id')
-        ->orderBy('order')
-        ->get();
+        }])->whereNull('parent_id');
+
+        if ($request->filled('search')) {
+            $search = trim($request->input('search'));
+            $query->where(function($q) use ($search) {
+                $q->where('name', 'like', "%{$search}%")
+                  ->orWhere('url', 'like', "%{$search}%")
+                  ->orWhereHas('children', function($cq) use ($search) {
+                      $cq->where('name', 'like', "%{$search}%")
+                         ->orWhere('url', 'like', "%{$search}%");
+                  });
+            });
+        }
+
+        // Fetch paginated root level menus with children
+        $menus = $query->orderBy('order')->paginate($perPage)->withQueryString();
 
         // Parent options for form dropdown
         $parentMenus = Menu::whereNull('parent_id')->orderBy('order')->get();

@@ -42,6 +42,11 @@ class Order extends Model
         return $this->belongsTo(Brand::class);
     }
 
+    public function assets()
+    {
+        return $this->hasMany(OrderAsset::class);
+    }
+
     /**
      * Generate format nomor order unik:
      * Contoh: SEN100226-1-P29 (Hari 3 huruf Indonesia, tanggal bulan tahun 2 digit, ID item, Tipe [P/B], angka acak)

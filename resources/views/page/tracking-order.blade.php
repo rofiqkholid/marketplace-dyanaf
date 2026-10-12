@@ -211,7 +211,7 @@
                 <!-- Action Buttons: Download Asset (jika selesai) & Konfirmasi WhatsApp -->
                 <div class="pt-2 flex flex-col sm:flex-row items-center justify-center gap-2.5">
                     @if($order->status === 'completed')
-                        <a href="{{ route('maintenance', ['page' => 'Download Asset']) }}"
+                        <a href="{{ route('download-asset', ['order_number' => $order->order_number]) }}"
                            class="inline-flex items-center space-x-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold transition-colors cursor-pointer w-full sm:w-auto justify-center">
                             <i class="fa-solid fa-cloud-arrow-down text-sm"></i>
                             <span>Download Asset</span>

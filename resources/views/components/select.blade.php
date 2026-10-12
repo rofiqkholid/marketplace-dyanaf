@@ -1,7 +1,7 @@
 @props([
     'name' => '',
     'options' => [],
-    'placeholder' => '-- Pilih Options --',
+    'placeholder' => 'Pilih Options',
     'selected' => '',
     'bind' => null, // e.g. 'formData.parent_id'
     'class' => '',
@@ -24,7 +24,8 @@
 
 <div x-data="customSelectComponent(@js($formattedOptions), @js($placeholder), @js($selected), @js($bind))"
      @click.outside="open = false"
-     class="relative w-full {{ $class }}">
+     class="relative w-full {{ $class }}"
+     :class="open ? 'z-30' : ''">
 
     <!-- Hidden Native Input for standard HTML Form Submit -->
     @if($name)
@@ -34,7 +35,8 @@
     <!-- Trigger Button -->
     <button 
         type="button" 
-        @click="open = !open" 
+        x-ref="trigger"
+        @click="toggleDropdown()" 
         class="w-full flex items-center justify-between p-2 text-xs bg-slate-50 border border-slate-300 text-slate-900 hover:bg-white focus:bg-white focus:border-blue-500 focus:outline-none transition-colors cursor-pointer">
         
         <span x-text="selectedLabel" :class="(!selected && selected !== 0) ? 'text-slate-400' : 'text-slate-900 font-medium'"></span>
@@ -43,18 +45,20 @@
            :class="open ? 'rotate-180 text-blue-600' : ''"></i>
     </button>
 
-    <!-- Dropdown Options List -->
+    <!-- Dropdown Options List (fixed position to escape overflow clipping) -->
     <div 
         x-show="open" 
+        x-ref="dropdown"
         x-cloak
         x-transition:enter="transition ease-out duration-150 transform"
-        x-transition:enter-start="opacity-0 scale-95 -translate-y-1"
-        x-transition:enter-end="opacity-100 scale-100 translate-y-0"
+        x-transition:enter-start="opacity-0 scale-95"
+        x-transition:enter-end="opacity-100 scale-100"
         x-transition:leave="transition ease-in duration-100 transform"
-        x-transition:leave-start="opacity-100 scale-100 translate-y-0"
-        x-transition:leave-end="opacity-0 scale-95 -translate-y-1"
+        x-transition:leave-start="opacity-100 scale-100"
+        x-transition:leave-end="opacity-0 scale-95"
         style="display: none;"
-        class="absolute left-0 right-0 top-full mt-1 z-50 bg-white border border-slate-300 max-h-60 overflow-y-auto py-1 text-xs">
+        class="fixed z-[9999] bg-white border border-slate-300 max-h-60 overflow-y-auto py-1 text-xs shadow-lg"
+        :style="dropdownStyle">
 
         @if($searchable)
             <div class="p-1.5 border-b border-slate-200">
@@ -88,6 +92,7 @@
             selected: initialSelected ? String(initialSelected) : '',
             options: options || [],
             search: '',
+            dropdownStyle: '',
 
             init() {
                 if (bindPath) {
@@ -101,6 +106,45 @@
                         }
                     } catch (e) {}
                 }
+            },
+
+            toggleDropdown() {
+                if (this.open) {
+                    this.open = false;
+                    return;
+                }
+                this.positionDropdown();
+                this.open = true;
+            },
+
+            positionDropdown() {
+                const trigger = this.$refs.trigger;
+                if (!trigger) return;
+
+                const rect = trigger.getBoundingClientRect();
+                const dropdownHeight = Math.min(240, this.options.length * 36 + 8);
+                const spaceBelow = window.innerHeight - rect.bottom;
+                const spaceAbove = rect.top;
+
+                let top, left, width;
+                width = rect.width;
+                left = rect.left;
+
+                if (spaceBelow >= dropdownHeight || spaceBelow >= spaceAbove) {
+                    // Open downward
+                    top = rect.bottom + 4;
+                } else {
+                    // Open upward
+                    top = rect.top - dropdownHeight - 4;
+                }
+
+                // Clamp to viewport
+                if (top < 4) top = 4;
+                if (top + dropdownHeight > window.innerHeight - 4) {
+                    top = window.innerHeight - dropdownHeight - 4;
+                }
+
+                this.dropdownStyle = `top: ${top}px; left: ${left}px; width: ${width}px;`;
             },
 
             get selectedLabel() {

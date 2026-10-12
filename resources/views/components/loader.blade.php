@@ -156,8 +156,15 @@
 
         // Intercept link clicks to show loader before page changes
         document.addEventListener('click', function(e) {
+            if (e.defaultPrevented) return;
+
             const link = e.target.closest('a');
             if (!link) return;
+
+            // Skip table pagination and AJAX containers
+            if (link.closest('#table-card-container, .table-card-container, [data-no-loader]')) {
+                return;
+            }
 
             const href = link.getAttribute('href');
             const target = link.getAttribute('target');
@@ -180,8 +187,12 @@
 
         // Intercept form submissions
         document.addEventListener('submit', function(e) {
+            if (e.defaultPrevented) return;
+
             const form = e.target;
             if (form.getAttribute('target') === '_blank') return;
+            if (form.closest('#table-card-container, .table-card-container, [data-no-loader]')) return;
+
             showLoader();
         });
     })();

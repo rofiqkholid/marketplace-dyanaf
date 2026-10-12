@@ -19,21 +19,34 @@
 
 
     <!-- Main Menu Management Table & Hierarchy -->
-    <div class="bg-white border border-slate-300/80 overflow-hidden">
+    <div id="table-card-container" class="table-card-container relative bg-white border border-slate-300/80 overflow-hidden">
         <div class="p-3 bg-white border-b border-slate-300/80 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
             <div>
                 <h2 class="text-sm font-bold text-slate-800 font-['Outfit']">Daftar Struktur Menu Navigasi</h2>
             </div>
 
             <!-- Search Input -->
-            <div class="relative w-full sm:w-64">
+            <form method="GET" action="{{ route('menus-master.index') }}" 
+                  onsubmit="event.preventDefault(); window.navigateTable(this.action + '?' + new URLSearchParams(new FormData(this)).toString(), this.closest('.table-card-container') || 'table-card-container');"
+                  class="relative w-full sm:w-64">
+                @if(request('per_page'))
+                    <input type="hidden" name="per_page" value="{{ request('per_page') }}">
+                @endif
                 <input 
                     type="text" 
-                    x-model="searchQuery" 
+                    name="search"
+                    value="{{ request('search') }}"
                     placeholder="Cari menu / submenu..." 
-                    class="w-full pl-8 pr-3 py-1.5 bg-white border border-slate-300 text-xs text-slate-800 focus:outline-none focus:border-blue-500">
+                    class="w-full pl-8 pr-8 py-1.5 bg-white border border-slate-300 text-xs text-slate-800 focus:outline-none focus:border-blue-500">
                 <i class="fa-solid fa-magnifying-glass absolute left-2.5 top-2.5 text-slate-400 text-xs"></i>
-            </div>
+                @if(request('search'))
+                    <a href="{{ request()->fullUrlWithQuery(['search' => null, 'page' => 1]) }}" 
+                       onclick="event.preventDefault(); window.navigateTable(this.getAttribute('href'), this.closest('.table-card-container') || 'table-card-container');"
+                       class="absolute right-2.5 top-2 text-slate-400 hover:text-slate-600 text-xs" title="Reset pencarian">
+                        <i class="fa-solid fa-xmark"></i>
+                    </a>
+                @endif
+            </form>
         </div>
 
         <div class="overflow-x-auto">
@@ -54,9 +67,7 @@
                 <tbody class="divide-y divide-slate-200/80 text-xs">
                     @forelse($menus as $menu)
                         <!-- Parent Row (Level 1) -->
-                        <tr 
-                            x-show="matchesSearch('{{ strtolower($menu->name) }}', '{{ strtolower($menu->url) }}')" 
-                            class="bg-white hover:bg-slate-50 transition-colors">
+                        <tr class="bg-white hover:bg-slate-50 transition-colors">
                             <td class="py-2.5 px-3.5 text-center text-slate-700">
                                 @if($menu->icon)
                                     <i class="{{ $menu->icon }} text-sm"></i>
@@ -130,9 +141,7 @@
 
                         <!-- Children Rows (Level 2 Submenus) -->
                         @foreach($menu->children as $child)
-                            <tr 
-                                x-show="matchesSearch('{{ strtolower($child->name) }}', '{{ strtolower($child->url) }}')" 
-                                class="bg-slate-50/70 hover:bg-blue-50/40 transition-colors">
+                            <tr class="bg-slate-50/70 hover:bg-blue-50/40 transition-colors">
                                 <td class="py-2 px-3.5 text-center text-slate-600 pl-6">
                                     @if($child->icon)
                                         <i class="{{ $child->icon }} text-xs"></i>
@@ -210,15 +219,22 @@
 
                     @empty
                         <tr>
-                            <td colspan="8" class="py-8 text-center text-slate-500">
-                                <i class="fa-solid fa-folder-open text-2xl mb-2 text-slate-400 block"></i>
-                                <span>Belum ada menu navigasi yang terdaftar.</span>
+                            <td colspan="9" class="py-8 text-center text-slate-500">
+                                @if(request('search'))
+                                    <i class="fa-solid fa-magnifying-glass text-2xl mb-2 text-slate-400 block"></i>
+                                    <span>Tidak ada menu yang sesuai dengan pencarian "{{ request('search') }}".</span>
+                                @else
+                                    <i class="fa-solid fa-folder-open text-2xl mb-2 text-slate-400 block"></i>
+                                    <span>Belum ada menu navigasi yang terdaftar.</span>
+                                @endif
                             </td>
                         </tr>
                     @endforelse
                 </tbody>
             </table>
         </div>
+
+        <x-table-footer :paginator="$menus" />
     </div>
 
     <!-- Add & Edit Menu Modal (Matching Logout Modal style) -->

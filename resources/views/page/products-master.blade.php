@@ -18,21 +18,34 @@
     </div>
 
     <!-- Main Product Management Table Card -->
-    <div class="bg-white border border-slate-300/80 overflow-hidden">
+    <div id="table-card-container" class="table-card-container relative bg-white border border-slate-300/80 overflow-hidden">
         <div class="p-3 bg-white border-b border-slate-300/80 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
             <div>
                 <h2 class="text-sm font-bold text-slate-800 font-['Outfit']">Daftar Produk Marketplace</h2>
             </div>
 
             <!-- Search Input -->
-            <div class="relative w-full sm:w-64">
+            <form method="GET" action="{{ route('products-master.index') }}" 
+                  onsubmit="event.preventDefault(); window.navigateTable(this.action + '?' + new URLSearchParams(new FormData(this)).toString(), this.closest('.table-card-container') || 'table-card-container');"
+                  class="relative w-full sm:w-64">
+                @if(request('per_page'))
+                    <input type="hidden" name="per_page" value="{{ request('per_page') }}">
+                @endif
                 <input 
                     type="text" 
-                    x-model="searchQuery" 
+                    name="search"
+                    value="{{ request('search') }}"
                     placeholder="Cari produk / kategori..." 
-                    class="w-full pl-8 pr-3 py-1.5 bg-white border border-slate-300 text-xs text-slate-800 focus:outline-none focus:border-blue-500">
+                    class="w-full pl-8 pr-8 py-1.5 bg-white border border-slate-300 text-xs text-slate-800 focus:outline-none focus:border-blue-500">
                 <i class="fa-solid fa-magnifying-glass absolute left-2.5 top-2.5 text-slate-400 text-xs"></i>
-            </div>
+                @if(request('search'))
+                    <a href="{{ request()->fullUrlWithQuery(['search' => null, 'page' => 1]) }}" 
+                       onclick="event.preventDefault(); window.navigateTable(this.getAttribute('href'), this.closest('.table-card-container') || 'table-card-container');"
+                       class="absolute right-2.5 top-2 text-slate-400 hover:text-slate-600 text-xs" title="Reset pencarian">
+                        <i class="fa-solid fa-xmark"></i>
+                    </a>
+                @endif
+            </form>
         </div>
 
         <div class="overflow-x-auto">
@@ -52,9 +65,7 @@
                 </thead>
                 <tbody class="divide-y divide-slate-200/80 text-xs">
                     @forelse($products as $product)
-                        <tr 
-                            x-show="matchesSearch('{{ strtolower($product->name) }}', '{{ strtolower($product->category) }}')" 
-                            class="bg-white hover:bg-slate-50 transition-colors">
+                        <tr class="bg-white hover:bg-slate-50 transition-colors">
                             <td class="py-2.5 px-3.5 text-center">
                                 @if($product->image)
                                     <img src="{{ $product->image }}" alt="{{ $product->name }}" class="w-10 h-10 object-contain rounded border border-slate-200 mx-auto">
@@ -126,14 +137,21 @@
                     @empty
                         <tr>
                             <td colspan="9" class="py-8 text-center text-slate-400">
-                                <i class="fa-solid fa-box-open text-3xl mb-2"></i>
-                                <p class="text-xs">Belum ada data produk tersimpan.</p>
+                                @if(request('search'))
+                                    <i class="fa-solid fa-magnifying-glass text-2xl mb-2 block"></i>
+                                    <p class="text-xs">Tidak ada data produk yang sesuai dengan pencarian "{{ request('search') }}".</p>
+                                @else
+                                    <i class="fa-solid fa-box-open text-3xl mb-2 block"></i>
+                                    <p class="text-xs">Belum ada data produk tersimpan.</p>
+                                @endif
                             </td>
                         </tr>
                     @endforelse
                 </tbody>
             </table>
         </div>
+
+        <x-table-footer :paginator="$products" />
     </div>
 
     <!-- Modal Form (Tambah & Edit Produk) -->
@@ -180,7 +198,7 @@
                                 name="category" 
                                 bind="formData.category" 
                                 :options="array_combine($categories, $categories)" 
-                                placeholder="-- Pilih Kategori --" 
+                                placeholder="Pilih Kategori" 
                             />
                         </div>
                         <div>
@@ -329,10 +347,9 @@
 <script>
     function productMasterData() {
         return {
-            searchQuery: '',
             isFormModalOpen: false,
             isDeleteModalOpen: false,
-            formMode: 'add', // 'add' or 'edit'
+            formMode: 'add',
             formAction: '{{ route("products-master.store") }}',
             deleteAction: '',
             productActiveStates: {
@@ -356,12 +373,6 @@
                 is_trending: false
             },
             targetProduct: {},
-
-            matchesSearch(name, category) {
-                if (!this.searchQuery.trim()) return true;
-                const query = this.searchQuery.toLowerCase();
-                return name.includes(query) || category.includes(query);
-            },
 
             openAddModal() {
                 this.formMode = 'add';

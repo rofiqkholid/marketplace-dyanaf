@@ -18,21 +18,34 @@
     </div>
 
     <!-- Main User Management Table Card -->
-    <div class="bg-white border border-slate-300/80 overflow-hidden">
+    <div id="table-card-container" class="table-card-container relative bg-white border border-slate-300/80 overflow-hidden">
         <div class="p-3 bg-white border-b border-slate-300/80 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
             <div>
                 <h2 class="text-sm font-bold text-slate-800 font-['Outfit']">Daftar Pengguna Marketplace</h2>
             </div>
 
             <!-- Search Input -->
-            <div class="relative w-full sm:w-64">
+            <form method="GET" action="{{ route('users.index') }}" 
+                  onsubmit="event.preventDefault(); window.navigateTable(this.action + '?' + new URLSearchParams(new FormData(this)).toString(), this.closest('.table-card-container') || 'table-card-container');"
+                  class="relative w-full sm:w-64">
+                @if(request('per_page'))
+                    <input type="hidden" name="per_page" value="{{ request('per_page') }}">
+                @endif
                 <input 
                     type="text" 
-                    x-model="searchQuery" 
+                    name="search"
+                    value="{{ request('search') }}"
                     placeholder="Cari nama, email, role..." 
-                    class="w-full pl-8 pr-3 py-1.5 bg-white border border-slate-300 text-xs text-slate-800 focus:outline-none focus:border-blue-500">
+                    class="w-full pl-8 pr-8 py-1.5 bg-white border border-slate-300 text-xs text-slate-800 focus:outline-none focus:border-blue-500">
                 <i class="fa-solid fa-magnifying-glass absolute left-2.5 top-2.5 text-slate-400 text-xs"></i>
-            </div>
+                @if(request('search'))
+                    <a href="{{ request()->fullUrlWithQuery(['search' => null, 'page' => 1]) }}" 
+                       onclick="event.preventDefault(); window.navigateTable(this.getAttribute('href'), this.closest('.table-card-container') || 'table-card-container');"
+                       class="absolute right-2.5 top-2 text-slate-400 hover:text-slate-600 text-xs" title="Reset pencarian">
+                        <i class="fa-solid fa-xmark"></i>
+                    </a>
+                @endif
+            </form>
         </div>
 
         <div class="overflow-x-auto">
@@ -51,9 +64,7 @@
                 </thead>
                 <tbody class="divide-y divide-slate-200/80 text-xs">
                     @forelse($users as $user)
-                        <tr 
-                            x-show="matchesSearch('{{ strtolower($user->name) }}', '{{ strtolower($user->email) }}', '{{ strtolower($user->role) }}')" 
-                            class="bg-white hover:bg-slate-50 transition-colors">
+                        <tr class="bg-white hover:bg-slate-50 transition-colors">
                             <td class="py-2.5 px-3.5 text-center">
                                 @if($user->avatar)
                                     <img src="{{ $user->avatar }}" 
@@ -131,15 +142,22 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="7" class="py-8 text-center text-slate-400">
-                                <i class="fa-solid fa-users-slash text-3xl mb-2"></i>
-                                <p class="text-xs">Belum ada data user tersimpan.</p>
+                            <td colspan="8" class="py-8 text-center text-slate-400">
+                                @if(request('search'))
+                                    <i class="fa-solid fa-magnifying-glass text-2xl mb-2 block"></i>
+                                    <p class="text-xs">Tidak ada data user yang sesuai dengan pencarian "{{ request('search') }}".</p>
+                                @else
+                                    <i class="fa-solid fa-users-slash text-3xl mb-2 block"></i>
+                                    <p class="text-xs">Belum ada data user tersimpan.</p>
+                                @endif
                             </td>
                         </tr>
                     @endforelse
                 </tbody>
             </table>
         </div>
+
+        <x-table-footer :paginator="$users" />
     </div>
 
     <!-- Modal Form (Tambah & Edit User) -->
@@ -197,7 +215,7 @@
                                 name="role" 
                                 bind="formData.role" 
                                 :options="['pengunjung' => 'Pengunjung', 'pemilik' => 'Pemilik']" 
-                                placeholder="-- Pilih Role --" 
+                                placeholder="Pilih Role" 
                             />
                         </div>
                         <div>
@@ -315,7 +333,6 @@
 <script>
     function userData() {
         return {
-            searchQuery: '',
             isFormModalOpen: false,
             isDeleteModalOpen: false,
             formMode: 'add', // 'add' or 'edit'
@@ -330,12 +347,6 @@
                 avatar: ''
             },
             targetUser: {},
-
-            matchesSearch(name, email, role) {
-                if (!this.searchQuery.trim()) return true;
-                const query = this.searchQuery.toLowerCase();
-                return name.includes(query) || email.includes(query) || role.includes(query);
-            },
 
             openAddModal() {
                 this.formMode = 'add';
