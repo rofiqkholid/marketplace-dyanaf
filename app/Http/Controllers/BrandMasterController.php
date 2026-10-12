@@ -47,6 +47,7 @@ class BrandMasterController extends Controller
             'restock_date' => 'nullable|date',
             'packages_json' => 'nullable|string',
             'is_active' => 'nullable|boolean',
+            'is_trending' => 'nullable|boolean',
         ]);
 
         $packages = [];
@@ -67,6 +68,7 @@ class BrandMasterController extends Controller
             'restock_date' => $validated['restock_date'] ?? null,
             'packages' => $packages,
             'is_active' => $request->has('is_active') ? (bool)$request->is_active : true,
+            'is_trending' => $request->has('is_trending') ? (bool)$request->is_trending : false,
         ]);
 
         return redirect()->route('brands-master.index')->with('success', 'Brand baru berhasil ditambahkan!');
@@ -89,6 +91,7 @@ class BrandMasterController extends Controller
             'restock_date' => 'nullable|date',
             'packages_json' => 'nullable|string',
             'is_active' => 'nullable|boolean',
+            'is_trending' => 'nullable|boolean',
         ]);
 
         $packages = $brand->packages ?? [];
@@ -109,6 +112,7 @@ class BrandMasterController extends Controller
             'restock_date' => $validated['restock_date'] ?? null,
             'packages' => $packages,
             'is_active' => $request->has('is_active') ? (bool)$request->is_active : false,
+            'is_trending' => $request->has('is_trending') ? (bool)$request->is_trending : false,
         ]);
 
         return redirect()->route('brands-master.index')->with('success', 'Brand ' . $brand->name . ' berhasil diperbarui!');
@@ -130,7 +134,7 @@ class BrandMasterController extends Controller
     /**
      * Toggle active status.
      */
-    public function toggleActive(Brand $brand)
+    public function toggleActive(Request $request, Brand $brand)
     {
         $this->checkRole();
 
@@ -138,10 +142,36 @@ class BrandMasterController extends Controller
             'is_active' => !$brand->is_active,
         ]);
 
-        return response()->json([
-            'status' => 'success',
-            'is_active' => $brand->is_active,
-            'message' => 'Status aktif brand berhasil diubah.',
+        if ($request->wantsJson() || $request->ajax()) {
+            return response()->json([
+                'status' => 'success',
+                'is_active' => $brand->is_active,
+                'message' => 'Status keaktifan brand ' . $brand->name . ' berhasil diubah!'
+            ]);
+        }
+
+        return redirect()->route('brands-master.index')->with('success', 'Status keaktifan brand berhasil diubah!');
+    }
+
+    /**
+     * Toggle trending status.
+     */
+    public function toggleTrending(Request $request, Brand $brand)
+    {
+        $this->checkRole();
+
+        $brand->update([
+            'is_trending' => !$brand->is_trending,
         ]);
+
+        if ($request->wantsJson() || $request->ajax()) {
+            return response()->json([
+                'status' => 'success',
+                'is_trending' => $brand->is_trending,
+                'message' => 'Status trending brand ' . $brand->name . ' berhasil diubah!'
+            ]);
+        }
+
+        return redirect()->route('brands-master.index')->with('success', 'Status trending brand berhasil diubah!');
     }
 }

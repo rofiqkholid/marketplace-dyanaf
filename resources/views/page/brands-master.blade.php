@@ -47,6 +47,7 @@
                         <th class="py-2.5 px-3.5 w-32 min-w-[110px] text-center">Restok</th>
                         <th class="py-2.5 px-3.5 w-20 min-w-[80px] text-center">Paket</th>
                         <th class="py-2.5 px-3.5 w-24 min-w-[90px] text-center">Status</th>
+                        <th class="py-2.5 px-3.5 w-24 min-w-[90px] text-center">Trending</th>
                         <th class="py-2.5 px-3.5 w-32 min-w-[120px] text-center">Aksi</th>
                     </tr>
                 </thead>
@@ -86,13 +87,24 @@
                                 {{ is_array($brand->packages) ? count($brand->packages) : 0 }}
                             </td>
                             <td class="py-2.5 px-3.5 text-center">
-                                <form action="{{ route('brands-master.toggle-active', $brand->id) }}" method="POST" class="inline-flex items-center justify-center">
-                                    @csrf
-                                    @method('PATCH')
-                                    <button type="submit" title="{{ $brand->is_active ? 'Status: Aktif (Klik untuk nonaktifkan)' : 'Status: Nonaktif (Klik untuk aktifkan)' }}" class="relative inline-flex h-5 w-9 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none {{ $brand->is_active ? 'bg-emerald-500' : 'bg-slate-300' }}">
-                                        <span class="pointer-events-none inline-block h-4 w-4 transform rounded-full bg-white ring-0 transition duration-200 ease-in-out {{ $brand->is_active ? 'translate-x-4' : 'translate-x-0' }}"></span>
-                                    </button>
-                                </form>
+                                <button type="button" 
+                                    @click="toggleActive({{ $brand->id }})" 
+                                    :title="brandActiveStates[{{ $brand->id }}] ? 'Status: Aktif (Klik untuk nonaktifkan)' : 'Status: Nonaktif (Klik untuk aktifkan)'" 
+                                    class="relative inline-flex h-5 w-9 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none"
+                                    :class="brandActiveStates[{{ $brand->id }}] ? 'bg-emerald-500' : 'bg-slate-300'">
+                                    <span class="pointer-events-none inline-block h-4 w-4 transform rounded-full bg-white ring-0 transition duration-200 ease-in-out"
+                                          :class="brandActiveStates[{{ $brand->id }}] ? 'translate-x-4' : 'translate-x-0'"></span>
+                                </button>
+                            </td>
+                            <td class="py-2.5 px-3.5 text-center">
+                                <button type="button" 
+                                    @click="toggleTrending({{ $brand->id }})" 
+                                    :title="brandTrendingStates[{{ $brand->id }}] ? 'Trending: Aktif (Klik untuk matikan)' : 'Trending: Nonaktif (Klik untuk aktifkan)'" 
+                                    class="relative inline-flex h-5 w-9 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none"
+                                    :class="brandTrendingStates[{{ $brand->id }}] ? 'bg-emerald-500' : 'bg-slate-300'">
+                                    <span class="pointer-events-none inline-block h-4 w-4 transform rounded-full bg-white ring-0 transition duration-200 ease-in-out"
+                                          :class="brandTrendingStates[{{ $brand->id }}] ? 'translate-x-4' : 'translate-x-0'"></span>
+                                </button>
                             </td>
                             <td class="py-2.5 px-3.5 text-center">
                                 <div class="flex items-center justify-center space-x-1.5">
@@ -122,7 +134,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="9" class="py-8 text-center text-slate-400">
+                            <td colspan="10" class="py-8 text-center text-slate-400">
                                 <i class="fa-solid fa-tags text-3xl mb-2"></i>
                                 <p class="text-xs">Belum ada data brand tersimpan.</p>
                             </td>
@@ -256,15 +268,27 @@
                         <p class="text-[10px] text-slate-400 mt-0.5">Array JSON berisi paket: title, desc, price, original_price, features.</p>
                     </div>
 
-                    <div class="flex items-center space-x-2 pt-1">
-                        <input 
-                            type="checkbox" 
-                            name="is_active" 
-                            id="is_active" 
-                            value="1" 
-                            x-model="formData.is_active" 
-                            class="w-4 h-4 text-blue-600 border-slate-300 rounded focus:ring-blue-500">
-                        <label for="is_active" class="text-xs font-medium text-slate-700 cursor-pointer">Status Aktif (Tampilkan di marketplace)</label>
+                    <div class="flex flex-col sm:flex-row sm:items-center gap-3 pt-1">
+                        <div class="flex items-center space-x-2">
+                            <input 
+                                type="checkbox" 
+                                name="is_active" 
+                                id="is_active" 
+                                value="1" 
+                                x-model="formData.is_active" 
+                                class="w-4 h-4 text-blue-600 border-slate-300 rounded focus:ring-blue-500">
+                            <label for="is_active" class="text-xs font-medium text-slate-700 cursor-pointer">Status Aktif (Tampilkan di marketplace)</label>
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <input 
+                                type="checkbox" 
+                                name="is_trending" 
+                                id="is_trending" 
+                                value="1" 
+                                x-model="formData.is_trending" 
+                                class="w-4 h-4 text-blue-600 border-slate-300 rounded focus:ring-blue-500">
+                            <label for="is_trending" class="text-xs font-medium text-slate-700 cursor-pointer">Trending (Tampilkan di trending)</label>
+                        </div>
                     </div>
 
                     <div class="pt-3 border-t border-slate-200 flex items-center justify-end space-x-2">
@@ -351,6 +375,16 @@ function brandMasterData() {
         formAction: '{{ route("brands-master.store") }}',
         deleteAction: '',
         targetBrand: { id: null, name: '' },
+        brandActiveStates: {
+            @foreach($brands as $b)
+                {{ $b->id }}: {{ $b->is_active ? 'true' : 'false' }},
+            @endforeach
+        },
+        brandTrendingStates: {
+            @foreach($brands as $b)
+                {{ $b->id }}: {{ $b->is_trending ? 'true' : 'false' }},
+            @endforeach
+        },
         formData: {
             name: '',
             slug: '',
@@ -360,7 +394,8 @@ function brandMasterData() {
             stock: 10,
             restock_date: '',
             packages_json: '[]',
-            is_active: true
+            is_active: true,
+            is_trending: false
         },
 
         matchesSearch(name, category, slug) {
@@ -390,7 +425,8 @@ function brandMasterData() {
                 stock: 10,
                 restock_date: '',
                 packages_json: '[\n  {\n    "title": "Paket 1",\n    "desc": "Deskripsi paket...",\n    "price": 50000,\n    "original_price": 75000,\n    "features": ["Fitur 1", "Fitur 2"]\n  }\n]',
-                is_active: true
+                is_active: true,
+                is_trending: false
             };
             this.isFormModalOpen = true;
         },
@@ -413,7 +449,8 @@ function brandMasterData() {
                 stock: brand.stock,
                 restock_date: dateVal,
                 packages_json: JSON.stringify(brand.packages || [], null, 2),
-                is_active: Boolean(brand.is_active)
+                is_active: Boolean(brand.is_active),
+                is_trending: Boolean(brand.is_trending)
             };
             this.isFormModalOpen = true;
         },
@@ -439,6 +476,58 @@ function brandMasterData() {
 
         closeDeleteModal() {
             this.isDeleteModalOpen = false;
+        },
+
+        async toggleActive(id) {
+            try {
+                const response = await fetch(`/brands-master/${id}/toggle-active`, {
+                    method: 'PATCH',
+                    headers: {
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    }
+                });
+                const data = await response.json();
+                if (data.status === 'success') {
+                    this.brandActiveStates[id] = data.is_active;
+                    window.dispatchEvent(new CustomEvent('notify', {
+                        detail: {
+                            type: 'success',
+                            title: 'Berhasil',
+                            message: data.message || 'Status keaktifan brand berhasil diubah!'
+                        }
+                    }));
+                }
+            } catch (err) {
+                console.error(err);
+            }
+        },
+
+        async toggleTrending(id) {
+            try {
+                const response = await fetch(`/brands-master/${id}/toggle-trending`, {
+                    method: 'PATCH',
+                    headers: {
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    }
+                });
+                const data = await response.json();
+                if (data.status === 'success') {
+                    this.brandTrendingStates[id] = data.is_trending;
+                    window.dispatchEvent(new CustomEvent('notify', {
+                        detail: {
+                            type: 'success',
+                            title: 'Berhasil',
+                            message: data.message || 'Status trending brand berhasil diubah!'
+                        }
+                    }));
+                }
+            } catch (err) {
+                console.error(err);
+            }
         }
     };
 }

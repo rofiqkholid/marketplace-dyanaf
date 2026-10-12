@@ -54,9 +54,11 @@ class ProductMasterController extends Controller
             'description' => 'nullable|string',
             'image' => 'nullable|string|max:1000',
             'is_active' => 'nullable|boolean',
+            'is_trending' => 'nullable|boolean',
         ]);
 
         $validated['is_active'] = $request->has('is_active') ? (bool)$request->is_active : true;
+        $validated['is_trending'] = $request->has('is_trending') ? (bool)$request->is_trending : false;
 
         Product::create($validated);
 
@@ -78,9 +80,11 @@ class ProductMasterController extends Controller
             'description' => 'nullable|string',
             'image' => 'nullable|string|max:1000',
             'is_active' => 'nullable|boolean',
+            'is_trending' => 'nullable|boolean',
         ]);
 
         $validated['is_active'] = $request->has('is_active') ? (bool)$request->is_active : false;
+        $validated['is_trending'] = $request->has('is_trending') ? (bool)$request->is_trending : false;
 
         $product->update($validated);
 
@@ -102,12 +106,40 @@ class ProductMasterController extends Controller
     /**
      * Toggle active status of the specified product.
      */
-    public function toggleActive(Product $product)
+    public function toggleActive(Request $request, Product $product)
     {
         $this->checkRole();
 
         $product->update(['is_active' => !$product->is_active]);
 
+        if ($request->wantsJson() || $request->ajax()) {
+            return response()->json([
+                'status' => 'success',
+                'is_active' => $product->is_active,
+                'message' => 'Status keaktifan produk ' . $product->name . ' berhasil diubah!'
+            ]);
+        }
+
         return redirect()->route('products-master.index')->with('success', 'Status keaktifan produk berhasil diubah!');
+    }
+
+    /**
+     * Toggle trending status of the specified product.
+     */
+    public function toggleTrending(Request $request, Product $product)
+    {
+        $this->checkRole();
+
+        $product->update(['is_trending' => !$product->is_trending]);
+
+        if ($request->wantsJson() || $request->ajax()) {
+            return response()->json([
+                'status' => 'success',
+                'is_trending' => $product->is_trending,
+                'message' => 'Status trending produk ' . $product->name . ' berhasil diubah!'
+            ]);
+        }
+
+        return redirect()->route('products-master.index')->with('success', 'Status trending produk berhasil diubah!');
     }
 }

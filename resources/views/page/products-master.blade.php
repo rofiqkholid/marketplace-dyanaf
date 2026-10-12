@@ -46,6 +46,7 @@
                         <th class="py-2.5 px-3.5 w-32 min-w-[120px] text-right">Harga</th>
                         <th class="py-2.5 px-3.5 w-20 min-w-[80px] text-center">Stok</th>
                         <th class="py-2.5 px-3.5 w-24 min-w-[90px] text-center">Status</th>
+                        <th class="py-2.5 px-3.5 w-24 min-w-[90px] text-center">Trending</th>
                         <th class="py-2.5 px-3.5 w-32 min-w-[120px] text-center">Aksi</th>
                     </tr>
                 </thead>
@@ -79,13 +80,24 @@
                                 {{ $product->stock }}
                             </td>
                             <td class="py-2.5 px-3.5 text-center">
-                                <form action="{{ route('products-master.toggle-active', $product->id) }}" method="POST" class="inline-flex items-center justify-center">
-                                    @csrf
-                                    @method('PATCH')
-                                    <button type="submit" title="{{ $product->is_active ? 'Status: Aktif (Klik untuk nonaktifkan)' : 'Status: Nonaktif (Klik untuk aktifkan)' }}" class="relative inline-flex h-5 w-9 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none {{ $product->is_active ? 'bg-emerald-500' : 'bg-slate-300' }}">
-                                        <span class="pointer-events-none inline-block h-4 w-4 transform rounded-full bg-white ring-0 transition duration-200 ease-in-out {{ $product->is_active ? 'translate-x-4' : 'translate-x-0' }}"></span>
-                                    </button>
-                                </form>
+                                <button type="button" 
+                                    @click="toggleActive({{ $product->id }})" 
+                                    :title="productActiveStates[{{ $product->id }}] ? 'Status: Aktif (Klik untuk nonaktifkan)' : 'Status: Nonaktif (Klik untuk aktifkan)'" 
+                                    class="relative inline-flex h-5 w-9 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none"
+                                    :class="productActiveStates[{{ $product->id }}] ? 'bg-emerald-500' : 'bg-slate-300'">
+                                    <span class="pointer-events-none inline-block h-4 w-4 transform rounded-full bg-white ring-0 transition duration-200 ease-in-out"
+                                          :class="productActiveStates[{{ $product->id }}] ? 'translate-x-4' : 'translate-x-0'"></span>
+                                </button>
+                            </td>
+                            <td class="py-2.5 px-3.5 text-center">
+                                <button type="button" 
+                                    @click="toggleTrending({{ $product->id }})" 
+                                    :title="productTrendingStates[{{ $product->id }}] ? 'Trending: Aktif (Klik untuk matikan)' : 'Trending: Nonaktif (Klik untuk aktifkan)'" 
+                                    class="relative inline-flex h-5 w-9 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none"
+                                    :class="productTrendingStates[{{ $product->id }}] ? 'bg-emerald-500' : 'bg-slate-300'">
+                                    <span class="pointer-events-none inline-block h-4 w-4 transform rounded-full bg-white ring-0 transition duration-200 ease-in-out"
+                                          :class="productTrendingStates[{{ $product->id }}] ? 'translate-x-4' : 'translate-x-0'"></span>
+                                </button>
                             </td>
                             <td class="py-2.5 px-3.5 text-center">
                                 <div class="flex items-center justify-center space-x-1.5">
@@ -113,7 +125,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="8" class="py-8 text-center text-slate-400">
+                            <td colspan="9" class="py-8 text-center text-slate-400">
                                 <i class="fa-solid fa-box-open text-3xl mb-2"></i>
                                 <p class="text-xs">Belum ada data produk tersimpan.</p>
                             </td>
@@ -217,15 +229,27 @@
                             class="w-full px-3 py-2 bg-white border border-slate-300 text-xs text-slate-800 focus:outline-none focus:border-blue-500"></textarea>
                     </div>
 
-                    <div class="flex items-center space-x-2 pt-1">
-                        <input 
-                            type="checkbox" 
-                            name="is_active" 
-                            id="is_active" 
-                            value="1" 
-                            x-model="formData.is_active" 
-                            class="w-4 h-4 text-blue-600 border-slate-300 rounded focus:ring-blue-500">
-                        <label for="is_active" class="text-xs font-medium text-slate-700 cursor-pointer">Status Aktif (Tampilkan di marketplace)</label>
+                    <div class="flex flex-col sm:flex-row sm:items-center gap-3 pt-1">
+                        <div class="flex items-center space-x-2">
+                            <input 
+                                type="checkbox" 
+                                name="is_active" 
+                                id="is_active" 
+                                value="1" 
+                                x-model="formData.is_active" 
+                                class="w-4 h-4 text-blue-600 border-slate-300 rounded focus:ring-blue-500">
+                            <label for="is_active" class="text-xs font-medium text-slate-700 cursor-pointer">Status Aktif (Tampilkan di marketplace)</label>
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <input 
+                                type="checkbox" 
+                                name="is_trending" 
+                                id="is_trending" 
+                                value="1" 
+                                x-model="formData.is_trending" 
+                                class="w-4 h-4 text-blue-600 border-slate-300 rounded focus:ring-blue-500">
+                            <label for="is_trending" class="text-xs font-medium text-slate-700 cursor-pointer">Trending (Tampilkan di trending)</label>
+                        </div>
                     </div>
 
                     <div class="pt-3 border-t border-slate-200 flex items-center justify-end space-x-2">
@@ -311,6 +335,16 @@
             formMode: 'add', // 'add' or 'edit'
             formAction: '{{ route("products-master.store") }}',
             deleteAction: '',
+            productActiveStates: {
+                @foreach($products as $p)
+                    {{ $p->id }}: {{ $p->is_active ? 'true' : 'false' }},
+                @endforeach
+            },
+            productTrendingStates: {
+                @foreach($products as $p)
+                    {{ $p->id }}: {{ $p->is_trending ? 'true' : 'false' }},
+                @endforeach
+            },
             formData: {
                 name: '',
                 category: '',
@@ -318,7 +352,8 @@
                 stock: 10,
                 description: '',
                 image: '',
-                is_active: true
+                is_active: true,
+                is_trending: false
             },
             targetProduct: {},
 
@@ -338,7 +373,8 @@
                     stock: 10,
                     description: '',
                     image: '',
-                    is_active: true
+                    is_active: true,
+                    is_trending: false
                 };
                 this.isFormModalOpen = true;
             },
@@ -353,7 +389,8 @@
                     stock: product.stock !== undefined ? product.stock : 0,
                     description: product.description || '',
                     image: product.image || '',
-                    is_active: product.is_active ? true : false
+                    is_active: product.is_active ? true : false,
+                    is_trending: product.is_trending ? true : false
                 };
                 this.isFormModalOpen = true;
             },
@@ -370,6 +407,58 @@
 
             closeDeleteModal() {
                 this.isDeleteModalOpen = false;
+            },
+
+            async toggleActive(id) {
+                try {
+                    const response = await fetch(`/products-master/${id}/toggle-active`, {
+                        method: 'PATCH',
+                        headers: {
+                            'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                            'Content-Type': 'application/json',
+                            'Accept': 'application/json'
+                        }
+                    });
+                    const data = await response.json();
+                    if (data.status === 'success') {
+                        this.productActiveStates[id] = data.is_active;
+                        window.dispatchEvent(new CustomEvent('notify', {
+                            detail: {
+                                type: 'success',
+                                title: 'Berhasil',
+                                message: data.message || 'Status keaktifan produk berhasil diubah!'
+                            }
+                        }));
+                    }
+                } catch (err) {
+                    console.error(err);
+                }
+            },
+
+            async toggleTrending(id) {
+                try {
+                    const response = await fetch(`/products-master/${id}/toggle-trending`, {
+                        method: 'PATCH',
+                        headers: {
+                            'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                            'Content-Type': 'application/json',
+                            'Accept': 'application/json'
+                        }
+                    });
+                    const data = await response.json();
+                    if (data.status === 'success') {
+                        this.productTrendingStates[id] = data.is_trending;
+                        window.dispatchEvent(new CustomEvent('notify', {
+                            detail: {
+                                type: 'success',
+                                title: 'Berhasil',
+                                message: data.message || 'Status trending produk berhasil diubah!'
+                            }
+                        }));
+                    }
+                } catch (err) {
+                    console.error(err);
+                }
             }
         };
     }

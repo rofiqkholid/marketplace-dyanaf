@@ -90,7 +90,7 @@
         <!-- Fixed Bottom User Info Card in Mobile Drawer -->
         <div class="pt-3 border-t border-slate-300/80 mt-3 shrink-0">
             @auth
-                <div class="flex items-center justify-between px-3 py-2 bg-[#eef2f6] border border-slate-300/70 rounded-none gap-2">
+                <div class="flex items-center justify-between px-3 py-2 bg-[#eef2f6] border border-slate-300/70 rounded-xl gap-2">
                     <div class="flex items-center space-x-3 min-w-0 flex-1">
                         <div class="relative shrink-0">
                             @if(Auth::user()->avatar)
@@ -123,7 +123,7 @@
                     </form>
                 </div>
             @else
-                <div class="flex items-center space-x-3 px-3 py-2 bg-[#eef2f6] border border-slate-300/70 rounded-none">
+                <div class="flex items-center space-x-3 px-3 py-2 bg-[#eef2f6] border border-slate-300/70 rounded-xl">
                     <div class="relative shrink-0">
                         <div class="w-8 h-8 rounded-full bg-slate-200 text-slate-400 border border-slate-300 flex items-center justify-center font-bold text-xs">
                             <i class="fa-solid fa-user"></i>
@@ -197,7 +197,7 @@
         <!-- Fixed Bottom User Info Card (Pinned at Bottom) -->
         <div class="pt-3 border-t border-slate-300/80 mt-3 shrink-0">
             @auth
-                <div class="flex items-center justify-between px-3 py-2 bg-[#eef2f6] border border-slate-300/70 rounded-none gap-2">
+                <div class="flex items-center justify-between px-3 py-2 bg-[#eef2f6] border border-slate-300/70 rounded-xl gap-2">
                     <div class="flex items-center space-x-3 min-w-0 flex-1">
                         <div class="relative shrink-0">
                             @if(Auth::user()->avatar)
@@ -230,7 +230,7 @@
                     </form>
                 </div>
             @else
-                <div class="flex items-center space-x-3 px-3 py-2 bg-[#eef2f6] border border-slate-300/70 rounded-none">
+                <div class="flex items-center space-x-3 px-3 py-2 bg-[#eef2f6] border border-slate-300/70 rounded-xl">
                     <div class="relative shrink-0">
                         <div class="w-8 h-8 rounded-full bg-slate-200 text-slate-400 border border-slate-300 flex items-center justify-center font-bold text-xs">
                             <i class="fa-solid fa-user"></i>

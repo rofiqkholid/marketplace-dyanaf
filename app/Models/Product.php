@@ -17,11 +17,13 @@ class Product extends Model
         'description',
         'image',
         'is_active',
+        'is_trending',
     ];
 
     protected $casts = [
         'price' => 'decimal:2',
         'stock' => 'integer',
         'is_active' => 'boolean',
+        'is_trending' => 'boolean',
     ];
 }

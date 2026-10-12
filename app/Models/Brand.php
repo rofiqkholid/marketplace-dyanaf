@@ -19,11 +19,13 @@ class Brand extends Model
         'stock',
         'restock_date',
         'is_active',
+        'is_trending',
     ];
 
     protected $casts = [
         'packages' => 'array',
         'restock_date' => 'date',
         'is_active' => 'boolean',
+        'is_trending' => 'boolean',
     ];
 }
