@@ -239,15 +239,15 @@
             </div>
 
             <!-- Dot separator on sm screens -->
-            <span class="hidden sm:inline-block text-slate-300 font-bold text-2xl">•</span>
+            <span class="hidden sm:inline-block text-slate-300 font-bold text-base select-none">•</span>
 
             <!-- Instant Delivery & 24/7 Support -->
-            <div class="flex items-center space-x-3 sm:space-x-5 font-semibold text-slate-800 text-sm sm:text-base">
+            <div class="flex items-center space-x-4 sm:space-x-6 font-semibold text-slate-800 text-sm sm:text-base">
                 <div class="flex items-center space-x-2">
                     <i class="fa-solid fa-bolt text-blue-600 text-lg sm:text-xl"></i>
                     <span>Instan</span>
                 </div>
-                <span class="text-slate-300 font-bold">•</span>
+                <span class="text-slate-300 font-bold text-base select-none">•</span>
                 <div class="flex items-center space-x-2">
                     <i class="fa-solid fa-headset text-emerald-600 text-lg sm:text-xl"></i>
                     <span>Support 24/7</span>
@@ -255,65 +255,76 @@
             </div>
         </div>
 
-        <!-- Section Header: Developer & Founder Portfolio (Centered) -->
+        <!-- Section Header: Developer Portfolio (Centered) -->
         <div class="text-center mb-5">
             <h3 class="text-base sm:text-lg font-bold text-slate-900 font-['Outfit'] tracking-tight">
-                Meet the Founder & Developer
+                Meet the Developer
             </h3>
             <p class="text-xs text-slate-500 mt-1">
-                Portofolio resmi pengembang dan arsitek sistem platform <span class="font-semibold text-slate-700">Dyanaf Marketplace</span>.
+                Portofolio resmi pengembang dan arsitek sistem platform <span class="font-semibold text-slate-700">Dyanaf Creative</span>.
             </p>
         </div>
 
         <!-- Portfolio & Profile Section: Rofiq Kholid (Layout Rapi, Terstruktur & Menarik) -->
-        <div class="py-4 px-3 sm:px-4 max-w-4xl mx-auto">
+        <div class="py-6 sm:py-8 px-3 sm:px-4 max-w-4xl mx-auto">
             <div class="grid grid-cols-1 md:grid-cols-12 gap-7 md:gap-8 items-center">
                 
                 <!-- Sisi Kiri: Profil, Info Singkat & Tombol Tautan -->
-                <div class="md:col-span-6 flex flex-col items-center md:items-start text-center md:text-left space-y-3.5">
-                    <div class="flex flex-col sm:flex-row items-center sm:space-x-3.5 space-y-2.5 sm:space-y-0 text-center sm:text-left">
+                <div class="md:col-span-6 flex flex-col items-center md:items-start text-center md:text-left space-y-5">
+                    <div class="flex flex-col sm:flex-row items-center gap-3 sm:gap-4.5 text-center sm:text-left">
                         <!-- Silhouette Avatar Bulat -->
-                        <div class="w-14 h-14 rounded-full bg-white border border-slate-300 text-slate-400 flex items-center justify-center shrink-0 shadow-sm mx-auto sm:mx-0">
+                        <div class="w-14 h-14 rounded-full bg-white border border-slate-300 text-slate-400 flex items-center justify-center shrink-0 mx-auto sm:mx-0">
                             <i class="fa-solid fa-user text-2xl text-slate-400"></i>
                         </div>
                         <div>
                             <h4 class="text-lg sm:text-xl font-bold text-slate-900 font-['Outfit'] leading-tight">Rofiq Kholid</h4>
-                            <p class="text-xs text-slate-500 font-medium mt-1">Software Engineer • Cybersecurity Enthusiast • DevOps</p>
+                            <p class="text-xs text-slate-500 font-medium mt-1.5">Software Engineer • Cybersecurity Enthusiast • DevOps</p>
                         </div>
                     </div>
 
                     <!-- Ringkasan Bio -->
-                    <p class="text-xs sm:text-sm text-slate-600 leading-relaxed max-w-md sm:max-w-none">
+                    <p class="text-xs sm:text-sm text-slate-600 leading-relaxed max-w-md sm:max-w-none pt-1">
                         Building responsive, high-performance, secure, and user-friendly web systems powered by modern technologies.
                     </p>
 
-                    <!-- Tombol Link Sosial & Portfolio Resmi -->
-                    <div class="flex flex-wrap items-center justify-center md:justify-start gap-2 pt-1 w-full sm:w-auto">
+                    <!-- Tombol Link Sosial & Portfolio Resmi (Icon Only) -->
+                    <div class="flex flex-wrap items-center justify-center md:justify-start gap-2 pt-2 w-full sm:w-auto">
                         <a href="https://rofiqkholid.dyanaf.com" 
                            target="_blank" 
                            rel="noopener noreferrer"
-                           class="inline-flex items-center justify-center space-x-1.5 px-3 py-1.5 bg-white text-slate-800 border border-slate-300 text-xs font-semibold rounded-none shadow-none">
-                            <i class="fa-solid fa-globe text-xs"></i>
-                            <span>rofiqkholid.Dyanaf.com</span>
-                            <i class="fa-solid fa-arrow-up-right-from-square text-[9px] ml-0.5"></i>
+                           title="Website: rofiqkholid.Dyanaf.com"
+                           class="inline-flex items-center justify-center w-8 h-8 bg-white text-slate-700 hover:text-blue-600 border border-slate-300 rounded-none transition-colors">
+                            <i class="fa-solid fa-link text-xs"></i>
+                        </a>
+
+                        <a href="https://github.com/rofiqkholid" 
+                           target="_blank" 
+                           rel="noopener noreferrer"
+                           title="GitHub: rofiqkholid"
+                           class="inline-flex items-center justify-center w-8 h-8 bg-white text-slate-700 hover:text-black border border-slate-300 rounded-none transition-colors">
+                            <i class="fa-brands fa-github text-sm"></i>
                         </a>
 
                         <a href="https://www.linkedin.com/in/rofiq-kholid/" 
                            target="_blank" 
                            rel="noopener noreferrer"
-                           title="LinkedIn Rofiq Kholid"
-                           class="inline-flex items-center justify-center space-x-1.5 px-3 py-1.5 bg-white text-slate-800 border border-slate-300 text-xs font-semibold rounded-none shadow-none">
-                            <i class="fa-brands fa-linkedin text-blue-600 text-sm"></i>
-                            <span>LinkedIn</span>
+                           title="LinkedIn: Rofiq Kholid"
+                           class="inline-flex items-center justify-center w-8 h-8 bg-white text-slate-700 hover:text-[#0A66C2] border border-slate-300 rounded-none transition-colors">
+                            <i class="fa-brands fa-linkedin text-sm"></i>
                         </a>
 
                         <a href="https://instagram.com/dhenrofiq" 
                            target="_blank" 
                            rel="noopener noreferrer"
-                           title="Instagram @dhenrofiq"
-                           class="inline-flex items-center justify-center space-x-1.5 px-3 py-1.5 bg-white text-slate-800 border border-slate-300 text-xs font-semibold rounded-none shadow-none">
-                            <i class="fa-brands fa-instagram text-rose-500 text-sm"></i>
-                            <span>@dhenrofiq</span>
+                           title="Instagram: @dhenrofiq"
+                           class="inline-flex items-center justify-center w-8 h-8 bg-white text-slate-700 hover:text-pink-600 border border-slate-300 rounded-none transition-colors">
+                            <i class="fa-brands fa-instagram text-sm"></i>
+                        </a>
+
+                        <a href="mailto:kholidrofiq@gmail.com" 
+                           title="Email: kholidrofiq@gmail.com"
+                           class="inline-flex items-center justify-center w-8 h-8 bg-white text-slate-700 hover:text-emerald-600 border border-slate-300 rounded-none transition-colors">
+                            <i class="fa-solid fa-envelope text-xs"></i>
                         </a>
                     </div>
                 </div>
@@ -356,7 +367,7 @@
                 Pertanyaan Yang Sering Diajukan
             </h3>
             <p class="text-xs text-slate-500 mt-1">
-                Jawaban seputar layanan, akun premium, pengerjaan tugas, dan keamanan transaksi di Dyanaf Marketplace.
+                Jawaban seputar layanan, akun premium, pengerjaan tugas, dan keamanan transaksi di Dyanaf Creative.
             </p>
         </div>
 
@@ -369,7 +380,7 @@
                         <button type="button" 
                                 @click="activeFaq = (activeFaq === 1 ? null : 1)" 
                                 class="w-full py-3.5 px-4 flex items-center justify-between text-left cursor-pointer transition-colors hover:bg-slate-50/80">
-                            <span class="text-xs sm:text-sm font-bold text-slate-900">Dyanaf Marketplace itu apa?</span>
+                            <span class="text-xs sm:text-sm font-bold text-slate-900">Dyanaf Creative itu apa?</span>
                             <i class="fa-solid fa-chevron-down text-xs text-slate-400 transition-transform duration-200 shrink-0 ml-3"
                                :class="activeFaq === 1 ? 'rotate-180 text-blue-600' : ''"></i>
                         </button>
@@ -377,7 +388,7 @@
                              x-collapse 
                              x-cloak 
                              class="px-4 pb-3.5 pt-1 text-xs text-slate-600 leading-relaxed border-t border-slate-100 bg-slate-50/40">
-                            Dyanaf Marketplace adalah platform penyedia layanan digital kreatif, software dan tools AI premium (Netflix, ChatGPT, Canva, Spotify, dll.), jasa pembuatan web responsif, hingga bantuan pengerjaan tugas akademik terpercaya dengan proses cepat.
+                            Dyanaf Creative adalah platform kreatif terpadu yang menyediakan aneka gift & kado spesial (bouquet bunga/hadiah, kartu ucapan custom), layanan digital & tools kreatif premium (Netflix, ChatGPT, Canva, Spotify), pembuatan website, hingga bantuan pengerjaan tugas terpercaya.
                         </div>
                     </div>
 
@@ -386,7 +397,7 @@
                         <button type="button" 
                                 @click="activeFaq = (activeFaq === 2 ? null : 2)" 
                                 class="w-full py-3.5 px-4 flex items-center justify-between text-left cursor-pointer transition-colors hover:bg-slate-50/80">
-                            <span class="text-xs sm:text-sm font-bold text-slate-900">Apakah layanan dan akun ini aman & legal?</span>
+                            <span class="text-xs sm:text-sm font-bold text-slate-900">Apakah layanan dan akun ini aman digunakan?</span>
                             <i class="fa-solid fa-chevron-down text-xs text-slate-400 transition-transform duration-200 shrink-0 ml-3"
                                :class="activeFaq === 2 ? 'rotate-180 text-blue-600' : ''"></i>
                         </button>
@@ -466,15 +477,27 @@
                         </div>
                     </div>
 
-                    <!-- Bottom Note Box -->
-                    <div class="bg-slate-50 border border-slate-300/80 p-4 rounded-none text-left">
-                        <h4 class="text-xs font-bold text-slate-900">Catatan</h4>
-                        <p class="text-xs text-slate-600 mt-1 leading-relaxed">
-                            Dyanaf Marketplace dibuat untuk akses layanan digital yang rapi, simpel, legal, dan masuk akal. Gunakan sesuai kebutuhan dan aturan yang berlaku.
-                        </p>
-                    </div>
+
 
                 </div>
+        </div>
+
+        <!-- Thank You Banner Section: Dyanaf Creative -->
+        <div class="mt-10 pt-8 pb-3 border-t border-slate-200/90 text-center max-w-2xl mx-auto px-4">
+            <div class="inline-flex items-center justify-center w-12 h-12 rounded-full bg-pink-50 border border-pink-200/80 text-pink-500 mb-3.5">
+                <i class="fa-solid fa-heart text-lg text-pink-500"></i>
+            </div>
+            <h4 class="text-base sm:text-lg font-bold text-slate-900 font-['Outfit'] tracking-tight">
+                Terima Kasih Telah Mengunjungi Dyanaf Creative
+            </h4>
+            <p class="text-xs sm:text-sm text-slate-600 mt-2 leading-relaxed">
+                Kami siap menemani setiap momen spesial Anda—mulai dari kreasi bouquet dan gift, hingga aneka layanan kreatif dan kebutuhan digital pilihan. Senang bisa menjadi bagian dari hari Anda!
+            </p>
+            <div class="mt-4 flex items-center justify-center space-x-2 text-xs font-semibold text-slate-500">
+                <span>Handcrafted & Curated with care</span>
+                <span>•</span>
+                <span class="text-pink-600 font-bold">Dyanaf Creative</span>
+            </div>
         </div>
 
     </div>
