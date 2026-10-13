@@ -229,27 +229,27 @@
             </a>
         </div>
 
-        <!-- Full Width Rating & Trust Strip (Background Putih Ujung ke Ujung Tanpa Card) -->
-        <div class="bg-white border-y border-slate-300/80 -mx-4 md:-mx-6 my-6 sm:my-8 py-5 sm:py-7 px-4 sm:px-6 flex flex-col sm:flex-row items-center justify-center gap-3.5 sm:gap-x-8 md:gap-x-12 text-sm sm:text-base text-slate-700">
+        <!-- Full Width Rating & Trust Strip -->
+        <div class="bg-white border-y border-slate-300/80 -mx-4 sm:mx-0 my-6 sm:my-8 py-5 sm:py-6 px-4 sm:px-6 flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-6 md:gap-8 text-sm text-slate-700">
             <!-- Rating Information -->
-            <div class="flex items-center justify-center space-x-2.5 sm:space-x-3 font-medium">
-                <i class="fa-solid fa-star text-amber-400 text-xl sm:text-2xl shrink-0"></i>
-                <span class="text-slate-900 font-extrabold text-base sm:text-lg">4.9/5</span>
+            <div class="flex items-center space-x-2.5 font-medium">
+                <i class="fa-solid fa-star text-amber-400 text-lg sm:text-xl shrink-0"></i>
+                <span class="text-slate-900 font-extrabold text-base">4.9/5</span>
                 <span class="text-slate-500 text-xs sm:text-sm">dari 250+ pengguna</span>
             </div>
 
             <!-- Dot separator on sm screens -->
-            <span class="hidden sm:inline-block text-slate-300 font-bold text-base select-none">•</span>
+            <span class="hidden sm:inline-block text-slate-300 font-bold text-sm select-none">•</span>
 
             <!-- Instant Delivery & 24/7 Support -->
-            <div class="flex items-center justify-center space-x-4 sm:space-x-6 font-semibold text-slate-800 text-xs sm:text-sm">
-                <div class="flex items-center space-x-1.5 sm:space-x-2">
-                    <i class="fa-solid fa-bolt text-blue-600 text-sm sm:text-base"></i>
+            <div class="flex items-center space-x-4 sm:space-x-6 font-semibold text-slate-800 text-xs sm:text-sm">
+                <div class="flex items-center space-x-1.5">
+                    <i class="fa-solid fa-bolt text-blue-600 text-sm"></i>
                     <span>Instan</span>
                 </div>
                 <span class="text-slate-300 font-bold text-sm select-none">•</span>
-                <div class="flex items-center space-x-1.5 sm:space-x-2">
-                    <i class="fa-solid fa-headset text-emerald-600 text-sm sm:text-base"></i>
+                <div class="flex items-center space-x-1.5">
+                    <i class="fa-solid fa-headset text-emerald-600 text-sm"></i>
                     <span>Support 24/7</span>
                 </div>
             </div>
