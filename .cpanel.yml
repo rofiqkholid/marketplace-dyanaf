@@ -1,3 +1,4 @@
+---
 deployment:
   tasks:
     - export DEPLOYPATH=/home/dyanafid/public_html/marketplace.dyanaf.id
