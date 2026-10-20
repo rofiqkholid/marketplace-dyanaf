@@ -62,6 +62,41 @@ Route::get('/brand/{slug}', function ($slug) {
     return view('page.brand-detail', compact('brand', 'slug'));
 })->name('brand.detail');
 
+// Dynamic Product Details Route
+Route::get('/product/{product}', function (\App\Models\Product $product) {
+    if (!$product->is_active) {
+        abort(404);
+    }
+
+    $originalPrices = [
+        'Makalah (Tanpa Materi)' => 140000,
+        'Makalah (Ada Materi)' => 98000,
+        'Jurnal Ilmiah' => 182000,
+        'CV Kreatif' => 35000,
+        'CV ATS-Friendly' => 84000,
+        'Surat Lamaran Kerja' => 28000,
+        'Gabung & Rapikan PDF' => 14000,
+        'Website Landing Page' => 2000000,
+        'Web Operasional & POS' => 10000000,
+        'Desain Grafis & Promo' => 140000,
+        'Data Entry & Spreadsheet' => 210000,
+        'Jasa Ketik Word' => 140000,
+        'Jasa Excel & Analisis Data' => 182000,
+    ];
+    $originalPrice = $originalPrices[$product->name] ?? null;
+
+    $relatedProducts = \App\Models\Product::where('is_active', true)
+        ->where('id', '!=', $product->id)
+        ->where(function($q) use ($product) {
+            $q->where('category', $product->category)
+              ->orWhere('is_trending', true);
+        })
+        ->take(4)
+        ->get();
+
+    return view('page.product-detail', compact('product', 'originalPrice', 'relatedProducts'));
+})->name('product.detail');
+
 // Google OAuth SSO Routes
 Route::get('/auth/google', [GoogleController::class, 'redirectToGoogle'])->name('auth.google');
 Route::get('/auth/google/callback', [GoogleController::class, 'handleGoogleCallback']);

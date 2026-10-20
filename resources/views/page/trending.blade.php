@@ -97,33 +97,36 @@
                         @php
                             $originalPrice = $originalPrices[$product->name] ?? null;
                         @endphp
-                        <div class="group relative bg-white hover:bg-slate-50 border border-slate-300/80 p-3 transition-colors flex flex-col justify-between overflow-hidden">
+                        <div class="group relative bg-white hover:bg-slate-50 border border-slate-300/80 p-3 transition-colors flex flex-col justify-between overflow-hidden cursor-pointer">
+                            <!-- Overlay link to product detail -->
+                            <a href="{{ route('product.detail', $product->id) }}" class="absolute inset-0 z-0" aria-label="{{ $product->name }}"></a>
+
                             <div>
                                 <div class="h-40 bg-[#eef2f6] border border-slate-300/70 flex flex-col items-center justify-center text-slate-400 mb-3 overflow-hidden relative">
                                     @if($product->image)
-                                        <img src="{{ $product->image }}" alt="{{ $product->name }}" class="w-full h-full object-cover">
+                                        <img src="{{ $product->image }}" alt="{{ $product->name }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
                                     @else
                                         <i class="fa-regular fa-image text-3xl mb-1"></i>
                                         <span class="text-[11px] font-medium text-slate-400">No Image</span>
                                     @endif
 
                                     @if($product->category)
-                                        <span class="absolute top-2 left-2 px-2 py-0.5 bg-slate-900/80 text-white text-[10px] font-medium">
+                                        <span class="absolute top-2 left-2 px-2 py-0.5 bg-slate-900/80 text-white text-[10px] font-medium pointer-events-none z-10">
                                             {{ $product->category }}
                                         </span>
                                     @endif
 
-                                    <span class="absolute top-2 right-2 px-2 py-0.5 bg-rose-600 text-white text-[10px] font-bold rounded-none shadow-none">
+                                    <span class="absolute top-2 right-2 px-2 py-0.5 bg-rose-600 text-white text-[10px] font-bold rounded-none shadow-none pointer-events-none z-10">
                                         <i class="fa-solid fa-fire text-[9px] mr-1"></i> TRENDING
                                     </span>
                                 </div>
                                 <div>
-                                    <h3 class="text-sm font-bold text-slate-900 leading-snug">{{ $product->name }}</h3>
+                                    <h3 class="text-sm font-bold text-slate-900 group-hover:text-blue-600 transition-colors leading-snug">{{ $product->name }}</h3>
                                     <p class="text-xs text-slate-600 mt-1 line-clamp-2 leading-relaxed">{{ $product->description }}</p>
                                 </div>
                             </div>
 
-                            <div class="mt-3 pt-3 border-t border-slate-300/70 flex items-end justify-between gap-2">
+                            <div class="mt-3 pt-3 border-t border-slate-300/70 flex items-end justify-between gap-2 relative z-10">
                                 <div>
                                     @if($originalPrice && $originalPrice > $product->price)
                                         <span class="text-[11px] text-slate-400 line-through block leading-none mb-1">
@@ -132,7 +135,7 @@
                                     @else
                                         <span class="text-[10px] text-slate-500 block font-medium leading-none mb-1">Harga</span>
                                     @endif
-                                    <span class="text-sm font-bold text-[#1e293b] leading-none">
+                                    <span class="text-sm font-bold text-[#1e293b] leading-none group-hover:text-blue-600 transition-colors">
                                         Rp {{ number_format($product->price, 0, ',', '.') }}
                                     </span>
                                 </div>
