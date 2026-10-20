@@ -99,7 +99,7 @@
                         @endphp
                         <div class="group relative bg-white hover:bg-slate-50 border border-slate-300/80 p-3 transition-colors flex flex-col justify-between overflow-hidden cursor-pointer">
                             <!-- Overlay link to product detail -->
-                            <a href="{{ route('product.detail', $product->id) }}" class="absolute inset-0 z-0" aria-label="{{ $product->name }}"></a>
+                            <a href="{{ route('product.detail', $product) }}" class="absolute inset-0 z-0" aria-label="{{ $product->name }}"></a>
 
                             <div>
                                 <div class="h-40 bg-[#eef2f6] border border-slate-300/70 flex flex-col items-center justify-center text-slate-400 mb-3 overflow-hidden relative">
