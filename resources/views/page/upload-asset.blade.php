@@ -124,11 +124,13 @@
                             <td class="py-2.5 px-3.5">
                                 <div class="space-y-1">
                                     @if($asset->file_path)
-                                        <div class="flex items-center space-x-1.5">
+                                        <div class="flex items-center space-x-1.5" x-data="{ downloading: false }">
                                             <a href="{{ route('download-asset.file', $asset) }}" 
-                                               class="text-blue-600 hover:text-blue-800 font-medium inline-flex items-center space-x-1 hover:underline">
-                                                <i class="fa-solid fa-download text-[10px]"></i>
-                                                <span>Download {{ strtoupper($ext) }}</span>
+                                               @click="downloading = true; setTimeout(() => downloading = false, 3500)"
+                                               class="text-blue-600 hover:text-blue-800 font-medium inline-flex items-center space-x-1 hover:underline"
+                                               :class="downloading ? 'opacity-75 pointer-events-none' : ''">
+                                                <i class="fa-solid" :class="downloading ? 'fa-circle-notch fa-spin text-[10px]' : 'fa-download text-[10px]'"></i>
+                                                <span x-text="downloading ? 'Mengunduh...' : 'Download {{ strtoupper($ext) }}'"></span>
                                             </a>
                                             @if($asset->file_size)
                                                 <span class="text-[10px] text-slate-400">({{ number_format($asset->file_size / 1024, 0) }} KB)</span>
