@@ -415,12 +415,24 @@ class BrandSeeder extends Seeder
             ],
         ];
 
-        foreach ($brands as $brand) {
-            // Update detail paket, nama, logo, deskripsi tanpa menimpa stok yang diinput manual dari master
-            Brand::updateOrCreate(
-                ['slug' => $brand['slug']],
-                $brand
-            );
+        foreach ($brands as $brandData) {
+            $existing = Brand::where('slug', $brandData['slug'])->first();
+
+            if ($existing) {
+                // Jika brand sudah ada: update informasi paket, nama, deskripsi, logo tanpa menyentuh stok & restock_date
+                $existing->update([
+                    'name' => $brandData['name'],
+                    'category' => $brandData['category'],
+                    'logo' => $brandData['logo'],
+                    'description' => $brandData['description'],
+                    'packages' => $brandData['packages'],
+                    'is_active' => $brandData['is_active'] ?? true,
+                ]);
+            } else {
+                // Jika brand baru pertama kali dibuat: isi dengan stok default 0
+                $brandData['stock'] = 0;
+                Brand::create($brandData);
+            }
         }
     }
 }
