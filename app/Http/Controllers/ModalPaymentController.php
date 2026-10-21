@@ -167,12 +167,6 @@ class ModalPaymentController extends Controller
             ]);
 
         } catch (\Throwable $e) {
-            Log::error('ModalPayment Charge Error: ' . $e->getMessage(), [
-                'trace' => $e->getTraceAsString(),
-                'product_id' => $product->id,
-                'method' => $paymentMethod,
-            ]);
-
             return response()->json([
                 'success' => false,
                 'message' => 'Gagal memproses pembayaran via ' . strtoupper($paymentMethod) . ': ' . $e->getMessage(),
@@ -265,8 +259,6 @@ class ModalPaymentController extends Controller
                     if ($user) {
                         $pointsToAdd = ($targetOrder->item_type ?? 'product') === 'brand' ? 3 : 5;
                         $user->increment('dyanaf_points', $pointsToAdd);
-
-                        Log::info("Dyanaf Points Awarded: +{$pointsToAdd} points to user {$user->email} for order {$orderNumber}");
 
                         if ($order) {
                             $order->points_awarded = true;

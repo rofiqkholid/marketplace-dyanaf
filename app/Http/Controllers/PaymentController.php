@@ -101,11 +101,6 @@ class PaymentController extends Controller
                 'order_number' => $order->order_number,
             ]);
         } catch (\Throwable $e) {
-            Log::error('Midtrans Snap Error: ' . $e->getMessage(), [
-                'order_id' => $order->order_number,
-                'trace' => $e->getTraceAsString(),
-            ]);
-
             return response()->json([
                 'success' => false,
                 'message' => 'Gagal memproses pembayaran ke Midtrans: ' . $e->getMessage(),
@@ -173,8 +168,6 @@ class PaymentController extends Controller
                 $user->increment('dyanaf_points', $pointsToAdd);
                 $order->points_awarded = true;
                 $order->save();
-
-                Log::info("Webhook: Dyanaf Points Awarded +{$pointsToAdd} to {$user->email} for order {$orderNumber}");
             }
         }
 
