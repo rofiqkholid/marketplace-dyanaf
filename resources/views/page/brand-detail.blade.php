@@ -60,15 +60,15 @@
                 <div class="pt-2 flex flex-wrap items-center justify-center sm:justify-start gap-x-4 gap-y-1.5 text-xs text-slate-700 leading-none">
                     <!-- Dyanaf Point Badge -->
                     @auth
-                        <div class="inline-flex items-center gap-1.5 px-2 py-0.5 bg-gradient-to-r from-purple-50 via-fuchsia-50 to-rose-50 border border-fuchsia-200/80 rounded-full text-[11px] font-medium text-purple-900" title="Dapatkan 3 Dyanaf Point setelah transaksi berhasil">
-                            <span class="inline-flex items-center justify-center w-3.5 h-3.5 rounded-full bg-gradient-to-r from-purple-600 to-rose-500 text-white text-[8px]">
+                        <div class="inline-flex items-center gap-2 px-3 py-1 bg-gradient-to-r from-purple-50 via-fuchsia-50 to-rose-50 border border-fuchsia-200/80 rounded-full text-xs font-medium text-purple-900 shadow-xs" title="Dapatkan 3 Dyanaf Point setelah transaksi berhasil">
+                            <span class="inline-flex items-center justify-center w-4 h-4 rounded-full bg-gradient-to-r from-purple-600 to-rose-500 text-white text-[9px] shadow-xs">
                                 <i class="fa-solid fa-bolt text-amber-300"></i>
                             </span>
                             <span>Dapat <strong class="font-bold text-fuchsia-700">+3</strong> Dyanaf Point</span>
                         </div>
                     @else
-                        <a href="{{ route('auth.google') }}" class="inline-flex items-center gap-1.5 px-2 py-0.5 bg-slate-50 hover:bg-purple-50/60 border border-slate-200 hover:border-fuchsia-200 rounded-full text-[11px] text-slate-600 hover:text-purple-700 transition-colors group cursor-pointer" title="Login dengan Google untuk mendapatkan 3 Dyanaf Point">
-                            <span class="inline-flex items-center justify-center w-3.5 h-3.5 rounded-full bg-slate-300 group-hover:bg-gradient-to-r group-hover:from-purple-600 group-hover:to-rose-500 text-white text-[8px] transition-all">
+                        <a href="{{ route('auth.google') }}" class="inline-flex items-center gap-2 px-3 py-1 bg-slate-50 hover:bg-purple-50/60 border border-slate-200 hover:border-fuchsia-200 rounded-full text-xs text-slate-600 hover:text-purple-700 transition-colors group cursor-pointer shadow-xs" title="Login dengan Google untuk mendapatkan 3 Dyanaf Point">
+                            <span class="inline-flex items-center justify-center w-4 h-4 rounded-full bg-slate-300 group-hover:bg-gradient-to-r group-hover:from-purple-600 group-hover:to-rose-500 text-white text-[9px] transition-all">
                                 <i class="fa-solid fa-bolt text-white group-hover:text-amber-300"></i>
                             </span>
                             <span>Login untuk <strong class="font-semibold text-slate-800 group-hover:text-fuchsia-700">+3 Point</strong></span>
@@ -150,15 +150,7 @@
 
                         @if($brand->stock > 0)
                             <button type="button"
-                                    @click="window.dispatchEvent(new CustomEvent('open-payment-modal', {
-                                        detail: {
-                                            itemName: '{{ addslashes($brand['name']) }}',
-                                            itemCategory: '{{ addslashes($brand['category'] ?? 'Langganan Digital') }}',
-                                            packageTitle: '{{ addslashes($package['title']) }}',
-                                            totalAmount: {{ (int) $package['price'] }},
-                                            chargeUrl: '{{ route('payment.modal.charge-brand', $brand) }}'
-                                        }
-                                    }))"
+                                    @click="buyPackage({{ json_encode($package) }})"
                                     title="Beli Paket {{ $package['title'] }} via Midtrans"
                                     class="text-blue-600 hover:text-blue-700 text-lg transition-colors p-1 cursor-pointer">
                                 <i class="fa-solid fa-cart-shopping"></i>

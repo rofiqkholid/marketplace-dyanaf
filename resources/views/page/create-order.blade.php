@@ -48,7 +48,7 @@
 @endphp
 
 <!-- Main Order Management Table Card -->
-    <div id="table-card-container" class="table-card-container relative bg-white border border-slate-300/80 overflow-hidden">
+    <div id="table-card-container" class="table-card-container relative bg-white border border-slate-300/80">
         <div class="p-3 bg-white border-b border-slate-300/80 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
             <div>
                 <h2 class="text-sm font-bold text-slate-800 font-['Outfit']">Daftar Order Pelanggan</h2>
@@ -96,7 +96,7 @@
                 </thead>
                 <tbody class="divide-y divide-slate-200/80 text-xs whitespace-nowrap">
                     @forelse($orders as $order)
-                        <tr class="bg-white hover:bg-slate-50 transition-colors relative">
+                        <tr class="bg-white hover:bg-slate-50 transition-colors">
                             
                             <td class="py-2.5 px-3.5 font-mono font-bold text-blue-600 whitespace-nowrap">
                                 <a href="{{ route('tracking-order', ['order_number' => $order->order_number]) }}" target="_blank" class="hover:underline" title="Lihat di Tracking">
@@ -135,12 +135,67 @@
                             </td>
 
                             <td class="py-2.5 px-3.5 text-center whitespace-nowrap">
-                                <div class="inline-block w-28 text-left relative z-20">
-                                    <x-select 
-                                        :options="$tableStatusOptions" 
-                                        :selected="$order->status" 
-                                        @change="updateOrderStatus({{ $order->id }}, $event.detail)" 
-                                    />
+                                <div class="inline-block w-28 text-left relative"
+                                     x-data="{
+                                         open: false,
+                                         dropUp: {{ $loop->iteration > max(1, count($orders) - 3) ? 'true' : 'false' }},
+                                         currentStatus: '{{ $order->status }}',
+                                         statusLabels: {
+                                             'pending': 'Pending',
+                                             'processing': 'Diproses',
+                                             'completed': 'Selesai',
+                                             'cancelled': 'Dibatalkan'
+                                         },
+                                         statusColors: {
+                                             'pending': 'border-amber-300 bg-amber-50 text-amber-700',
+                                             'processing': 'border-blue-300 bg-blue-50 text-blue-700',
+                                             'completed': 'border-emerald-300 bg-emerald-50 text-emerald-700',
+                                             'cancelled': 'border-rose-300 bg-rose-50 text-rose-700'
+                                         },
+                                         toggleDropdown() {
+                                             this.open = !this.open;
+                                         },
+                                         selectStatus(val) {
+                                             this.currentStatus = val;
+                                             this.open = false;
+                                             updateOrderStatus({{ $order->id }}, val);
+                                         }
+                                     }"
+                                     @click.outside="open = false"
+                                     :class="open ? 'z-50' : 'z-10'">
+                                    
+                                    <!-- Trigger Button -->
+                                    <button type="button" 
+                                            @click="toggleDropdown()" 
+                                            class="w-full flex items-center justify-between px-2.5 py-1.5 text-xs font-semibold border transition-colors cursor-pointer"
+                                            :class="statusColors[currentStatus] || 'border-slate-300 bg-slate-50 text-slate-800'">
+                                        <span x-text="statusLabels[currentStatus] || currentStatus"></span>
+                                        <i class="fa-solid fa-chevron-down text-[9px] transition-transform duration-200"
+                                           :class="open ? (dropUp ? 'rotate-0' : 'rotate-180') : (dropUp ? 'rotate-180' : '')"></i>
+                                    </button>
+
+                                    <!-- Dropdown Menu (Auto opens upwards if near bottom of table/window) -->
+                                    <div x-show="open" 
+                                         x-cloak
+                                         x-transition:enter="transition ease-out duration-100 transform"
+                                         x-transition:enter-start="opacity-0 scale-95"
+                                         x-transition:enter-end="opacity-100 scale-100"
+                                         x-transition:leave="transition ease-in duration-75 transform"
+                                         x-transition:leave-start="opacity-100 scale-100"
+                                         x-transition:leave-end="opacity-0 scale-95"
+                                         class="absolute left-0 w-full bg-white border border-slate-300 shadow-xl py-1 text-xs z-[100]"
+                                         :class="dropUp ? 'bottom-full mb-1' : 'top-full mt-1'"
+                                         style="display: none;">
+                                        @foreach($tableStatusOptions as $val => $label)
+                                            <button type="button"
+                                                    @click="selectStatus('{{ $val }}')"
+                                                    class="w-full text-left px-3 py-1.5 hover:bg-slate-50 flex items-center justify-between transition-colors cursor-pointer"
+                                                    :class="currentStatus === '{{ $val }}' ? 'font-bold text-blue-600 bg-blue-50/60' : 'text-slate-700'">
+                                                <span>{{ $label }}</span>
+                                                <i x-show="currentStatus === '{{ $val }}'" class="fa-solid fa-check text-[10px] text-blue-600"></i>
+                                            </button>
+                                        @endforeach
+                                    </div>
                                 </div>
                             </td>
 

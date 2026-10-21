@@ -192,7 +192,7 @@
                             @endif
                         </a>
                         <div>
-                            <h4 class="text-sm font-bold text-slate-900 group-hover:text-blue-600 transition-colors leading-snug">{{ $product->name }}</h4>
+                            <h4 class="text-sm font-bold text-slate-900 leading-snug">{{ $product->name }}</h4>
                             <p class="text-xs text-slate-600 mt-1 line-clamp-2 leading-relaxed">{{ $product->description }}</p>
                         </div>
                     </div>
@@ -206,7 +206,7 @@
                             @else
                                 <span class="text-[10px] text-slate-500 block font-medium leading-none mb-1">Harga</span>
                             @endif
-                            <span class="text-sm font-bold text-[#1e293b] leading-none group-hover:text-blue-600 transition-colors">
+                            <span class="text-sm font-bold text-[#1e293b] leading-none">
                                 Rp {{ number_format($product->price, 0, ',', '.') }}
                             </span>
                         </div>

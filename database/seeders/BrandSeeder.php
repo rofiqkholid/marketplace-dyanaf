@@ -29,7 +29,7 @@ class BrandSeeder extends Seeder
                         'original_price' => 45000,
                         'features' => [
                             'Profil bersama dengan pembeli lain dilengkapi PIN',
-                            'Rawan screen limit***',
+                            'Rawan screen limit',
                             'Hanya login 1 device',
                             'KHUSUS Penggunaan HP/Tab',
                             'Disarankan menonton metode offline agar tidak rawan batas layar'
@@ -42,7 +42,7 @@ class BrandSeeder extends Seeder
                         'original_price' => 75000,
                         'features' => [
                             'Profil bersama dengan pembeli lain dilengkapi PIN',
-                            'Rawan screen limit***',
+                            'Rawan screen limit',
                             'Hanya login 1 device',
                             'KHUSUS Penggunaan HP/Tab',
                             'Disarankan menonton metode offline agar tidak rawan batas layar'
@@ -55,7 +55,7 @@ class BrandSeeder extends Seeder
                         'original_price' => 110000,
                         'features' => [
                             'Profil bersama dengan pembeli lain dilengkapi PIN',
-                            'Rawan screen limit***',
+                            'Rawan screen limit',
                             'Hanya login 1 device',
                             'KHUSUS Penggunaan HP/Tab',
                             'Disarankan menonton metode offline agar tidak rawan batas layar'
@@ -70,7 +70,7 @@ class BrandSeeder extends Seeder
                         'original_price' => 65000,
                         'features' => [
                             'Profil pribadi dengan PIN',
-                            'Minim screen limit**',
+                            'Minim screen limit',
                             'Disarankan utk pengguna HP/Tab/Laptop/PC',
                             'Bisa di Smart TV dgn risiko screen limit lebih besar dari paket VIP'
                         ]
@@ -82,7 +82,7 @@ class BrandSeeder extends Seeder
                         'original_price' => 115000,
                         'features' => [
                             'Profil pribadi dengan PIN',
-                            'Minim screen limit**',
+                            'Minim screen limit',
                             'Disarankan utk pengguna HP/Tab/Laptop/PC',
                             'Bisa di Smart TV dgn risiko screen limit lebih besar dari paket VIP'
                         ]
@@ -94,7 +94,7 @@ class BrandSeeder extends Seeder
                         'original_price' => 150000,
                         'features' => [
                             'Profil pribadi dengan PIN',
-                            'Minim screen limit**',
+                            'Minim screen limit',
                             'Disarankan utk pengguna HP/Tab/Laptop/PC',
                             'Bisa di Smart TV dgn risiko screen limit lebih besar dari paket VIP'
                         ]
@@ -103,13 +103,13 @@ class BrandSeeder extends Seeder
                     // Paket VIP
                     [
                         'title' => 'Netflix VIP (1 Bulan)',
-                        'desc' => 'Profil pribadi dengan PIN. AMAN screen limit*, exclusive untuk Smart TV & bisa perpanjang.',
+                        'desc' => 'Profil pribadi dengan PIN. AMAN screen limit, exclusive untuk Smart TV & bisa perpanjang.',
                         'price' => 69000,
                         'original_price' => 85000,
                         'features' => [
                             'Profil pribadi dengan PIN',
-                            'AMAN screen limit*',
-                            'Exclusive utk pengguna TV supaya AMAN screen limit*',
+                            'AMAN screen limit',
+                            'Exclusive utk pengguna TV supaya AMAN screen limit',
                             'Bisa perpanjang dgn email sama / transfer profil'
                         ]
                     ],
@@ -120,8 +120,8 @@ class BrandSeeder extends Seeder
                         'original_price' => 99000,
                         'features' => [
                             'Profil pribadi dengan PIN',
-                            'AMAN screen limit*',
-                            'Exclusive utk pengguna TV supaya AMAN screen limit*',
+                            'AMAN screen limit',
+                            'Exclusive utk pengguna TV supaya AMAN screen limit',
                             'Bisa perpanjang dgn email sama / transfer profil'
                         ]
                     ],
@@ -132,8 +132,8 @@ class BrandSeeder extends Seeder
                         'original_price' => 165000,
                         'features' => [
                             'Profil pribadi dengan PIN',
-                            'AMAN screen limit*',
-                            'Exclusive utk pengguna TV supaya AMAN screen limit*',
+                            'AMAN screen limit',
+                            'Exclusive utk pengguna TV supaya AMAN screen limit',
                             'Bisa perpanjang dgn email sama / transfer profil'
                         ]
                     ],

@@ -178,7 +178,7 @@ class="relative z-[9999]">
                     </div>
                     <div class="text-right">
                         <p class="text-[10px] sm:text-[11px] font-bold text-slate-500 mb-0.5">Total Pembayaran</p>
-                        <p class="text-base sm:text-xl font-bold text-blue-600" x-text="'Rp ' + Number(totalAmount).toLocaleString('id-ID')"></p>
+                        <p class="text-base sm:text-xl font-bold text-slate-900" x-text="'Rp ' + Number(totalAmount).toLocaleString('id-ID')"></p>
                     </div>
                 </div>
                 <div class="mt-2.5 pt-2 border-t border-slate-200 flex items-center justify-between text-xs font-medium text-slate-600">
