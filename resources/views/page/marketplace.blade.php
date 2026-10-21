@@ -210,9 +210,8 @@
                                 Rp {{ number_format($product->price, 0, ',', '.') }}
                             </span>
                         </div>
-                        <a href="https://wa.me/6285881721193?text={{ urlencode('Halo Dyanaf Creative, saya tertarik memesan ' . $product->name) }}"
-                           target="_blank"
-                           title="Order {{ $product->name }}"
+                        <a href="{{ route('product.detail', $product) }}"
+                           title="Detail {{ $product->name }}"
                            class="text-blue-600 hover:text-blue-700 text-lg transition-colors p-1">
                             <i class="fa-solid fa-cart-shopping"></i>
                         </a>
