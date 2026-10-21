@@ -1,7 +1,19 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="space-y-4">
+<div class="space-y-4" x-data="{
+    buyPackage(pkg) {
+        window.dispatchEvent(new CustomEvent('open-payment-modal', {
+            detail: {
+                itemName: '{{ addslashes($brand['name']) }}',
+                itemCategory: '{{ addslashes($brand['category'] ?? 'Langganan Digital') }}',
+                packageTitle: pkg.title,
+                totalAmount: Number(pkg.price),
+                chargeUrl: '{{ route('payment.modal.charge-brand', $brand) }}'
+            }
+        }));
+    }
+}">
     <!-- Breadcrumb & Back -->
     <nav aria-label="Breadcrumb" class="flex items-center space-x-2 text-xs text-slate-500">
         <a href="/" class="hover:text-blue-600 transition-colors inline-flex items-center gap-1.5">
