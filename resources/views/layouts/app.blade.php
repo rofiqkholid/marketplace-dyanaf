@@ -43,5 +43,6 @@
     <!-- Global Toast Alert Notifications (Bottom-Right Floating) -->
     @include('components.alert')
 
+    @stack('scripts')
 </body>
 </html>

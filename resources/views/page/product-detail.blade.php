@@ -120,14 +120,15 @@
                     $currentUrl = request()->fullUrl();
                 @endphp
                 <div class="pt-4 border-t border-slate-200 flex flex-col sm:flex-row sm:items-center justify-between gap-3"
-                     x-data="{ copied: false }">
+                     x-data="{ copied: false, loadingPayment: false }">
                     <!-- Left: CTA Buttons -->
                     <div class="grid grid-cols-2 sm:flex sm:items-center gap-2.5 w-full sm:w-auto">
-                        <a href="{{ $waUrl }}"
-                           class="inline-flex items-center justify-center gap-2 px-4 sm:px-5 h-10 bg-blue-600 hover:bg-blue-700 text-white text-xs sm:text-sm font-semibold transition-colors">
+                        <button type="button"
+                                @click="$dispatch('open-payment-modal')"
+                                class="inline-flex items-center justify-center gap-2 px-4 sm:px-5 h-10 bg-blue-600 hover:bg-blue-700 text-white text-xs sm:text-sm font-semibold transition-colors cursor-pointer">
                             <i class="fa-solid fa-cart-shopping text-xs"></i>
                             <span>Order Sekarang</span>
-                        </a>
+                        </button>
 
                         <a href="https://wa.me/6285881721193?text={{ urlencode('Halo Dyanaf Creative, saya ingin tanya mengenai layanan ' . $product->name) }}"
                            target="_blank"
@@ -317,5 +318,9 @@
             </div>
         </div>
     @endif
+
+    <!-- Custom Modal Payment Component (VA & QRIS Custom UI) -->
+    <x-modal-payment :product="$product" />
 </div>
 @endsection
+

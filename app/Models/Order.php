@@ -24,6 +24,15 @@ class Order extends Model
         'total_amount',
         'status',
         'notes',
+        'customer_email',
+        'snap_token',
+        'midtrans_transaction_id',
+        'payment_type',
+        'bank',
+        'va_number',
+        'qris_url',
+        'payment_status',
+        'paid_at',
     ];
 
     protected $casts = [

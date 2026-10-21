@@ -14,6 +14,9 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->web(append: [
             \App\Http\Middleware\CheckMenuMaintenanceMiddleware::class,
         ]);
+        $middleware->validateCsrfTokens(except: [
+            'payment/midtrans-notification',
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //
