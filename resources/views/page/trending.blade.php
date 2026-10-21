@@ -102,12 +102,14 @@
                             <a href="{{ route('product.detail', $product) }}" class="absolute inset-0 z-0" aria-label="{{ $product->name }}"></a>
 
                             <div>
-                                <div class="h-40 bg-[#eef2f6] border border-slate-300/70 flex flex-col items-center justify-center text-slate-400 mb-3 overflow-hidden relative">
+                                <a href="{{ route('product.detail', $product) }}" class="block h-40 bg-[#eef2f6] border border-slate-300/70 overflow-hidden relative mb-3 cursor-pointer">
                                     @if($product->image)
-                                        <img src="{{ $product->image }}" alt="{{ $product->name }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
+                                        <img src="{{ $product->image }}" alt="{{ $product->name }}" class="w-full h-full object-cover">
                                     @else
-                                        <i class="fa-regular fa-image text-3xl mb-1"></i>
-                                        <span class="text-[11px] font-medium text-slate-400">No Image</span>
+                                        <div class="w-full h-full flex flex-col items-center justify-center text-slate-400">
+                                            <i class="fa-regular fa-image text-3xl mb-1"></i>
+                                            <span class="text-[11px] font-medium text-slate-400">No Image</span>
+                                        </div>
                                     @endif
 
                                     @if($product->category)
@@ -119,7 +121,7 @@
                                     <span class="absolute top-2 right-2 px-2 py-0.5 bg-rose-600 text-white text-[10px] font-bold rounded-none shadow-none pointer-events-none z-10">
                                         <i class="fa-solid fa-fire text-[9px] mr-1"></i> TRENDING
                                     </span>
-                                </div>
+                                </a>
                                 <div>
                                     <h3 class="text-sm font-bold text-slate-900 group-hover:text-blue-600 transition-colors leading-snug">{{ $product->name }}</h3>
                                     <p class="text-xs text-slate-600 mt-1 line-clamp-2 leading-relaxed">{{ $product->description }}</p>
