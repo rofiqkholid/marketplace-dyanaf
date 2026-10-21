@@ -13,10 +13,6 @@ class BrandSeeder extends Seeder
      */
     public function run(): void
     {
-        DB::statement('SET FOREIGN_KEY_CHECKS=0;');
-        Brand::truncate();
-        DB::statement('SET FOREIGN_KEY_CHECKS=1;');
-
         $brands = [
             [
                 'slug' => 'netflix',
@@ -416,10 +412,14 @@ class BrandSeeder extends Seeder
         ];
 
         foreach ($brands as $brandData) {
-            $existing = Brand::where('slug', $brandData['slug'])->first();
+            $slug = strtolower(trim($brandData['slug']));
+            $existing = Brand::whereRaw('LOWER(slug) = ?', [$slug])->first();
 
             if ($existing) {
-                // Jika brand sudah ada: update informasi paket, nama, deskripsi, logo tanpa menyentuh stok & restock_date
+                // KUNCI: Pertahankan stok dan tanggal restok yang sudah diinput oleh admin
+                $currentStock = $existing->stock;
+                $currentRestockDate = $existing->restock_date;
+
                 $existing->update([
                     'name' => $brandData['name'],
                     'category' => $brandData['category'],
@@ -427,9 +427,11 @@ class BrandSeeder extends Seeder
                     'description' => $brandData['description'],
                     'packages' => $brandData['packages'],
                     'is_active' => $brandData['is_active'] ?? true,
+                    'stock' => $currentStock,
+                    'restock_date' => $currentRestockDate,
                 ]);
             } else {
-                // Jika brand baru pertama kali dibuat: isi dengan stok default 0
+                // Hanya jika benar-benar brand baru yang belum ada di database
                 $brandData['stock'] = 0;
                 Brand::create($brandData);
             }
