@@ -125,8 +125,7 @@
                                 <div class="space-y-1">
                                     @if($asset->file_path)
                                         <div class="flex items-center space-x-1.5">
-                                            <a href="{{ asset('storage/' . $asset->file_path) }}" 
-                                               target="_blank" 
+                                            <a href="{{ route('download-asset.file', $asset) }}" 
                                                class="text-blue-600 hover:text-blue-800 font-medium inline-flex items-center space-x-1 hover:underline">
                                                 <i class="fa-solid fa-download text-[10px]"></i>
                                                 <span>Download {{ strtoupper($ext) }}</span>

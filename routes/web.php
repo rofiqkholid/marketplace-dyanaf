@@ -143,6 +143,7 @@ Route::get('/tracking-order', [\App\Http\Controllers\OrderController::class, 'tr
 
 // Download Asset Public Route
 Route::get('/download-asset', [\App\Http\Controllers\OrderController::class, 'downloadAsset'])->name('download-asset');
+Route::get('/download-asset/file/{orderAsset}', [\App\Http\Controllers\OrderController::class, 'downloadFile'])->name('download-asset.file');
 
 // Create Order / Order Management Routes (Restricted to role: pemilik in controller)
 Route::get('/orders-create', [\App\Http\Controllers\OrderController::class, 'adminIndex'])->name('orders.admin');

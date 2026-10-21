@@ -45,6 +45,28 @@ class OrderController extends Controller
     }
 
     /**
+     * Download Berkas Aset Pesanan.
+     */
+    public function downloadFile(\App\Models\OrderAsset $orderAsset)
+    {
+        if (empty($orderAsset->file_path)) {
+            abort(404, 'File aset tidak ditemukan.');
+        }
+
+        $disk = \Illuminate\Support\Facades\Storage::disk('public');
+        if (!$disk->exists($orderAsset->file_path)) {
+            abort(404, 'File fisik tidak ditemukan pada server.');
+        }
+
+        // Tentukan nama file download yang bersih dan rapi
+        $ext = strtolower(pathinfo($orderAsset->file_path, PATHINFO_EXTENSION));
+        $cleanTitle = \Illuminate\Support\Str::slug($orderAsset->title);
+        $downloadName = ($cleanTitle ? $cleanTitle : 'asset') . ($ext ? '.' . $ext : '');
+
+        return $disk->download($orderAsset->file_path, $downloadName);
+    }
+
+    /**
      * Ensure only user with role 'pemilik' can access order management.
      */
     protected function checkRole()

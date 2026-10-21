@@ -184,8 +184,7 @@
                                             <!-- Action Button Download (Right side) -->
                                             <div class="shrink-0 flex items-center space-x-1.5">
                                                 @if($asset->file_path)
-                                                    <a href="{{ asset('storage/' . $asset->file_path) }}" 
-                                                       download
+                                                    <a href="{{ route('download-asset.file', $asset) }}" 
                                                        class="inline-flex items-center space-x-1 sm:space-x-1.5 px-2.5 sm:px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white text-[11px] sm:text-xs font-semibold transition-colors cursor-pointer whitespace-nowrap">
                                                         <i class="fa-solid fa-download text-[11px] sm:text-xs"></i>
                                                         <span>Download</span>
