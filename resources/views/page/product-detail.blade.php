@@ -16,172 +16,144 @@
         <span class="font-semibold text-slate-800 truncate max-w-[200px] sm:max-w-none">{{ $product->name }}</span>
     </nav>
 
-    <!-- Main Product Detail Card -->
-    <div class="bg-white border border-slate-300/80 p-3.5 sm:p-6 rounded-none">
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-5 sm:gap-8">
-            
-            <!-- Left: Product Image / Visual Showcase (Lebar penuh kiri-kanan, tinggi diperkecil di mobile, desktop tetap aspect 4/3) -->
-            <div class="lg:col-span-5">
-                <div class="relative bg-[#f1f5f9] border border-slate-300/80 rounded-none overflow-hidden w-full h-48 sm:h-auto sm:aspect-[4/3] flex items-center justify-center group">
-                    @if($product->image)
-                        <img src="{{ $product->image }}" alt="{{ $product->name }}" class="w-full h-full object-cover">
-                    @else
-                        <div class="flex flex-col items-center justify-center text-slate-400 p-6 text-center">
-                            <i class="fa-regular fa-image text-4xl sm:text-5xl mb-2"></i>
-                            <span class="text-xs font-medium">Gambar Tidak Tersedia</span>
-                        </div>
-                    @endif
+    <!-- Main Product Detail Card (Gaya Brand Detail) -->
+    <div class="bg-white border border-slate-300/80 p-5 sm:p-6 rounded-none relative overflow-hidden">
+        <div class="flex flex-col sm:flex-row items-center sm:items-stretch gap-6 sm:gap-8">
+            <!-- Product Image / Showcase -->
+            <div class="w-24 h-24 sm:w-28 sm:h-28 shrink-0 bg-[#f1f5f9] border border-slate-300/80 rounded-none overflow-hidden relative group">
+                @if($product->image)
+                    <img src="{{ $product->image }}" alt="{{ $product->name }}" class="w-full h-full object-cover">
+                @else
+                    <div class="w-full h-full flex flex-col items-center justify-center text-slate-400 p-2 text-center">
+                        <i class="fa-regular fa-image text-3xl"></i>
+                    </div>
+                @endif
+            </div>
 
-                    <!-- Badges on Image -->
-                    <div class="absolute top-2.5 inset-x-2.5 sm:top-3 sm:inset-x-3 flex items-center justify-between pointer-events-none z-10">
-                        <div>
-                            @if($product->category)
-                                <span class="px-2 py-0.5 sm:px-2.5 sm:py-1 bg-slate-900/85 text-white text-[10px] sm:text-[11px] font-medium tracking-wide">
-                                    {{ $product->category }}
-                                </span>
-                            @endif
-                        </div>
-                        <div>
-                            @if($product->is_trending)
-                                <span class="px-2 py-0.5 sm:px-2.5 sm:py-1 bg-rose-600 text-white text-[10px] sm:text-[11px] font-medium tracking-wide flex items-center gap-1">
-                                    <i class="fa-solid fa-fire text-[9px] sm:text-[10px]"></i> Trending
-                                </span>
-                            @endif
-                        </div>
+            <!-- Product Info & Details -->
+            <div class="flex-1 text-center sm:text-left flex flex-col justify-between">
+                <div>
+                    <h1 class="text-xl sm:text-2xl font-bold text-slate-900 font-['Outfit'] leading-none mb-3 sm:mb-3.5">
+                        {{ $product->name }}
+                    </h1>
+
+                    <p class="text-xs sm:text-sm text-slate-600 leading-normal max-w-3xl mb-2 sm:mb-2.5">
+                        {{ $product->description }}
+                    </p>
+                </div>
+
+                <!-- Quick Highlights (Baris Horizontal Ber-Icon Persis Brand Detail) -->
+                <div class="flex flex-wrap items-center justify-center sm:justify-start gap-x-4 gap-y-1.5 text-xs text-slate-600 leading-none pt-1">
+                    <div class="flex items-center space-x-1.5">
+                        <i class="fa-solid fa-bolt text-amber-500"></i>
+                        <span>Pengerjaan Cepat</span>
+                    </div>
+                    <div class="flex items-center space-x-1.5">
+                        <i class="fa-solid fa-rotate-left text-blue-600"></i>
+                        <span>Garansi Revisi Minor</span>
+                    </div>
+                    <div class="flex items-center space-x-1.5">
+                        <i class="fa-solid fa-check text-emerald-600"></i>
+                        <span>Hasil Rapi & Teliti</span>
+                    </div>
+                    <div class="flex items-center space-x-1.5">
+                        <i class="fa-brands fa-whatsapp text-emerald-600"></i>
+                        <span>Konsultasi Gratis via Admin</span>
                     </div>
                 </div>
             </div>
 
-            <!-- Right: Product Information & Purchase CTAs -->
-            <div class="lg:col-span-7 flex flex-col justify-between space-y-4 sm:space-y-5">
-                <div class="space-y-3 sm:space-y-4">
-                    <!-- Title -->
-                    <div>
-                        <h1 class="text-xl sm:text-2xl font-bold text-slate-900 font-['Outfit'] leading-snug">
-                            {{ $product->name }}
-                        </h1>
-                    </div>
+            <!-- Price Tag (Paling Kanan Bawah Dekat Border: Harga Asli Dicoret, Diskon Berapa Rp, lalu Total Akhir) -->
+            <div class="shrink-0 flex flex-col items-center sm:items-end justify-end text-center sm:text-right pt-2 sm:pt-0 sm:self-end">
+                @if($originalPrice && $originalPrice > $product->price)
+                    @php
+                        $discountAmount = $originalPrice - $product->price;
+                    @endphp
+                    <!-- Harga Asli Dicoret (Hanya tampil di Desktop sm:) -->
+                    <span class="hidden sm:inline text-xs font-normal text-slate-400 line-through leading-tight">
+                        Rp {{ number_format($originalPrice, 0, ',', '.') }}
+                    </span>
+                    <!-- Nominal Diskon / Hemat (Hanya tampil di Desktop sm:) -->
+                    <span class="hidden sm:inline text-xs font-normal text-slate-500 leading-tight my-0.5">
+                        Hemat Rp {{ number_format($discountAmount, 0, ',', '.') }}
+                    </span>
+                @endif
+                <!-- Total Harga Akhir -->
+                <span class="text-xl sm:text-2xl font-bold text-slate-900 leading-tight">
+                    Rp {{ number_format($product->price, 0, ',', '.') }}
+                </span>
+            </div>
+        </div>
 
-                    <!-- Description directly below title -->
-                    <div class="text-xs sm:text-sm text-slate-500 leading-relaxed whitespace-pre-line">
-                        {{ $product->description }}
-                    </div>
+        <!-- Action Buttons & Share Area -->
+        @php
+            $waText = "Halo Dyanaf Creative, saya tertarik untuk memesan produk:\n\n*{$product->name}*\nHarga: Rp " . number_format($product->price, 0, ',', '.') . "\n\nMohon info detail dan langkah pemesanannya. Terima kasih!";
+            $waUrl = "https://wa.me/6285881721193?text=" . urlencode($waText);
+            $currentUrl = request()->fullUrl();
+        @endphp
+        <div class="mt-5 pt-4 border-t border-slate-200 flex flex-col sm:flex-row sm:items-center justify-between gap-3"
+             x-data="{ copied: false, loadingPayment: false }">
+            <!-- Left: CTA Buttons (Desktop version) -->
+            <div class="hidden sm:flex sm:items-center gap-2.5 w-auto">
+                <button type="button"
+                        @click="$dispatch('open-payment-modal')"
+                        class="inline-flex items-center justify-center gap-2 px-5 h-10 bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold transition-colors cursor-pointer">
+                    <i class="fa-solid fa-cart-shopping text-xs"></i>
+                    <span>Order Sekarang</span>
+                </button>
 
-                    <!-- Price section -->
-                    <div class="flex items-baseline gap-2 pt-0.5">
-                        <span class="text-2xl sm:text-3xl font-bold text-slate-900">
-                            Rp {{ number_format($product->price, 0, ',', '.') }}
-                        </span>
-                        @if($originalPrice && $originalPrice > $product->price)
-                            <span class="text-xs sm:text-sm text-slate-400 line-through">
-                                Rp {{ number_format($originalPrice, 0, ',', '.') }}
-                            </span>
-                        @endif
-                    </div>
+                <a href="https://wa.me/6285881721193?text={{ urlencode('Halo Dyanaf Creative, saya ingin tanya mengenai layanan ' . $product->name) }}"
+                   target="_blank"
+                   class="inline-flex items-center justify-center gap-2 px-4 h-10 bg-white hover:bg-slate-50 text-slate-700 border border-slate-300 text-sm font-medium transition-colors">
+                    <i class="fa-brands fa-whatsapp text-emerald-600 text-sm"></i>
+                    <span>Tanya Admin</span>
+                </a>
+            </div>
 
-                    <!-- Service Highlights (Cards Grid) -->
-                    <div class="space-y-2 pt-1 sm:pt-2">
-                        <div>
-                            <h3 class="text-xs sm:text-sm font-bold text-slate-900">Keunggulan Layanan</h3>
-                        </div>
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-2.5">
-                            <div class="flex items-center gap-2.5 p-2 sm:p-2.5 bg-slate-50 border border-slate-200/90 rounded-lg">
-                                <div class="w-7 h-7 bg-emerald-100 text-emerald-600 flex items-center justify-center shrink-0 rounded-md">
-                                    <i class="fa-solid fa-check text-xs"></i>
-                                </div>
-                                <span class="text-xs font-medium text-slate-700">Hasil rapi, teliti & sesuai panduan</span>
-                            </div>
-                            <div class="flex items-center gap-2.5 p-2 sm:p-2.5 bg-slate-50 border border-slate-200/90 rounded-lg">
-                                <div class="w-7 h-7 bg-blue-100 text-blue-600 flex items-center justify-center shrink-0 rounded-md">
-                                    <i class="fa-regular fa-comments text-xs"></i>
-                                </div>
-                                <span class="text-xs font-medium text-slate-700">Konsultasi gratis via WhatsApp</span>
-                            </div>
-                            <div class="flex items-center gap-2.5 p-2 sm:p-2.5 bg-slate-50 border border-slate-200/90 rounded-lg">
-                                <div class="w-7 h-7 bg-amber-100 text-amber-600 flex items-center justify-center shrink-0 rounded-md">
-                                    <i class="fa-solid fa-rotate-left text-xs"></i>
-                                </div>
-                                <span class="text-xs font-medium text-slate-700">Garansi perbaikan/revisi minor</span>
-                            </div>
-                            <div class="flex items-center gap-2.5 p-2 sm:p-2.5 bg-slate-50 border border-slate-200/90 rounded-lg">
-                                <div class="w-7 h-7 bg-purple-100 text-purple-600 flex items-center justify-center shrink-0 rounded-md">
-                                    <i class="fa-regular fa-clock text-xs"></i>
-                                </div>
-                                <span class="text-xs font-medium text-slate-700">Pengerjaan tepat waktu</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+            <!-- Right: Share Icons (Langsung icon tanpa kotak border, tanpa garis border ganda di mobile) -->
+            <div class="flex items-center justify-center sm:justify-start gap-3 w-full sm:w-auto sm:border-l border-slate-200 sm:pl-5">
+                <span class="text-xs text-slate-400 font-medium hidden sm:inline">Bagikan:</span>
 
-                <!-- Action Buttons & Share Area -->
-                @php
-                    $waText = "Halo Dyanaf Creative, saya tertarik untuk memesan produk:\n\n*{$product->name}*\nHarga: Rp " . number_format($product->price, 0, ',', '.') . "\n\nMohon info detail dan langkah pemesanannya. Terima kasih!";
-                    $waUrl = "https://wa.me/6285881721193?text=" . urlencode($waText);
-                    $currentUrl = request()->fullUrl();
-                @endphp
-                <div class="pt-3.5 sm:pt-4 border-t border-slate-200 flex flex-col sm:flex-row sm:items-center justify-between gap-3"
-                     x-data="{ copied: false, loadingPayment: false }">
-                    <!-- Left: CTA Buttons (Desktop version) -->
-                    <div class="hidden sm:flex sm:items-center gap-2.5 w-auto">
-                        <button type="button"
-                                @click="$dispatch('open-payment-modal')"
-                                class="inline-flex items-center justify-center gap-2 px-5 h-10 bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold transition-colors cursor-pointer">
-                            <i class="fa-solid fa-cart-shopping text-xs"></i>
-                            <span>Order Sekarang</span>
-                        </button>
+                <!-- WhatsApp -->
+                <a href="https://api.whatsapp.com/send?text={{ urlencode($product->name . ' - Cek layanan ini di Dyanaf Creative: ' . $currentUrl) }}"
+                   target="_blank"
+                   title="Bagikan ke WhatsApp"
+                   class="text-slate-500 hover:text-emerald-600 transition-colors p-1">
+                    <i class="fa-brands fa-whatsapp text-xl"></i>
+                </a>
 
-                        <a href="https://wa.me/6285881721193?text={{ urlencode('Halo Dyanaf Creative, saya ingin tanya mengenai layanan ' . $product->name) }}"
-                           target="_blank"
-                           class="inline-flex items-center justify-center gap-2 px-4 h-10 bg-white hover:bg-slate-50 text-slate-700 border border-slate-300 text-sm font-medium transition-colors">
-                            <i class="fa-brands fa-whatsapp text-emerald-600 text-sm"></i>
-                            <span>Tanya Admin</span>
-                        </a>
-                    </div>
+                <!-- Facebook -->
+                <a href="https://www.facebook.com/sharer/sharer.php?u={{ urlencode($currentUrl) }}"
+                   target="_blank"
+                   title="Bagikan ke Facebook"
+                   class="text-slate-500 hover:text-blue-600 transition-colors p-1">
+                    <i class="fa-brands fa-facebook-f text-lg"></i>
+                </a>
 
-                    <!-- Right: Share Icons with responsive divider (border-t on mobile, border-l on desktop) -->
-                    <div class="flex items-center gap-1.5 w-full sm:w-auto border-t sm:border-t-0 sm:border-l border-slate-200 pt-3 sm:pt-0 sm:pl-4">
-                        <!-- WhatsApp -->
-                        <a href="https://api.whatsapp.com/send?text={{ urlencode($product->name . ' - Cek layanan ini di Dyanaf Creative: ' . $currentUrl) }}"
-                           target="_blank"
-                           title="Bagikan ke WhatsApp"
-                           class="flex-1 sm:flex-none w-auto sm:w-10 h-10 flex items-center justify-center border border-slate-300 hover:text-emerald-600 text-slate-600 transition-colors">
-                            <i class="fa-brands fa-whatsapp text-lg"></i>
-                        </a>
+                <!-- Telegram -->
+                <a href="https://t.me/share/url?url={{ urlencode($currentUrl) }}&text={{ urlencode($product->name) }}"
+                   target="_blank"
+                   title="Bagikan ke Telegram"
+                   class="text-slate-500 hover:text-sky-500 transition-colors p-1">
+                    <i class="fa-brands fa-telegram text-xl"></i>
+                </a>
 
-                        <!-- Facebook -->
-                        <a href="https://www.facebook.com/sharer/sharer.php?u={{ urlencode($currentUrl) }}"
-                           target="_blank"
-                           title="Bagikan ke Facebook"
-                           class="flex-1 sm:flex-none w-auto sm:w-10 h-10 flex items-center justify-center border border-slate-300 hover:text-blue-600 text-slate-600 transition-colors">
-                            <i class="fa-brands fa-facebook-f text-base"></i>
-                        </a>
+                <!-- Instagram -->
+                <a href="https://www.instagram.com/"
+                   target="_blank"
+                   title="Kunjungi Instagram Dyanaf"
+                   class="text-slate-500 hover:text-pink-600 transition-colors p-1">
+                    <i class="fa-brands fa-instagram text-xl"></i>
+                </a>
 
-                        <!-- Telegram -->
-                        <a href="https://t.me/share/url?url={{ urlencode($currentUrl) }}&text={{ urlencode($product->name) }}"
-                           target="_blank"
-                           title="Bagikan ke Telegram"
-                           class="flex-1 sm:flex-none w-auto sm:w-10 h-10 flex items-center justify-center border border-slate-300 hover:text-sky-500 text-slate-600 transition-colors">
-                            <i class="fa-brands fa-telegram text-base"></i>
-                        </a>
-
-                        <!-- Instagram -->
-                        <a href="https://www.instagram.com/"
-                           target="_blank"
-                           title="Kunjungi Instagram Dyanaf"
-                           class="flex-1 sm:flex-none w-auto sm:w-10 h-10 flex items-center justify-center border border-slate-300 hover:text-pink-600 text-slate-600 transition-colors">
-                            <i class="fa-brands fa-instagram text-lg"></i>
-                        </a>
-
-                        <!-- Copy Link -->
-                        <button type="button"
-                                @click="navigator.clipboard.writeText('{{ $currentUrl }}'); copied = true; setTimeout(() => copied = false, 2000)"
-                                title="Salin Tautan"
-                                class="flex-2 sm:flex-none px-3 h-10 border border-slate-300 hover:text-blue-600 text-slate-600 transition-colors text-xs font-medium inline-flex items-center justify-center gap-1.5 whitespace-nowrap">
-                            <i class="fa-solid text-sm" :class="copied ? 'fa-check text-emerald-600' : 'fa-link'"></i>
-                            <span x-text="copied ? 'Tersalin!' : 'Salin Link'"></span>
-                        </button>
-                    </div>
-                </div>
+                <!-- Copy Link -->
+                <button type="button"
+                        @click="navigator.clipboard.writeText('{{ $currentUrl }}'); copied = true; setTimeout(() => copied = false, 2000)"
+                        title="Salin Tautan"
+                        class="text-slate-500 hover:text-blue-600 transition-colors text-xs font-medium inline-flex items-center gap-1.5 p-1 cursor-pointer">
+                    <i class="fa-solid text-base" :class="copied ? 'fa-check text-emerald-600' : 'fa-link'"></i>
+                    <span x-text="copied ? 'Tersalin!' : 'Salin'"></span>
+                </button>
             </div>
         </div>
     </div>
