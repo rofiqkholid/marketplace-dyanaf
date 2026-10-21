@@ -3,13 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Models\Order;
+use App\Models\PaymentTransaction;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Midtrans\Config;
 use Midtrans\CoreApi;
-use Midtrans\Notification;
 use Midtrans\Transaction;
 
 class ModalPaymentController extends Controller
@@ -42,17 +42,17 @@ class ModalPaymentController extends Controller
         ]);
 
         $user = Auth::user();
-        $customerName = !empty($validated['customer_name'])
-            ? $validated['customer_name']
-            : ($user->name ?? 'Pelanggan Dyanaf');
-
-        $customerEmail = !empty($validated['customer_email'])
-            ? $validated['customer_email']
-            : ($user->email ?? 'customer@dyanaf.com');
-
-        $customerPhone = !empty($validated['customer_phone'])
-            ? $validated['customer_phone']
-            : ($user->phone ?? '085881721193');
+        if ($user) {
+            // User sedang login: gunakan nama & email akun mereka, no telpon kosongkan jika tidak ada
+            $customerName = $validated['customer_name'] ?? $user->name;
+            $customerEmail = $validated['customer_email'] ?? $user->email;
+            $customerPhone = $validated['customer_phone'] ?? ($user->phone ?? null);
+        } else {
+            // User guest / tidak login: gunakan default
+            $customerName = !empty($validated['customer_name']) ? $validated['customer_name'] : 'Pelanggan Dyanaf';
+            $customerEmail = !empty($validated['customer_email']) ? $validated['customer_email'] : 'customer@dyanaf.com';
+            $customerPhone = !empty($validated['customer_phone']) ? $validated['customer_phone'] : '085881721193';
+        }
 
         $orderNumber = Order::generateOrderNumber('product', $product->id);
         $price = (float) $product->price;
@@ -136,31 +136,27 @@ class ModalPaymentController extends Controller
                 }
             }
 
-            // Simpan record Order ke database
-            $order = Order::create([
+            // Simpan HANYA ke tabel payment_transactions (TIDAK MASUK ke tabel orders pengerjaan produk saat pending)
+            $trx = PaymentTransaction::create([
                 'order_number' => $orderNumber,
                 'customer_name' => $customerName,
                 'customer_email' => $customerEmail,
                 'customer_phone' => $customerPhone,
-                'item_type' => 'product',
                 'product_id' => $product->id,
                 'item_name' => $product->name,
-                'price' => $price,
-                'quantity' => 1,
-                'total_amount' => $price,
-                'status' => 'pending',
-                'payment_status' => 'pending',
-                'payment_type' => $paymentMethod === 'qris' ? 'qris' : 'bank_transfer',
+                'amount' => $price,
+                'payment_method' => $paymentMethod,
                 'bank' => $bankName,
                 'va_number' => $vaNumber,
                 'qris_url' => $qrisUrl,
                 'midtrans_transaction_id' => $res->transaction_id ?? null,
+                'status' => 'pending',
                 'notes' => $validated['notes'] ?? null,
             ]);
 
             return response()->json([
                 'success' => true,
-                'order_number' => $order->order_number,
+                'order_number' => $trx->order_number,
                 'payment_method' => $paymentMethod,
                 'bank' => $bankName,
                 'va_number' => $vaNumber,
@@ -185,18 +181,17 @@ class ModalPaymentController extends Controller
 
     /**
      * Mengecek status pembayaran secara realtime (polling oleh modal kustom).
+     * Jika sukses (settlement/capture), baru simpan/buat order ke tabel orders pengerjaan produk.
      */
     public function checkStatus(Request $request, string $orderNumber)
     {
         $this->initMidtrans();
 
+        $trx = PaymentTransaction::where('order_number', $orderNumber)->first();
         $order = Order::where('order_number', $orderNumber)->first();
-        if (!$order) {
-            return response()->json(['success' => false, 'message' => 'Order tidak ditemukan'], 404);
-        }
 
-        // Jika sudah status paid di database, langsung kembalikan
-        if ($order->payment_status === 'paid') {
+        // Jika order sudah terbentuk di tabel orders dan sudah lunas
+        if ($order && $order->payment_status === 'paid') {
             return response()->json([
                 'success' => true,
                 'payment_status' => 'paid',
@@ -205,38 +200,99 @@ class ModalPaymentController extends Controller
             ]);
         }
 
-        // Cek langsung ke Midtrans Transaction Status
+        // Cek langsung ke status transaksi Midtrans
         try {
             $status = Transaction::status($orderNumber);
             $res = (object) $status;
             $transactionStatus = $res->transaction_status ?? null;
             $fraudStatus = $res->fraud_status ?? null;
 
-            if ($transactionStatus === 'settlement' || ($transactionStatus === 'capture' && $fraudStatus === 'accept')) {
-                $order->payment_status = 'paid';
-                $order->status = 'processing';
-                $order->paid_at = now();
-                $order->save();
-            } elseif (in_array($transactionStatus, ['expire', 'cancel', 'deny'])) {
-                $order->payment_status = $transactionStatus;
-                $order->status = 'cancelled';
-                $order->save();
+            $isPaid = ($transactionStatus === 'settlement' || ($transactionStatus === 'capture' && $fraudStatus === 'accept'));
+
+            if ($isPaid) {
+                // Update status di payment_transactions
+                if ($trx) {
+                    $trx->status = 'paid';
+                    $trx->paid_at = now();
+                    $trx->save();
+                }
+
+                // BUAT ORDER BARU DI TABEL ORDERS HANYA JIKA SUDAH SUKSES BAYAR
+                if (!$order && $trx) {
+                    $order = Order::create([
+                        'order_number' => $trx->order_number,
+                        'customer_name' => $trx->customer_name,
+                        'customer_email' => $trx->customer_email,
+                        'customer_phone' => $trx->customer_phone,
+                        'item_type' => 'product',
+                        'product_id' => $trx->product_id,
+                        'item_name' => $trx->item_name,
+                        'price' => $trx->amount,
+                        'quantity' => 1,
+                        'total_amount' => $trx->amount,
+                        'status' => 'processing', // Langsung masuk antrian pengerjaan
+                        'payment_status' => 'paid',
+                        'payment_type' => $trx->payment_method === 'qris' ? 'qris' : 'bank_transfer',
+                        'bank' => $trx->bank,
+                        'va_number' => $trx->va_number,
+                        'qris_url' => $trx->qris_url,
+                        'midtrans_transaction_id' => $trx->midtrans_transaction_id,
+                        'notes' => $trx->notes,
+                        'paid_at' => now(),
+                    ]);
+
+                    $trx->order_id = $order->id;
+                    $trx->save();
+                } elseif ($order) {
+                    $order->payment_status = 'paid';
+                    $order->status = 'processing';
+                    $order->paid_at = now();
+                    $order->save();
+                }
+
+                return response()->json([
+                    'success' => true,
+                    'payment_status' => 'paid',
+                    'order_status' => $order ? $order->status : 'processing',
+                    'order_number' => $orderNumber,
+                ]);
             }
 
+            if (in_array($transactionStatus, ['expire', 'cancel', 'deny'])) {
+                if ($trx) {
+                    $trx->status = $transactionStatus;
+                    $trx->save();
+                }
+                if ($order) {
+                    $order->payment_status = $transactionStatus;
+                    $order->status = 'cancelled';
+                    $order->save();
+                }
+
+                return response()->json([
+                    'success' => true,
+                    'payment_status' => $transactionStatus,
+                    'order_status' => 'cancelled',
+                    'order_number' => $orderNumber,
+                ]);
+            }
+
+            // Masih pending
             return response()->json([
                 'success' => true,
-                'payment_status' => $order->payment_status,
-                'order_status' => $order->status,
-                'order_number' => $order->order_number,
+                'payment_status' => 'pending',
+                'order_status' => 'pending',
+                'order_number' => $orderNumber,
             ]);
+
         } catch (\Throwable $e) {
-            // Kembalikan status lokal jika gagal query ke midtrans
             return response()->json([
                 'success' => true,
-                'payment_status' => $order->payment_status,
-                'order_status' => $order->status,
-                'order_number' => $order->order_number,
+                'payment_status' => $trx ? $trx->status : ($order->payment_status ?? 'pending'),
+                'order_status' => $order ? $order->status : 'pending',
+                'order_number' => $orderNumber,
             ]);
         }
     }
 }
+

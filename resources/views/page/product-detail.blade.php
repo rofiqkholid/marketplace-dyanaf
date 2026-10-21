@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="space-y-4">
+<div class="space-y-4 pb-16 sm:pb-0">
     <!-- Breadcrumb -->
     <nav aria-label="Breadcrumb" class="flex flex-wrap items-center gap-2 text-xs text-slate-500">
         <a href="/" class="hover:text-blue-600 transition-colors inline-flex items-center gap-1.5">
@@ -17,34 +17,34 @@
     </nav>
 
     <!-- Main Product Detail Card -->
-    <div class="bg-white border border-slate-300/80 p-4 sm:p-6 rounded-none">
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8">
+    <div class="bg-white border border-slate-300/80 p-3.5 sm:p-6 rounded-none">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-5 sm:gap-8">
             
-            <!-- Left: Product Image / Visual Showcase -->
-            <div class="lg:col-span-5 space-y-3">
-                <div class="relative bg-[#f1f5f9] border border-slate-300/80 rounded-none overflow-hidden aspect-[4/3] flex items-center justify-center group">
+            <!-- Left: Product Image / Visual Showcase (Lebar penuh kiri-kanan, tinggi diperkecil di mobile, desktop tetap aspect 4/3) -->
+            <div class="lg:col-span-5">
+                <div class="relative bg-[#f1f5f9] border border-slate-300/80 rounded-none overflow-hidden w-full h-48 sm:h-auto sm:aspect-[4/3] flex items-center justify-center group">
                     @if($product->image)
                         <img src="{{ $product->image }}" alt="{{ $product->name }}" class="w-full h-full object-cover">
                     @else
                         <div class="flex flex-col items-center justify-center text-slate-400 p-6 text-center">
-                            <i class="fa-regular fa-image text-5xl mb-2"></i>
+                            <i class="fa-regular fa-image text-4xl sm:text-5xl mb-2"></i>
                             <span class="text-xs font-medium">Gambar Tidak Tersedia</span>
                         </div>
                     @endif
 
                     <!-- Badges on Image -->
-                    <div class="absolute top-3 inset-x-3 flex items-center justify-between pointer-events-none z-10">
+                    <div class="absolute top-2.5 inset-x-2.5 sm:top-3 sm:inset-x-3 flex items-center justify-between pointer-events-none z-10">
                         <div>
                             @if($product->category)
-                                <span class="px-2.5 py-1 bg-slate-900/85 text-white text-[11px] font-medium tracking-wide">
+                                <span class="px-2 py-0.5 sm:px-2.5 sm:py-1 bg-slate-900/85 text-white text-[10px] sm:text-[11px] font-medium tracking-wide">
                                     {{ $product->category }}
                                 </span>
                             @endif
                         </div>
                         <div>
                             @if($product->is_trending)
-                                <span class="px-2.5 py-1 bg-rose-600 text-white text-[11px] font-medium tracking-wide flex items-center gap-1">
-                                    <i class="fa-solid fa-fire text-[10px]"></i> Trending
+                                <span class="px-2 py-0.5 sm:px-2.5 sm:py-1 bg-rose-600 text-white text-[10px] sm:text-[11px] font-medium tracking-wide flex items-center gap-1">
+                                    <i class="fa-solid fa-fire text-[9px] sm:text-[10px]"></i> Trending
                                 </span>
                             @endif
                         </div>
@@ -53,57 +53,57 @@
             </div>
 
             <!-- Right: Product Information & Purchase CTAs -->
-            <div class="lg:col-span-7 flex flex-col justify-between space-y-5">
-                <div class="space-y-4">
+            <div class="lg:col-span-7 flex flex-col justify-between space-y-4 sm:space-y-5">
+                <div class="space-y-3 sm:space-y-4">
                     <!-- Title -->
                     <div>
-                        <h1 class="text-xl sm:text-2xl font-bold text-slate-900 font-['Outfit'] leading-tight">
+                        <h1 class="text-xl sm:text-2xl font-bold text-slate-900 font-['Outfit'] leading-snug">
                             {{ $product->name }}
                         </h1>
                     </div>
 
                     <!-- Description directly below title -->
-                    <div class="text-xs sm:text-sm text-slate-600 leading-relaxed whitespace-pre-line">
+                    <div class="text-xs sm:text-sm text-slate-500 leading-relaxed whitespace-pre-line">
                         {{ $product->description }}
                     </div>
 
                     <!-- Price section -->
-                    <div class="flex items-baseline gap-2.5">
-                        <span class="text-2xl sm:text-3xl font-semibold text-slate-900">
+                    <div class="flex items-baseline gap-2 pt-0.5">
+                        <span class="text-2xl sm:text-3xl font-bold text-slate-900">
                             Rp {{ number_format($product->price, 0, ',', '.') }}
                         </span>
                         @if($originalPrice && $originalPrice > $product->price)
-                            <span class="text-sm text-slate-400 line-through">
+                            <span class="text-xs sm:text-sm text-slate-400 line-through">
                                 Rp {{ number_format($originalPrice, 0, ',', '.') }}
                             </span>
                         @endif
                     </div>
 
                     <!-- Service Highlights (Cards Grid) -->
-                    <div class="space-y-2.5 pt-2">
+                    <div class="space-y-2 pt-1 sm:pt-2">
                         <div>
-                            <h3 class="text-xs font-bold text-slate-800">Keunggulan Layanan</h3>
+                            <h3 class="text-xs sm:text-sm font-bold text-slate-900">Keunggulan Layanan</h3>
                         </div>
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
-                            <div class="flex items-center gap-2.5 p-2.5 bg-slate-50 border border-slate-200/90 rounded-lg">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-2.5">
+                            <div class="flex items-center gap-2.5 p-2 sm:p-2.5 bg-slate-50 border border-slate-200/90 rounded-lg">
                                 <div class="w-7 h-7 bg-emerald-100 text-emerald-600 flex items-center justify-center shrink-0 rounded-md">
                                     <i class="fa-solid fa-check text-xs"></i>
                                 </div>
                                 <span class="text-xs font-medium text-slate-700">Hasil rapi, teliti & sesuai panduan</span>
                             </div>
-                            <div class="flex items-center gap-2.5 p-2.5 bg-slate-50 border border-slate-200/90 rounded-lg">
+                            <div class="flex items-center gap-2.5 p-2 sm:p-2.5 bg-slate-50 border border-slate-200/90 rounded-lg">
                                 <div class="w-7 h-7 bg-blue-100 text-blue-600 flex items-center justify-center shrink-0 rounded-md">
                                     <i class="fa-regular fa-comments text-xs"></i>
                                 </div>
                                 <span class="text-xs font-medium text-slate-700">Konsultasi gratis via WhatsApp</span>
                             </div>
-                            <div class="flex items-center gap-2.5 p-2.5 bg-slate-50 border border-slate-200/90 rounded-lg">
+                            <div class="flex items-center gap-2.5 p-2 sm:p-2.5 bg-slate-50 border border-slate-200/90 rounded-lg">
                                 <div class="w-7 h-7 bg-amber-100 text-amber-600 flex items-center justify-center shrink-0 rounded-md">
                                     <i class="fa-solid fa-rotate-left text-xs"></i>
                                 </div>
                                 <span class="text-xs font-medium text-slate-700">Garansi perbaikan/revisi minor</span>
                             </div>
-                            <div class="flex items-center gap-2.5 p-2.5 bg-slate-50 border border-slate-200/90 rounded-lg">
+                            <div class="flex items-center gap-2.5 p-2 sm:p-2.5 bg-slate-50 border border-slate-200/90 rounded-lg">
                                 <div class="w-7 h-7 bg-purple-100 text-purple-600 flex items-center justify-center shrink-0 rounded-md">
                                     <i class="fa-regular fa-clock text-xs"></i>
                                 </div>
@@ -119,20 +119,20 @@
                     $waUrl = "https://wa.me/6285881721193?text=" . urlencode($waText);
                     $currentUrl = request()->fullUrl();
                 @endphp
-                <div class="pt-4 border-t border-slate-200 flex flex-col sm:flex-row sm:items-center justify-between gap-3"
+                <div class="pt-3.5 sm:pt-4 border-t border-slate-200 flex flex-col sm:flex-row sm:items-center justify-between gap-3"
                      x-data="{ copied: false, loadingPayment: false }">
-                    <!-- Left: CTA Buttons -->
-                    <div class="grid grid-cols-2 sm:flex sm:items-center gap-2.5 w-full sm:w-auto">
+                    <!-- Left: CTA Buttons (Desktop version) -->
+                    <div class="hidden sm:flex sm:items-center gap-2.5 w-auto">
                         <button type="button"
                                 @click="$dispatch('open-payment-modal')"
-                                class="inline-flex items-center justify-center gap-2 px-4 sm:px-5 h-10 bg-blue-600 hover:bg-blue-700 text-white text-xs sm:text-sm font-semibold transition-colors cursor-pointer">
+                                class="inline-flex items-center justify-center gap-2 px-5 h-10 bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold transition-colors cursor-pointer">
                             <i class="fa-solid fa-cart-shopping text-xs"></i>
                             <span>Order Sekarang</span>
                         </button>
 
                         <a href="https://wa.me/6285881721193?text={{ urlencode('Halo Dyanaf Creative, saya ingin tanya mengenai layanan ' . $product->name) }}"
                            target="_blank"
-                           class="inline-flex items-center justify-center gap-2 px-3 sm:px-4 h-10 bg-white hover:bg-slate-50 text-slate-700 border border-slate-300 text-xs sm:text-sm font-medium transition-colors">
+                           class="inline-flex items-center justify-center gap-2 px-4 h-10 bg-white hover:bg-slate-50 text-slate-700 border border-slate-300 text-sm font-medium transition-colors">
                             <i class="fa-brands fa-whatsapp text-emerald-600 text-sm"></i>
                             <span>Tanya Admin</span>
                         </a>
@@ -321,6 +321,28 @@
 
     <!-- Custom Modal Payment Component (VA & QRIS Custom UI) -->
     <x-modal-payment :product="$product" />
+
+    <!-- Floating Bottom Action Bar for Mobile -->
+    <div x-data
+         class="sm:hidden fixed bottom-0 inset-x-0 bg-white/95 backdrop-blur-md border-t border-slate-300/80 p-3 z-40 shadow-[0_-4px_12px_rgba(0,0,0,0.06)]">
+        <div class="flex items-center gap-2.5 max-w-lg mx-auto">
+            <!-- Tanya Admin (Kiri) -->
+            <a href="https://wa.me/6285881721193?text={{ urlencode('Halo Dyanaf Creative, saya ingin tanya mengenai layanan ' . $product->name) }}"
+               target="_blank"
+               class="flex-1 inline-flex items-center justify-center gap-2 h-11 bg-white active:bg-slate-100 text-slate-800 border border-slate-300 text-xs font-semibold transition-all">
+                <i class="fa-brands fa-whatsapp text-emerald-600 text-base"></i>
+                <span>Tanya Admin</span>
+            </a>
+
+            <!-- Order Sekarang (Kanan) -->
+            <button type="button"
+                    @click="window.dispatchEvent(new CustomEvent('open-payment-modal'))"
+                    class="flex-1 inline-flex items-center justify-center gap-2 h-11 bg-blue-600 active:bg-blue-700 text-white text-xs font-bold transition-all shadow-sm cursor-pointer">
+                <i class="fa-solid fa-cart-shopping text-xs"></i>
+                <span>Order Sekarang</span>
+            </button>
+        </div>
+    </div>
 </div>
 @endsection
 
