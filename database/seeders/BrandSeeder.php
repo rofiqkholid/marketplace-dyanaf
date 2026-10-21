@@ -25,26 +25,121 @@ class BrandSeeder extends Seeder
                 'logo' => 'assets/logo/Netflix_2015_logo.svg',
                 'description' => 'Akses streaming film & series original Netflix kualitas Ultra HD 4K tanpa hambatan dengan garansi penuh selama masa aktif.',
                 'packages' => [
+                    // Paket Sharing
                     [
-                        'title' => 'Netflix 1 Profil (Sharing)',
-                        'desc' => '1 User 1 Profil Private PIN, Kualitas 4K Ultra HD, Support TV & HP.',
-                        'price' => 35000,
+                        'title' => 'Netflix Sharing (1 Bulan)',
+                        'desc' => 'Profil bersama dengan pembeli lain dilengkapi PIN. Khusus penggunaan HP / Tab.',
+                        'price' => 38000,
                         'original_price' => 45000,
-                        'features' => ['Kualitas 4K Ultra HD', 'Bisa di TV, Laptop, & HP', 'Garansi Full 30 Hari', 'Private Profile PIN']
+                        'features' => [
+                            'Profil bersama dengan pembeli lain dilengkapi PIN',
+                            'Rawan screen limit***',
+                            'Hanya login 1 device',
+                            'KHUSUS Penggunaan HP/Tab',
+                            'Disarankan menonton metode offline agar tidak rawan batas layar'
+                        ]
                     ],
                     [
-                        'title' => 'Netflix Semi-Private (2 Device)',
-                        'desc' => 'Akses 2 Device aktif bersamaan, bebas download offline kapan pun.',
-                        'price' => 65000,
+                        'title' => 'Netflix Sharing (2 Bulan)',
+                        'desc' => 'Profil bersama dengan pembeli lain dilengkapi PIN. Khusus penggunaan HP / Tab durasi 2 bulan hemat.',
+                        'price' => 63000,
+                        'original_price' => 75000,
+                        'features' => [
+                            'Profil bersama dengan pembeli lain dilengkapi PIN',
+                            'Rawan screen limit***',
+                            'Hanya login 1 device',
+                            'KHUSUS Penggunaan HP/Tab',
+                            'Disarankan menonton metode offline agar tidak rawan batas layar'
+                        ]
+                    ],
+                    [
+                        'title' => 'Netflix Sharing (3 Bulan)',
+                        'desc' => 'Profil bersama dengan pembeli lain dilengkapi PIN. Khusus penggunaan HP / Tab durasi 3 bulan paling ekonomis.',
+                        'price' => 91000,
+                        'original_price' => 110000,
+                        'features' => [
+                            'Profil bersama dengan pembeli lain dilengkapi PIN',
+                            'Rawan screen limit***',
+                            'Hanya login 1 device',
+                            'KHUSUS Penggunaan HP/Tab',
+                            'Disarankan menonton metode offline agar tidak rawan batas layar'
+                        ]
+                    ],
+
+                    // Paket Private
+                    [
+                        'title' => 'Netflix Private (1 Bulan)',
+                        'desc' => 'Profil pribadi dengan PIN. Minim screen limit, cocok untuk HP, Tab, Laptop, PC, & Smart TV.',
+                        'price' => 55000,
+                        'original_price' => 65000,
+                        'features' => [
+                            'Profil pribadi dengan PIN',
+                            'Minim screen limit**',
+                            'Disarankan utk pengguna HP/Tab/Laptop/PC',
+                            'Bisa di Smart TV dgn risiko screen limit lebih besar dari paket VIP'
+                        ]
+                    ],
+                    [
+                        'title' => 'Netflix Private (2 Bulan)',
+                        'desc' => 'Profil pribadi dengan PIN durasi 2 bulan. Minim screen limit untuk semua device.',
+                        'price' => 95000,
+                        'original_price' => 115000,
+                        'features' => [
+                            'Profil pribadi dengan PIN',
+                            'Minim screen limit**',
+                            'Disarankan utk pengguna HP/Tab/Laptop/PC',
+                            'Bisa di Smart TV dgn risiko screen limit lebih besar dari paket VIP'
+                        ]
+                    ],
+                    [
+                        'title' => 'Netflix Private (3 Bulan)',
+                        'desc' => 'Profil pribadi dengan PIN durasi 3 bulan hemat panjang. Bebas nonton di berbagai device.',
+                        'price' => 120000,
+                        'original_price' => 150000,
+                        'features' => [
+                            'Profil pribadi dengan PIN',
+                            'Minim screen limit**',
+                            'Disarankan utk pengguna HP/Tab/Laptop/PC',
+                            'Bisa di Smart TV dgn risiko screen limit lebih besar dari paket VIP'
+                        ]
+                    ],
+
+                    // Paket VIP
+                    [
+                        'title' => 'Netflix VIP (1 Bulan)',
+                        'desc' => 'Profil pribadi dengan PIN. AMAN screen limit*, exclusive untuk Smart TV & bisa perpanjang.',
+                        'price' => 69000,
                         'original_price' => 85000,
-                        'features' => ['2 Layar Bersamaan', 'Bisa download offline', 'Full Garansi Resmi', 'No On-Hold / Antiribet']
+                        'features' => [
+                            'Profil pribadi dengan PIN',
+                            'AMAN screen limit*',
+                            'Exclusive utk pengguna TV supaya AMAN screen limit*',
+                            'Bisa perpanjang dgn email sama / transfer profil'
+                        ]
                     ],
                     [
-                        'title' => 'Netflix 1 Akun Penuh (Private)',
-                        'desc' => '1 Akun 5 Profil khusus milik Anda sendiri tanpa campur dengan orang lain.',
-                        'price' => 155000,
-                        'original_price' => 186000,
-                        'features' => ['5 Profil Penuh', '4 Layar Bersamaan 4K', 'Email Pribadi / Dari Kami', 'Garansi Penuh 1 Bulan']
+                        'title' => 'Netflix VIP (2 Bulan)',
+                        'desc' => 'Profil pribadi dengan PIN durasi 2 bulan. Bebas screen limit khusus Smart TV dan semua device.',
+                        'price' => 79000,
+                        'original_price' => 99000,
+                        'features' => [
+                            'Profil pribadi dengan PIN',
+                            'AMAN screen limit*',
+                            'Exclusive utk pengguna TV supaya AMAN screen limit*',
+                            'Bisa perpanjang dgn email sama / transfer profil'
+                        ]
+                    ],
+                    [
+                        'title' => 'Netflix VIP (3 Bulan)',
+                        'desc' => 'Profil pribadi dengan PIN durasi 3 bulan terbaik. Paling nyaman & stabil untuk nonton di TV.',
+                        'price' => 135000,
+                        'original_price' => 165000,
+                        'features' => [
+                            'Profil pribadi dengan PIN',
+                            'AMAN screen limit*',
+                            'Exclusive utk pengguna TV supaya AMAN screen limit*',
+                            'Bisa perpanjang dgn email sama / transfer profil'
+                        ]
                     ],
                 ],
                 'is_active' => true,

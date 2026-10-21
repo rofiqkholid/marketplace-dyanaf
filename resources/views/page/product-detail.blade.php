@@ -218,10 +218,6 @@
                     </h2>
                     <p class="text-xs text-slate-500">Mungkin Anda juga membutuhkan layanan berikut.</p>
                 </div>
-                <a href="{{ route('all-product') }}" class="text-xs text-blue-600 hover:text-blue-700 font-semibold inline-flex items-center gap-1">
-                    <span>Lihat Semua</span>
-                    <i class="fa-solid fa-arrow-right text-[10px]"></i>
-                </a>
             </div>
 
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
