@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Order;
 use App\Models\Product;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
@@ -161,6 +162,21 @@ class PaymentController extends Controller
         }
 
         $order->save();
+
+        // Tambah Dyanaf Points otomatis jika pembayaran sukses (settlement / capture accept)
+        if ($order->payment_status === 'paid' && empty($order->points_awarded)) {
+            $customerEmail = $order->customer_email ?? null;
+            $user = $customerEmail ? User::where('email', $customerEmail)->first() : null;
+
+            if ($user) {
+                $pointsToAdd = ($order->item_type ?? 'product') === 'brand' ? 3 : 5;
+                $user->increment('dyanaf_points', $pointsToAdd);
+                $order->points_awarded = true;
+                $order->save();
+
+                Log::info("Webhook: Dyanaf Points Awarded +{$pointsToAdd} to {$user->email} for order {$orderNumber}");
+            }
+        }
 
         return response()->json(['message' => 'Notification handled']);
     }

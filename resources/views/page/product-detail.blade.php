@@ -63,8 +63,25 @@
                 </div>
             </div>
 
-            <!-- Price Tag (Paling Kanan Bawah Dekat Border: Harga Asli Dicoret, Diskon Berapa Rp, lalu Total Akhir) -->
+            <!-- Price Tag (Paling Kanan Bawah Dekat Border: Dyanaf Point di Atas, Harga Asli Dicoret, Diskon Berapa Rp, lalu Total Akhir) -->
             <div class="shrink-0 flex flex-col items-center sm:items-end justify-end text-center sm:text-right pt-2 sm:pt-0 sm:self-end">
+                <!-- Dyanaf Point Badge / Information (5 Poin untuk Produk) -->
+                @auth
+                    <div class="inline-flex items-center gap-1.5 px-2 py-0.5 mb-1.5 bg-gradient-to-r from-purple-50 via-fuchsia-50 to-rose-50 border border-fuchsia-200/80 rounded-full text-[11px] font-medium text-purple-900" title="Dapatkan 5 Dyanaf Point setelah transaksi berhasil">
+                        <span class="inline-flex items-center justify-center w-4 h-4 rounded-full bg-gradient-to-r from-purple-600 to-rose-500 text-white text-[9px] shadow-xs">
+                            <i class="fa-solid fa-bolt text-amber-300"></i>
+                        </span>
+                        <span>Dapat <strong class="font-bold text-fuchsia-700">+5</strong> Dyanaf Point</span>
+                    </div>
+                @else
+                    <a href="{{ route('auth.google') }}" class="inline-flex items-center gap-1.5 px-2 py-0.5 mb-1.5 bg-slate-50 hover:bg-purple-50/60 border border-slate-200 hover:border-fuchsia-200 rounded-full text-[11px] text-slate-600 hover:text-purple-700 transition-colors group cursor-pointer" title="Login dengan Google untuk mendapatkan 5 Dyanaf Point">
+                        <span class="inline-flex items-center justify-center w-4 h-4 rounded-full bg-slate-300 group-hover:bg-gradient-to-r group-hover:from-purple-600 group-hover:to-rose-500 text-white text-[9px] transition-all">
+                            <i class="fa-solid fa-bolt text-white group-hover:text-amber-300"></i>
+                        </span>
+                        <span>Login untuk <strong class="font-semibold text-slate-800 group-hover:text-fuchsia-700">+5 Point</strong></span>
+                    </a>
+                @endauth
+
                 @if($originalPrice && $originalPrice > $product->price)
                     @php
                         $discountAmount = $originalPrice - $product->price;

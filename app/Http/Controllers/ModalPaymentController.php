@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Order;
 use App\Models\PaymentTransaction;
 use App\Models\Product;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
@@ -248,6 +249,34 @@ class ModalPaymentController extends Controller
                     $order->status = 'processing';
                     $order->paid_at = now();
                     $order->save();
+                }
+
+                // TAMBAH OTOMATIS DYANAF POINT JIKA USER TERDAFTAR (5 poin produk, 3 poin brand)
+                $targetOrder = $order ?: $trx;
+                if ($targetOrder && empty($targetOrder->points_awarded)) {
+                    $customerEmail = $targetOrder->customer_email ?? null;
+                    $user = $customerEmail ? User::where('email', $customerEmail)->first() : null;
+
+                    // Jika belum ketemu dan ada user yang sedang login saat transaksi
+                    if (!$user && Auth::check()) {
+                        $user = Auth::user();
+                    }
+
+                    if ($user) {
+                        $pointsToAdd = ($targetOrder->item_type ?? 'product') === 'brand' ? 3 : 5;
+                        $user->increment('dyanaf_points', $pointsToAdd);
+
+                        Log::info("Dyanaf Points Awarded: +{$pointsToAdd} points to user {$user->email} for order {$orderNumber}");
+
+                        if ($order) {
+                            $order->points_awarded = true;
+                            $order->save();
+                        }
+                        if ($trx) {
+                            $trx->points_awarded = true;
+                            $trx->save();
+                        }
+                    }
                 }
 
                 return response()->json([

@@ -28,6 +28,7 @@ class PaymentTransaction extends Model
         'notes',
         'order_id',
         'paid_at',
+        'points_awarded',
     ];
 
     protected $casts = [

@@ -33,6 +33,7 @@ class Order extends Model
         'qris_url',
         'payment_status',
         'paid_at',
+        'points_awarded',
     ];
 
     protected $casts = [
