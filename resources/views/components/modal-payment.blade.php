@@ -1,4 +1,4 @@
-@props(['product'])
+@props(['product' => null, 'brand' => null])
 
 <div x-data="{
     openPaymentModal: false,
@@ -15,11 +15,22 @@
     bank: '',
     vaNumber: '',
     qrisUrl: '',
-    totalAmount: {{ (int) $product->price }},
+    itemName: '{{ addslashes($product ? $product->name : ($brand ? $brand->name : 'Layanan Dyanaf')) }}',
+    itemCategory: '{{ addslashes($product ? ($product->category ?? 'Layanan Digital') : ($brand ? ($brand->category ?? 'Langganan Akun') : 'Layanan Digital')) }}',
+    packageTitle: '',
+    totalAmount: {{ $product ? (int) $product->price : 0 }},
+    chargeUrl: '{{ $product ? route('payment.modal.charge', $product) : '' }}',
     expiryTime: '',
     pollingInterval: null,
 
-    open() {
+    open(data = null) {
+        if (data) {
+            if (data.itemName) this.itemName = data.itemName;
+            if (data.itemCategory) this.itemCategory = data.itemCategory;
+            if (data.packageTitle) this.packageTitle = data.packageTitle;
+            if (data.totalAmount) this.totalAmount = data.totalAmount;
+            if (data.chargeUrl) this.chargeUrl = data.chargeUrl;
+        }
         this.openPaymentModal = true;
         this.step = 'choose_method';
         this.errorMessage = '';
@@ -42,20 +53,27 @@
         this.loading = true;
         this.errorMessage = '';
 
-        fetch('{{ route('payment.modal.charge', $product) }}', {
+        const payload = {
+            payment_method: this.selectedMethod,
+            customer_name: this.customerName,
+            customer_email: this.customerEmail,
+            customer_phone: this.customerPhone,
+            notes: this.notes
+        };
+
+        if (this.packageTitle) {
+            payload.package_title = this.packageTitle;
+            payload.package_price = this.totalAmount;
+        }
+
+        fetch(this.chargeUrl, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
                 'X-CSRF-TOKEN': '{{ csrf_token() }}',
                 'Accept': 'application/json'
             },
-            body: JSON.stringify({
-                payment_method: this.selectedMethod,
-                customer_name: this.customerName,
-                customer_email: this.customerEmail,
-                customer_phone: this.customerPhone,
-                notes: this.notes
-            })
+            body: JSON.stringify(payload)
         })
         .then(res => res.json())
         .then(data => {
@@ -110,7 +128,7 @@
     }
 }"
 x-effect="document.body.style.overflow = openPaymentModal ? 'hidden' : ''"
-@open-payment-modal.window="open()"
+@open-payment-modal.window="open($event.detail)"
 @keydown.escape.window="close()"
 class="relative z-[9999]">
 
@@ -154,13 +172,13 @@ class="relative z-[9999]">
             <div class="px-5 py-3.5 bg-slate-50 border-b border-slate-200 text-slate-900">
                 <div class="grid grid-cols-2 gap-2 sm:gap-4 items-center">
                     <div>
-                        <p class="text-[10px] sm:text-[11px] font-bold text-slate-500 mb-0.5">Layanan / Produk</p>
-                        <p class="text-sm sm:text-base font-bold text-slate-900 line-clamp-1">{{ $product->name }}</p>
-                        <span class="text-[11px] text-slate-500 block">{{ $product->category ?? 'Layanan Digital' }}</span>
+                        <p class="text-[10px] sm:text-[11px] font-bold text-slate-500 mb-0.5">Layanan / Item</p>
+                        <p class="text-sm sm:text-base font-bold text-slate-900 line-clamp-1" x-text="packageTitle ? (itemName + ' (' + packageTitle + ')') : itemName"></p>
+                        <span class="text-[11px] text-slate-500 block" x-text="itemCategory"></span>
                     </div>
                     <div class="text-right">
                         <p class="text-[10px] sm:text-[11px] font-bold text-slate-500 mb-0.5">Total Pembayaran</p>
-                        <p class="text-base sm:text-xl font-bold text-blue-600" x-text="orderNumber ? ('Rp ' + Number(totalAmount).toLocaleString('id-ID')) : 'Rp {{ number_format($product->price, 0, ',', '.') }}'"></p>
+                        <p class="text-base sm:text-xl font-bold text-blue-600" x-text="'Rp ' + Number(totalAmount).toLocaleString('id-ID')"></p>
                     </div>
                 </div>
                 <div class="mt-2.5 pt-2 border-t border-slate-200 flex items-center justify-between text-xs font-medium text-slate-600">

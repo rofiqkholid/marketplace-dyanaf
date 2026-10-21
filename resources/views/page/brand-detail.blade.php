@@ -137,12 +137,20 @@
                         </div>
 
                         @if($brand->stock > 0)
-                            <a href="https://wa.me/6285881721193?text={{ urlencode('Halo Dyanaf Creative, saya tertarik memesan ' . $brand['name'] . ' - ' . $package['title'] . ' (Rp ' . number_format($package['price'], 0, ',', '.') . ')') }}"
-                               target="_blank"
-                               title="Order {{ $package['title'] }}"
-                               class="text-blue-600 hover:text-blue-700 text-lg transition-colors p-1">
+                            <button type="button"
+                                    @click="window.dispatchEvent(new CustomEvent('open-payment-modal', {
+                                        detail: {
+                                            itemName: '{{ addslashes($brand['name']) }}',
+                                            itemCategory: '{{ addslashes($brand['category'] ?? 'Langganan Digital') }}',
+                                            packageTitle: '{{ addslashes($package['title']) }}',
+                                            totalAmount: {{ (int) $package['price'] }},
+                                            chargeUrl: '{{ route('payment.modal.charge-brand', $brand) }}'
+                                        }
+                                    }))"
+                                    title="Beli Paket {{ $package['title'] }} via Midtrans"
+                                    class="text-blue-600 hover:text-blue-700 text-lg transition-colors p-1 cursor-pointer">
                                 <i class="fa-solid fa-cart-shopping"></i>
-                            </a>
+                            </button>
                         @else
                             <button type="button" 
                                     disabled 
@@ -160,5 +168,8 @@
             @endforelse
         </div>
     </div>
+
+    <!-- Custom Modal Payment Component (VA & QRIS Midtrans Core API) -->
+    <x-modal-payment :brand="$brand" />
 </div>
 @endsection

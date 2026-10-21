@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Brand;
 use App\Models\Order;
 use App\Models\PaymentTransaction;
 use App\Models\Product;
@@ -175,8 +176,148 @@ class ModalPaymentController extends Controller
     }
 
     /**
+     * Memproses checkout kustom paket Brand untuk metode Bank Transfer (VA) atau QRIS.
+     */
+    public function chargeBrand(Request $request, Brand $brand)
+    {
+        $this->initMidtrans();
+
+        $validated = $request->validate([
+            'package_title' => 'required|string|max:255',
+            'package_price' => 'required|numeric|min:1000',
+            'payment_method' => 'required|in:bca,bni,bri,cimb,permata,mandiri,qris',
+            'customer_name' => 'nullable|string|max:255',
+            'customer_email' => 'nullable|email|max:255',
+            'customer_phone' => 'nullable|string|max:30',
+            'notes' => 'nullable|string',
+        ]);
+
+        $user = Auth::user();
+        if ($user) {
+            $customerName = $validated['customer_name'] ?? $user->name;
+            $customerEmail = $validated['customer_email'] ?? $user->email;
+            $customerPhone = $validated['customer_phone'] ?? ($user->phone ?? null);
+        } else {
+            $customerName = !empty($validated['customer_name']) ? $validated['customer_name'] : 'Pelanggan Dyanaf';
+            $customerEmail = !empty($validated['customer_email']) ? $validated['customer_email'] : 'customer@dyanaf.com';
+            $customerPhone = !empty($validated['customer_phone']) ? $validated['customer_phone'] : '085881721193';
+        }
+
+        $orderNumber = Order::generateOrderNumber('brand', $brand->id);
+        $price = (float) $validated['package_price'];
+        $paymentMethod = $validated['payment_method'];
+        $packageName = $validated['package_title'];
+
+        $params = [
+            'transaction_details' => [
+                'order_id' => $orderNumber,
+                'gross_amount' => (int) $price,
+            ],
+            'customer_details' => [
+                'first_name' => $customerName,
+                'email' => $customerEmail,
+                'phone' => $customerPhone,
+            ],
+            'item_details' => [
+                [
+                    'id' => 'BRD-' . $brand->id,
+                    'price' => (int) $price,
+                    'quantity' => 1,
+                    'name' => mb_strimwidth($brand->name . ' - ' . $packageName, 0, 45, '...'),
+                ]
+            ],
+        ];
+
+        if ($paymentMethod === 'qris') {
+            $params['payment_type'] = 'qris';
+            $params['qris'] = ['acquirer' => 'gopay'];
+        } elseif ($paymentMethod === 'permata') {
+            $params['payment_type'] = 'permata';
+        } elseif ($paymentMethod === 'mandiri') {
+            $params['payment_type'] = 'echannel';
+            $params['echannel'] = [
+                'bill_info1' => 'Payment For:',
+                'bill_info2' => mb_strimwidth($brand->name, 0, 25, ''),
+            ];
+        } else {
+            $params['payment_type'] = 'bank_transfer';
+            $params['bank_transfer'] = ['bank' => $paymentMethod];
+        }
+
+        try {
+            $response = CoreApi::charge($params);
+            $res = (object) $response;
+
+            $vaNumber = null;
+            $bankName = strtoupper($paymentMethod);
+            $qrisUrl = null;
+
+            if ($paymentMethod === 'permata') {
+                $vaNumber = $res->permata_va_number ?? null;
+            } elseif ($paymentMethod === 'mandiri') {
+                $billKey = $res->bill_key ?? '';
+                $billerCode = $res->biller_code ?? '';
+                $vaNumber = $billerCode . ' - ' . $billKey;
+            } elseif (isset($res->va_numbers) && is_array($res->va_numbers) && count($res->va_numbers) > 0) {
+                $vaNumber = $res->va_numbers[0]->va_number ?? null;
+                $bankName = strtoupper($res->va_numbers[0]->bank ?? $paymentMethod);
+            }
+
+            if ($paymentMethod === 'qris') {
+                if (!empty($res->actions)) {
+                    foreach ($res->actions as $action) {
+                        if (($action->name ?? '') === 'generate-qr-code') {
+                            $qrisUrl = $action->url;
+                            break;
+                        }
+                    }
+                }
+                if (!$qrisUrl && !empty($res->transaction_id)) {
+                    $qrisUrl = "https://api.midtrans.com/v2/qris/{$res->transaction_id}/qr-code";
+                }
+            }
+
+            $trx = PaymentTransaction::create([
+                'order_number' => $orderNumber,
+                'customer_name' => $customerName,
+                'customer_email' => $customerEmail,
+                'customer_phone' => $customerPhone,
+                'item_type' => 'brand',
+                'brand_id' => $brand->id,
+                'item_name' => $brand->name,
+                'package_name' => $packageName,
+                'amount' => $price,
+                'payment_method' => $paymentMethod,
+                'bank' => $bankName,
+                'va_number' => $vaNumber,
+                'qris_url' => $qrisUrl,
+                'midtrans_transaction_id' => $res->transaction_id ?? null,
+                'status' => 'pending',
+                'notes' => $validated['notes'] ?? null,
+            ]);
+
+            return response()->json([
+                'success' => true,
+                'order_number' => $trx->order_number,
+                'payment_method' => $paymentMethod,
+                'bank' => $bankName,
+                'va_number' => $vaNumber,
+                'qris_url' => $qrisUrl,
+                'gross_amount' => $price,
+                'expire_time' => $res->expiry_time ?? null,
+            ]);
+
+        } catch (\Throwable $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Gagal memproses pembayaran via ' . strtoupper($paymentMethod) . ': ' . $e->getMessage(),
+            ], 500);
+        }
+    }
+
+    /**
      * Mengecek status pembayaran secara realtime (polling oleh modal kustom).
-     * Jika sukses (settlement/capture), baru simpan/buat order ke tabel orders pengerjaan produk.
+     * Jika sukses (settlement/capture), baru simpan/buat order ke tabel orders pengerjaan produk/brand.
      */
     public function checkStatus(Request $request, string $orderNumber)
     {
@@ -219,9 +360,11 @@ class ModalPaymentController extends Controller
                         'customer_name' => $trx->customer_name,
                         'customer_email' => $trx->customer_email,
                         'customer_phone' => $trx->customer_phone,
-                        'item_type' => 'product',
+                        'item_type' => $trx->item_type ?? 'product',
                         'product_id' => $trx->product_id,
+                        'brand_id' => $trx->brand_id,
                         'item_name' => $trx->item_name,
+                        'package_name' => $trx->package_name,
                         'price' => $trx->amount,
                         'quantity' => 1,
                         'total_amount' => $trx->amount,

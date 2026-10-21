@@ -16,8 +16,11 @@ class PaymentTransaction extends Model
         'customer_name',
         'customer_email',
         'customer_phone',
+        'item_type',
         'product_id',
+        'brand_id',
         'item_name',
+        'package_name',
         'amount',
         'payment_method',
         'bank',
@@ -34,11 +37,17 @@ class PaymentTransaction extends Model
     protected $casts = [
         'amount' => 'decimal:2',
         'paid_at' => 'datetime',
+        'points_awarded' => 'boolean',
     ];
 
     public function product()
     {
         return $this->belongsTo(Product::class);
+    }
+
+    public function brand()
+    {
+        return $this->belongsTo(Brand::class);
     }
 
     public function order()

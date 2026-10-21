@@ -158,6 +158,7 @@ Route::delete('/assets-upload/{orderAsset}', [\App\Http\Controllers\AssetUploadC
 
 // Custom Modal Payment Routes (Core API Custom UI: VA & QRIS)
 Route::post('/payment/charge/{product}', [\App\Http\Controllers\ModalPaymentController::class, 'charge'])->name('payment.modal.charge');
+Route::post('/payment/charge-brand/{brand}', [\App\Http\Controllers\ModalPaymentController::class, 'chargeBrand'])->name('payment.modal.charge-brand');
 Route::get('/payment/status/{orderNumber}', [\App\Http\Controllers\ModalPaymentController::class, 'checkStatus'])->name('payment.modal.status');
 
 
