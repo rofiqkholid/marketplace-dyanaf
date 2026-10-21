@@ -416,7 +416,11 @@ class BrandSeeder extends Seeder
         ];
 
         foreach ($brands as $brand) {
-            Brand::create($brand);
+            // Update detail paket, nama, logo, deskripsi tanpa menimpa stok yang diinput manual dari master
+            Brand::updateOrCreate(
+                ['slug' => $brand['slug']],
+                $brand
+            );
         }
     }
 }
