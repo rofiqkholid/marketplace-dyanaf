@@ -264,7 +264,7 @@
                                 @endif
                             </a>
                             <div>
-                                <h4 class="text-sm font-bold text-slate-900 group-hover:text-blue-600 transition-colors leading-snug">{{ $related->name }}</h4>
+                                <h4 class="text-sm font-bold text-slate-900 leading-snug">{{ $related->name }}</h4>
                                 <p class="text-xs text-slate-600 mt-1 line-clamp-2 leading-relaxed">{{ $related->description }}</p>
                             </div>
                         </div>
@@ -278,15 +278,14 @@
                                 @else
                                     <span class="text-[10px] text-slate-500 block font-medium leading-none mb-1">Harga</span>
                                 @endif
-                                <span class="text-sm font-bold text-[#1e293b] leading-none group-hover:text-blue-600 transition-colors">
+                                <span class="text-sm font-bold text-[#1e293b] leading-none">
                                     Rp {{ number_format($related->price, 0, ',', '.') }}
                                 </span>
                             </div>
-                            <a href="https://wa.me/6285881721193?text={{ urlencode('Halo Dyanaf Creative, saya tertarik memesan ' . $related->name) }}"
-                               target="_blank"
-                               title="Order {{ $related->name }}"
-                               class="text-blue-600 hover:text-blue-700 text-lg transition-colors p-1">
-                                <i class="fa-solid fa-cart-shopping"></i>
+                            <a href="{{ route('product.detail', $related) }}"
+                               title="Detail {{ $related->name }}"
+                               class="text-blue-600 hover:text-blue-700 text-sm transition-colors p-1.5 flex items-center justify-center">
+                                <i class="fa-solid fa-arrow-right"></i>
                             </a>
                         </div>
                     </div>
