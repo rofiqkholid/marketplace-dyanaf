@@ -10,6 +10,8 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\OrderPaidNotification;
 use Midtrans\Config;
 use Midtrans\CoreApi;
 use Midtrans\Transaction;
@@ -44,17 +46,17 @@ class ModalPaymentController extends Controller
         ]);
 
         $user = Auth::user();
-        if ($user) {
-            // User sedang login: gunakan nama & email akun mereka, no telpon kosongkan jika tidak ada
-            $customerName = $validated['customer_name'] ?? $user->name;
-            $customerEmail = $validated['customer_email'] ?? $user->email;
-            $customerPhone = $validated['customer_phone'] ?? ($user->phone ?? null);
-        } else {
-            // User guest / tidak login: gunakan default
-            $customerName = !empty($validated['customer_name']) ? $validated['customer_name'] : 'Pelanggan Dyanaf';
-            $customerEmail = !empty($validated['customer_email']) ? $validated['customer_email'] : 'customer@dyanaf.com';
-            $customerPhone = !empty($validated['customer_phone']) ? $validated['customer_phone'] : '085881721193';
-        }
+        $customerName = !empty($validated['customer_name']) 
+            ? $validated['customer_name'] 
+            : ($user ? $user->name : 'Pelanggan Dyanaf');
+
+        $customerEmail = !empty($validated['customer_email']) 
+            ? $validated['customer_email'] 
+            : ($user ? $user->email : 'customer@dyanaf.com');
+
+        $customerPhone = !empty($validated['customer_phone']) 
+            ? $validated['customer_phone'] 
+            : ($user && !empty($user->phone) ? $user->phone : '085881721193');
 
         $orderNumber = Order::generateOrderNumber('product', $product->id);
         $price = (float) $product->price;
@@ -193,15 +195,17 @@ class ModalPaymentController extends Controller
         ]);
 
         $user = Auth::user();
-        if ($user) {
-            $customerName = $validated['customer_name'] ?? $user->name;
-            $customerEmail = $validated['customer_email'] ?? $user->email;
-            $customerPhone = $validated['customer_phone'] ?? ($user->phone ?? null);
-        } else {
-            $customerName = !empty($validated['customer_name']) ? $validated['customer_name'] : 'Pelanggan Dyanaf';
-            $customerEmail = !empty($validated['customer_email']) ? $validated['customer_email'] : 'customer@dyanaf.com';
-            $customerPhone = !empty($validated['customer_phone']) ? $validated['customer_phone'] : '085881721193';
-        }
+        $customerName = !empty($validated['customer_name']) 
+            ? $validated['customer_name'] 
+            : ($user ? $user->name : 'Pelanggan Dyanaf');
+
+        $customerEmail = !empty($validated['customer_email']) 
+            ? $validated['customer_email'] 
+            : ($user ? $user->email : 'customer@dyanaf.com');
+
+        $customerPhone = !empty($validated['customer_phone']) 
+            ? $validated['customer_phone'] 
+            : ($user && !empty($user->phone) ? $user->phone : '085881721193');
 
         $orderNumber = Order::generateOrderNumber('brand', $brand->id);
         $price = (float) $validated['package_price'];
@@ -410,6 +414,20 @@ class ModalPaymentController extends Controller
                         if ($trx) {
                             $trx->points_awarded = true;
                             $trx->save();
+                        }
+                    }
+                }
+
+                // KIRIM EMAIL KONFIRMASI PEMBAYARAN JIKA USER MENYERTAKAN EMAIL
+                if ($order && !empty($order->customer_email) && empty($order->email_sent)) {
+                    // Hanya kirim jika email valid dan bukan default dummy
+                    if (filter_var($order->customer_email, FILTER_VALIDATE_EMAIL) && $order->customer_email !== 'customer@dyanaf.com') {
+                        try {
+                            Mail::to($order->customer_email)->send(new OrderPaidNotification($order));
+                            $order->email_sent = true;
+                            $order->save();
+                        } catch (\Throwable $mailErr) {
+                            Log::error("Gagal mengirim email notifikasi order #{$order->order_number}: " . $mailErr->getMessage());
                         }
                     }
                 }

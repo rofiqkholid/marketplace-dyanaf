@@ -2,11 +2,11 @@
 
 <div x-data="{
     openPaymentModal: false,
-    step: 'choose_method', // 'choose_method', 'pay_details', 'success'
+    step: 'input_contact', // 'input_contact', 'choose_method', 'pay_details', 'success'
     selectedMethod: 'qris',
-    customerName: '{{ addslashes(Auth::check() ? Auth::user()->name : 'Pelanggan Dyanaf') }}',
-    customerEmail: '{{ addslashes(Auth::check() ? Auth::user()->email : 'customer@dyanaf.com') }}',
-    customerPhone: '{{ addslashes(Auth::check() ? (Auth::user()->phone ?? '') : '085881721193') }}',
+    customerName: '{{ addslashes(Auth::check() ? Auth::user()->name : '') }}',
+    customerEmail: '{{ addslashes(Auth::check() ? Auth::user()->email : '') }}',
+    customerPhone: '{{ addslashes(Auth::check() ? (Auth::user()->phone ?? '') : '') }}',
     notes: '',
     loading: false,
     errorMessage: '',
@@ -32,9 +32,36 @@
             if (data.chargeUrl) this.chargeUrl = data.chargeUrl;
         }
         this.openPaymentModal = true;
-        this.step = 'choose_method';
+        this.step = 'input_contact';
         this.errorMessage = '';
         this.clearInterval();
+    },
+
+    goToPaymentMethod() {
+        this.errorMessage = '';
+        if (!this.customerName || !this.customerName.trim()) {
+            this.errorMessage = 'Mohon isi Nama Lengkap Anda terlebih dahulu.';
+            return;
+        }
+        if (!this.customerPhone || !this.customerPhone.trim()) {
+            this.errorMessage = 'Mohon isi Nomor Telepon / WhatsApp yang dapat dihubungi.';
+            return;
+        }
+        // Validasi format nomor telepon minimal 8 digit angka
+        const phoneClean = this.customerPhone.replace(/[^0-9]/g, '');
+        if (phoneClean.length < 8) {
+            this.errorMessage = 'Nomor Telepon / WhatsApp tidak valid (minimal 8 angka).';
+            return;
+        }
+        // Validasi format email jika diisi
+        if (this.customerEmail && this.customerEmail.trim()) {
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(this.customerEmail.trim())) {
+                this.errorMessage = 'Format email tidak valid. Kosongkan jika tidak ingin mencantumkan email.';
+                return;
+            }
+        }
+        this.step = 'choose_method';
     },
 
     close() {
@@ -182,12 +209,12 @@ class="relative z-[9999]">
                     </div>
                 </div>
                 <div class="mt-2.5 pt-2 border-t border-slate-200 flex items-center justify-between text-xs font-medium text-slate-600">
-                    <div class="flex items-center gap-1.5">
-                        <i class="fa-solid fa-user text-slate-400 text-[11px]"></i>
-                        <span class="font-semibold text-slate-800">{{ Auth::check() ? Auth::user()->name : 'Pelanggan Dyanaf' }}</span>
+                    <div class="flex items-center gap-1.5 truncate pr-2">
+                        <i class="fa-solid fa-user text-slate-400 text-[11px] shrink-0"></i>
+                        <span class="font-semibold text-slate-800 truncate" x-text="customerName ? customerName : 'Pelanggan Dyanaf'"></span>
                     </div>
                     <template x-if="orderNumber">
-                        <div class="text-right">
+                        <div class="text-right shrink-0">
                             <span class="text-[10px] text-slate-500">Nomor Pesanan: </span>
                             <span class="font-bold font-mono text-slate-900" x-text="orderNumber"></span>
                         </div>
@@ -204,6 +231,64 @@ class="relative z-[9999]">
                      class="p-3 bg-rose-50 border border-rose-200 text-rose-700 flex items-start gap-2">
                     <i class="fa-solid fa-circle-exclamation text-rose-500 mt-0.5"></i>
                     <span x-text="errorMessage"></span>
+                </div>
+
+                <!-- STEP 0: INPUT INFORMASI KONTAK PEMESAN -->
+                <div x-show="step === 'input_contact'" class="space-y-4">
+                    <div class="space-y-3.5 pt-1">
+                        <!-- Input Nama Lengkap (Wajib) -->
+                        <div>
+                            <label class="block text-xs font-bold text-slate-800 mb-1.5">
+                                Nama Lengkap <span class="text-rose-500">*</span>
+                            </label>
+                            <div class="flex items-stretch border border-slate-300 focus-within:border-blue-600 focus-within:ring-1 focus-within:ring-blue-600 transition-colors bg-white">
+                                <div class="w-10 bg-gray-100 border-r border-slate-200 text-gray-500 flex items-center justify-center shrink-0">
+                                    <i class="fa-solid fa-user text-xs"></i>
+                                </div>
+                                <input type="text"
+                                       x-model="customerName"
+                                       placeholder="Contoh: Rofiq Kholid"
+                                       class="flex-1 px-3 py-2.5 bg-white text-xs text-slate-900 focus:outline-none placeholder:text-slate-400"
+                                       @keydown.enter.prevent="goToPaymentMethod()">
+                            </div>
+                        </div>
+
+                        <!-- Input Nomor HP / WhatsApp (Wajib) -->
+                        <div>
+                            <label class="block text-xs font-bold text-slate-800 mb-1.5">
+                                No. WhatsApp / HP yang Bisa Dihubungi <span class="text-rose-500">*</span>
+                            </label>
+                            <div class="flex items-stretch border border-slate-300 focus-within:border-blue-600 focus-within:ring-1 focus-within:ring-blue-600 transition-colors bg-white">
+                                <div class="w-10 bg-gray-100 border-r border-slate-200 text-gray-500 flex items-center justify-center shrink-0">
+                                    <i class="fa-solid fa-phone text-xs"></i>
+                                </div>
+                                <input type="tel"
+                                       x-model="customerPhone"
+                                       placeholder="Contoh: 085881721193 atau 628123456789"
+                                       class="flex-1 px-3 py-2.5 bg-white text-xs text-slate-900 focus:outline-none placeholder:text-slate-400"
+                                       @keydown.enter.prevent="goToPaymentMethod()">
+                            </div>
+                        </div>
+
+                        <!-- Input Email (Opsional) -->
+                        <div>
+                            <label class="block text-xs font-bold text-slate-800 mb-1.5 flex items-center gap-1.5">
+                                <span>Email</span>
+                                <span class="text-[10px] text-slate-400 font-normal italic">(Opsional)</span>
+                            </label>
+                            <div class="flex items-stretch border border-slate-300 focus-within:border-blue-600 focus-within:ring-1 focus-within:ring-blue-600 transition-colors bg-white">
+                                <div class="w-10 bg-gray-100 border-r border-slate-200 text-gray-500 flex items-center justify-center shrink-0">
+                                    <i class="fa-solid fa-envelope text-xs"></i>
+                                </div>
+                                <input type="email"
+                                       x-model="customerEmail"
+                                       placeholder="Contoh: nama@domain.com (opsional)"
+                                       class="flex-1 px-3 py-2.5 bg-white text-xs text-slate-900 focus:outline-none placeholder:text-slate-400"
+                                       @keydown.enter.prevent="goToPaymentMethod()">
+                            </div>
+                            <p class="text-xs text-slate-500 mt-1.5 leading-relaxed">Nomor pesanan dan tautan pelacakan progres pesanan akan dikirimkan otomatis ke email ini.</p>
+                        </div>
+                    </div>
                 </div>
 
                 <!-- STEP 1: PILIH METODE PEMBAYARAN -->
@@ -450,31 +535,56 @@ class="relative z-[9999]">
 
             <!-- Modal Footer (Buttons) -->
             <div class="px-5 py-3 border-t border-slate-200 bg-slate-50 flex items-center justify-between">
-                <!-- Jika step 1 -->
-                <template x-if="step === 'choose_method'">
-                    <div class="w-full flex items-center justify-end space-x-2.5">
+                <!-- Jika step 0 (input_contact) -->
+                <template x-if="step === 'input_contact'">
+                    <div class="w-full flex items-center justify-between">
                         <button type="button" 
                                 @click="close()" 
                                 class="px-4 py-2 border border-slate-300 bg-white hover:bg-slate-100 text-slate-700 text-xs font-medium transition-colors">
                             Batal
                         </button>
                         <button type="button" 
-                                @click="processPayment()" 
-                                :disabled="loading"
-                                class="px-5 py-2.5 bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white text-xs font-bold transition-colors inline-flex items-center gap-2 cursor-pointer">
-                            <template x-if="!loading">
-                                <span class="inline-flex items-center gap-2">
-                                    <span>Lanjut Bayar</span>
-                                    <i class="fa-solid fa-arrow-right text-sm"></i>
-                                </span>
-                            </template>
-                            <template x-if="loading">
-                                <span class="inline-flex items-center gap-2">
-                                    <i class="fa-solid fa-circle-notch fa-spin text-sm"></i>
-                                    <span>Memproses...</span>
-                                </span>
-                            </template>
+                                @click="goToPaymentMethod()" 
+                                class="px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold transition-colors inline-flex items-center gap-2 cursor-pointer shadow-sm">
+                            <span>Lanjut ke Pembayaran</span>
+                            <i class="fa-solid fa-arrow-right text-xs"></i>
                         </button>
+                    </div>
+                </template>
+
+                <!-- Jika step 1 (choose_method) -->
+                <template x-if="step === 'choose_method'">
+                    <div class="w-full flex items-center justify-between">
+                        <button type="button" 
+                                @click="step = 'input_contact'" 
+                                class="text-xs text-slate-600 hover:text-slate-900 font-medium inline-flex items-center gap-1.5 transition-colors">
+                            <i class="fa-solid fa-arrow-left text-[11px]"></i>
+                            <span>Ubah Kontak</span>
+                        </button>
+                        <div class="flex items-center space-x-2.5">
+                            <button type="button" 
+                                    @click="close()" 
+                                    class="px-4 py-2 border border-slate-300 bg-white hover:bg-slate-100 text-slate-700 text-xs font-medium transition-colors">
+                                Batal
+                            </button>
+                            <button type="button" 
+                                    @click="processPayment()" 
+                                    :disabled="loading"
+                                    class="px-5 py-2.5 bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white text-xs font-bold transition-colors inline-flex items-center gap-2 cursor-pointer">
+                                <template x-if="!loading">
+                                    <span class="inline-flex items-center gap-2">
+                                        <span>Bayar Sekarang</span>
+                                        <i class="fa-solid fa-arrow-right text-sm"></i>
+                                    </span>
+                                </template>
+                                <template x-if="loading">
+                                    <span class="inline-flex items-center gap-2">
+                                        <i class="fa-solid fa-circle-notch fa-spin text-sm"></i>
+                                        <span>Memproses...</span>
+                                    </span>
+                                </template>
+                            </button>
+                        </div>
                     </div>
                 </template>
 

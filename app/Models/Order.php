@@ -34,6 +34,7 @@ class Order extends Model
         'payment_status',
         'paid_at',
         'points_awarded',
+        'email_sent',
     ];
 
     protected $casts = [

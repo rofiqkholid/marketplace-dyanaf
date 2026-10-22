@@ -8,6 +8,8 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\OrderPaidNotification;
 use Midtrans\Config;
 use Midtrans\Notification;
 use Midtrans\Snap;
@@ -168,6 +170,19 @@ class PaymentController extends Controller
                 $user->increment('dyanaf_points', $pointsToAdd);
                 $order->points_awarded = true;
                 $order->save();
+            }
+        }
+
+        // Kirim email notifikasi order sukses jika email disertakan dan belum terkirim
+        if ($order->payment_status === 'paid' && !empty($order->customer_email) && empty($order->email_sent)) {
+            if (filter_var($order->customer_email, FILTER_VALIDATE_EMAIL) && $order->customer_email !== 'customer@dyanaf.com') {
+                try {
+                    Mail::to($order->customer_email)->send(new OrderPaidNotification($order));
+                    $order->email_sent = true;
+                    $order->save();
+                } catch (\Throwable $mailErr) {
+                    Log::error("Gagal mengirim email notifikasi webhook order #{$order->order_number}: " . $mailErr->getMessage());
+                }
             }
         }
 
