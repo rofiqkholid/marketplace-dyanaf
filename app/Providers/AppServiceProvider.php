@@ -42,8 +42,26 @@ class AppServiceProvider extends ServiceProvider
                 ->orderBy('order')
                 ->get();
 
-            $mainMenus = $menus->filter(fn($menu) => $menu->children->isEmpty());
-            $sectionMenus = $menus->filter(fn($menu) => $menu->children->isNotEmpty());
+            // Decorate helper function for menu presentation logic
+            $decorateMenu = function ($menu) {
+                $menu->target_url = $menu->is_maintenance 
+                    ? route('maintenance', ['page' => $menu->name]) 
+                    : $menu->url;
+
+                $menu->is_active_link = ($menu->url === '/' && request()->is('/')) || 
+                    ($menu->url !== '#' && $menu->url !== '/' && (request()->is(trim($menu->url, '/')) || request()->fullUrlIs(url($menu->url))));
+
+                $menu->is_external = !$menu->is_maintenance && 
+                    (str_starts_with($menu->url, 'http://') || str_starts_with($menu->url, 'https://'));
+
+                return $menu;
+            };
+
+            $mainMenus = $menus->filter(fn($menu) => $menu->children->isEmpty())->map($decorateMenu);
+            $sectionMenus = $menus->filter(fn($menu) => $menu->children->isNotEmpty())->map(function ($section) use ($decorateMenu) {
+                $section->children->transform($decorateMenu);
+                return $section;
+            });
 
             $view->with([
                 'menus' => $menus,

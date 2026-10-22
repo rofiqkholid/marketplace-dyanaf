@@ -88,38 +88,38 @@
     <div class="space-y-4 px-1 pt-4 mt-3 border-t border-slate-300/80">
         <div class="space-y-3.5">
             <!-- Website -->
-            <a href="https://dyanaf.com" target="_blank" class="block">
+            <a href="https://dyanaf.id" target="_blank" class="block">
                 <div class="text-[11px] text-slate-500 font-normal">Website Resmi</div>
-                <div class="text-xs font-normal text-slate-800 truncate">dyanaf.com</div>
+                <div class="text-xs font-normal text-slate-800 truncate">dyanaf.id</div>
             </a>
 
             <!-- Phone / WhatsApp -->
-            <a href="https://wa.me/6283120791133" target="_blank" class="block">
+            <a href="https://wa.me/6285881721193" target="_blank" class="block">
                 <div class="text-[11px] text-slate-500 font-normal">Telepon / WhatsApp</div>
-                <div class="text-xs font-normal text-slate-800 truncate">083120791133</div>
+                <div class="text-xs font-normal text-slate-800 truncate">085881721193</div>
             </a>
 
             <!-- Email -->
-            <a href="mailto:support@dyanaf.com" class="block">
+            <a href="mailto:support@dyanaf.id" class="block">
                 <div class="text-[11px] text-slate-500 font-normal">Email Support</div>
-                <div class="text-xs font-normal text-slate-800 truncate">support@dyanaf.com</div>
+                <div class="text-xs font-normal text-slate-800 truncate">support@dyanaf.id</div>
             </a>
 
             <!-- Social Media (TikTok, Threads, Instagram) -->
             <div class="space-y-1.5 pt-0.5">
                 <div class="text-[11px] text-slate-500 font-normal">Media Sosial</div>
                 <div class="space-y-1">
-                    <a href="https://www.tiktok.com/@dyanaf.joki" target="_blank" class="flex items-center space-x-2 text-xs text-slate-800">
+                    <a href="https://www.tiktok.com/@dyanaf.creative" target="_blank" class="flex items-center space-x-2 text-xs text-slate-800">
                         <i class="fa-brands fa-tiktok text-slate-500 w-4 text-center"></i>
-                        <span class="truncate">@dyanaf.joki</span>
+                        <span class="truncate">@dyanaf.creative</span>
                     </a>
-                    <a href="https://www.threads.net/@dyanaf.joki" target="_blank" class="flex items-center space-x-2 text-xs text-slate-800">
+                    <a href="https://www.threads.net/@dyanaf.creative" target="_blank" class="flex items-center space-x-2 text-xs text-slate-800">
                         <i class="fa-brands fa-threads text-slate-500 w-4 text-center"></i>
-                        <span class="truncate">@dyanaf.joki</span>
+                        <span class="truncate">@dyanaf.creative</span>
                     </a>
-                    <a href="https://www.instagram.com/dyanaf.joki" target="_blank" class="flex items-center space-x-2 text-xs text-slate-800">
+                    <a href="https://www.instagram.com/dyanaf.creative" target="_blank" class="flex items-center space-x-2 text-xs text-slate-800">
                         <i class="fa-brands fa-instagram text-slate-500 w-4 text-center"></i>
-                        <span class="truncate">@dyanaf.joki</span>
+                        <span class="truncate">@dyanaf.creative</span>
                     </a>
                 </div>
             </div>

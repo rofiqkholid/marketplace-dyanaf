@@ -43,11 +43,7 @@
         <div id="mobile-sidebar-scroll" class="space-y-5 overflow-y-auto flex-1 pr-1 overscroll-contain">
             <nav class="space-y-1">
                 @foreach($mainMenus as $menu)
-                    @php
-                        $targetUrl = $menu->is_maintenance ? route('maintenance', ['page' => $menu->name]) : $menu->url;
-                        $isActive = ($menu->url === '/' && request()->is('/')) || ($menu->url !== '#' && $menu->url !== '/' && (request()->is(trim($menu->url, '/')) || request()->fullUrlIs(url($menu->url))));
-                    @endphp
-                    <a href="{{ $targetUrl }}" class="flex items-center space-x-3 px-3.5 py-2 text-xs {{ $isActive ? 'font-bold text-blue-600' : 'font-medium text-slate-600 hover:text-slate-900' }} hover:bg-blue-50 rounded-none transition-colors">
+                    <a href="{{ $menu->target_url }}" class="flex items-center space-x-3 px-3.5 py-2 text-xs {{ $menu->is_active_link ? 'font-bold text-blue-600' : 'font-medium text-slate-600 hover:text-slate-900' }} hover:bg-blue-50 rounded-none transition-colors">
                         @if($menu->icon)
                             <i class="{{ $menu->icon }}"></i>
                         @endif
@@ -61,16 +57,9 @@
                     <div class="text-xs font-bold text-slate-500 mb-2 px-1">{{ $section->name }}</div>
                     <nav class="space-y-1">
                         @foreach($section->children as $child)
-                            @php
-                                $childTargetUrl = $child->is_maintenance ? route('maintenance', ['page' => $child->name]) : $child->url;
-                                $isChildActive = ($child->url === '/' && request()->is('/')) || ($child->url !== '#' && $child->url !== '/' && (request()->is(trim($child->url, '/')) || request()->fullUrlIs(url($child->url))));
-                            @endphp
-                            @php
-                                $isExternal = !$child->is_maintenance && (str_starts_with($child->url, 'http://') || str_starts_with($child->url, 'https://'));
-                            @endphp
-                            <a href="{{ $childTargetUrl }}" 
-                               @if($isExternal) target="_blank" rel="noopener noreferrer" @endif
-                               class="flex items-center justify-between px-3.5 py-1.5 text-xs {{ $isChildActive ? 'font-bold text-blue-600' : 'text-slate-600 hover:text-slate-900' }} hover:bg-blue-50 rounded-none transition-colors">
+                            <a href="{{ $child->target_url }}" 
+                               @if($child->is_external) target="_blank" rel="noopener noreferrer" @endif
+                               class="flex items-center justify-between px-3.5 py-1.5 text-xs {{ $child->is_active_link ? 'font-bold text-blue-600' : 'text-slate-600 hover:text-slate-900' }} hover:bg-blue-50 rounded-none transition-colors">
                                 <div class="flex items-center space-x-3">
                                     @if($child->icon)
                                         <i class="{{ $child->icon }}"></i>
@@ -146,11 +135,7 @@
             <!-- Main Navigation Links (Standalone Items) -->
             <nav class="space-y-1">
                 @foreach($mainMenus as $menu)
-                    @php
-                        $targetUrl = $menu->is_maintenance ? route('maintenance', ['page' => $menu->name]) : $menu->url;
-                        $isActive = ($menu->url === '/' && request()->is('/')) || ($menu->url !== '#' && $menu->url !== '/' && (request()->is(trim($menu->url, '/')) || request()->fullUrlIs(url($menu->url))));
-                    @endphp
-                    <a href="{{ $targetUrl }}" class="flex items-center space-x-3 px-3.5 py-2 text-xs {{ $isActive ? 'active-sidebar-item font-bold text-blue-600' : 'font-medium text-slate-600 hover:text-slate-900' }} hover:bg-blue-50 rounded-none transition-colors">
+                    <a href="{{ $menu->target_url }}" class="flex items-center space-x-3 px-3.5 py-2 text-xs {{ $menu->is_active_link ? 'active-sidebar-item font-bold text-blue-600' : 'font-medium text-slate-600 hover:text-slate-900' }} hover:bg-blue-50 rounded-none transition-colors">
                         @if($menu->icon)
                             <i class="{{ $menu->icon }}"></i>
                         @endif
@@ -168,16 +153,9 @@
                     <!-- Level 2 Submenus -->
                     <nav class="space-y-1">
                         @foreach($section->children as $child)
-                            @php
-                                $childTargetUrl = $child->is_maintenance ? route('maintenance', ['page' => $child->name]) : $child->url;
-                                $isChildActive = ($child->url === '/' && request()->is('/')) || ($child->url !== '#' && $child->url !== '/' && (request()->is(trim($child->url, '/')) || request()->fullUrlIs(url($child->url))));
-                            @endphp
-                            @php
-                                $isExternal = !$child->is_maintenance && (str_starts_with($child->url, 'http://') || str_starts_with($child->url, 'https://'));
-                            @endphp
-                            <a href="{{ $childTargetUrl }}" 
-                               @if($isExternal) target="_blank" rel="noopener noreferrer" @endif
-                               class="flex items-center justify-between px-3.5 py-1.5 text-xs {{ $isChildActive ? 'active-sidebar-item font-bold text-blue-600' : 'text-slate-600 hover:text-slate-900' }} hover:bg-blue-50 rounded-none transition-colors">
+                            <a href="{{ $child->target_url }}" 
+                               @if($child->is_external) target="_blank" rel="noopener noreferrer" @endif
+                               class="flex items-center justify-between px-3.5 py-1.5 text-xs {{ $child->is_active_link ? 'active-sidebar-item font-bold text-blue-600' : 'text-slate-600 hover:text-slate-900' }} hover:bg-blue-50 rounded-none transition-colors">
                                 <div class="flex items-center space-x-3">
                                     @if($child->icon)
                                         <i class="{{ $child->icon }}"></i>

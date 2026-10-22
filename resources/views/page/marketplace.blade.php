@@ -81,41 +81,9 @@
         
         <!-- Quick Brand & Tools Bar Grid -->
         <div class="grid grid-cols-3 sm:grid-cols-9 gap-3 w-full">
-            @php
-                $quickBrandSlugs = ['netflix', 'chatgpt', 'claude', 'gemini', 'spotify', 'canva', 'instagram', 'copilot', 'figma'];
-                $defaultLogos = [
-                    'netflix' => 'assets/logo/Netflix_2015_logo.svg',
-                    'chatgpt' => 'assets/logo/OpenAI_logo_2025_(symbol).svg',
-                    'claude' => 'assets/logo/Claude_AI_logo.svg',
-                    'gemini' => 'assets/logo/Google_Gemini_logo.svg',
-                    'spotify' => 'assets/logo/2024_Spotify_Logo.svg',
-                    'canva' => 'assets/logo/Canva_logo.svg',
-                    'instagram' => 'assets/logo/Instagram_logo_2022.svg',
-                    'copilot' => 'assets/logo/Visual_Studio_Code_1.35_icon.svg',
-                    'figma' => 'assets/logo/figma-logo.svg',
-                ];
-                $defaultNames = [
-                    'netflix' => 'Netflix',
-                    'chatgpt' => 'ChatGPT',
-                    'claude' => 'Claude',
-                    'gemini' => 'Gemini',
-                    'spotify' => 'Spotify',
-                    'canva' => 'Canva',
-                    'instagram' => 'Instagram',
-                    'copilot' => 'Copilot',
-                    'figma' => 'Figma',
-                ];
-            @endphp
-
-            @foreach($quickBrandSlugs as $slug)
-                @php
-                    $brandItem = $brands->get($slug);
-                    $brandName = $brandItem ? $brandItem->name : ($defaultNames[$slug] ?? ucfirst($slug));
-                    $brandLogo = ($brandItem && $brandItem->logo) ? asset($brandItem->logo) : asset($defaultLogos[$slug]);
-                    $isOutOfStock = $brandItem ? ($brandItem->stock <= 0) : false;
-                @endphp
-                <a href="{{ route('brand.detail', $slug) }}" class="relative overflow-hidden flex flex-col items-center justify-center p-3 rounded-none bg-white hover:bg-slate-50 border border-slate-300/70 transition-colors group aspect-square w-full {{ $isOutOfStock ? 'max-sm:opacity-85' : '' }}">
-                    @if($isOutOfStock)
+            @foreach($quickBrands as $item)
+                <a href="{{ route('brand.detail', $item->slug) }}" class="relative overflow-hidden flex flex-col items-center justify-center p-3 rounded-none bg-white hover:bg-slate-50 border border-slate-300/70 transition-colors group aspect-square w-full {{ $item->is_out_of_stock ? 'max-sm:opacity-85' : '' }}">
+                    @if($item->is_out_of_stock)
                         <!-- Diagonal Sold Badge / Ribbon Miring (Hanya di Mobile) -->
                         <div class="sm:hidden absolute top-0 right-0 w-16 h-16 overflow-hidden pointer-events-none z-10">
                             <div class="absolute top-[10px] right-[-26px] w-24 bg-red-600 text-white text-[8px] font-extrabold uppercase tracking-wider text-center py-0.5 rotate-45 shadow-sm">
@@ -125,9 +93,9 @@
                     @endif
 
                     <div class="w-full h-10 sm:h-12 flex items-center justify-center mb-1 group-hover:scale-105 transition-transform px-1">
-                        <img src="{{ $brandLogo }}" alt="{{ $brandName }}" class="h-8 sm:h-10 max-w-full object-contain">
+                        <img src="{{ $item->logo }}" alt="{{ $item->name }}" class="h-8 sm:h-10 max-w-full object-contain">
                     </div>
-                    <span class="text-[11px] font-semibold text-slate-700 truncate max-w-full text-center">{{ $defaultNames[$slug] ?? $brandName }}</span>
+                    <span class="text-[11px] font-semibold text-slate-700 truncate max-w-full text-center">{{ $item->name }}</span>
                 </a>
             @endforeach
         </div>
@@ -147,29 +115,7 @@
 
         <!-- Featured Products Grid (Dinamis dari Database Produk) -->
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
-            @php
-                // Mapping harga coret / diskon untuk produk
-                $originalPrices = [
-                    'Makalah (Tanpa Materi)' => 140000,
-                    'Makalah (Ada Materi)' => 98000,
-                    'Jurnal Ilmiah' => 182000,
-                    'CV Kreatif' => 35000,
-                    'CV ATS-Friendly' => 84000,
-                    'Surat Lamaran Kerja' => 28000,
-                    'Gabung & Rapikan PDF' => 14000,
-                    'Website Landing Page' => 2000000,
-                    'Web Operasional & POS' => 10000000,
-                    'Desain Grafis & Promo' => 140000,
-                    'Data Entry & Spreadsheet' => 210000,
-                    'Jasa Ketik Word' => 140000,
-                    'Jasa Excel & Analisis Data' => 182000,
-                ];
-            @endphp
-
             @forelse($products->where('is_trending', true) as $product)
-                @php
-                    $originalPrice = $originalPrices[$product->name] ?? null;
-                @endphp
                 <div class="group relative rounded-none bg-white hover:bg-slate-50 border border-slate-300/80 p-3 transition-colors flex flex-col justify-between overflow-hidden cursor-pointer">
                     <!-- Overlay link to product detail -->
                     <a href="{{ route('product.detail', $product) }}" class="absolute inset-0 z-0" aria-label="{{ $product->name }}"></a>
@@ -199,9 +145,9 @@
 
                     <div class="mt-3 pt-3 border-t border-slate-300/70 flex items-end justify-between gap-2 relative z-10">
                         <div>
-                            @if($originalPrice && $originalPrice > $product->price)
+                            @if($product->original_price && $product->original_price > $product->price)
                                 <span class="text-[11px] text-slate-400 line-through block leading-none mb-1">
-                                    Rp {{ number_format($originalPrice, 0, ',', '.') }}
+                                    Rp {{ number_format($product->original_price, 0, ',', '.') }}
                                 </span>
                             @else
                                 <span class="text-[10px] text-slate-500 block font-medium leading-none mb-1">Harga</span>
@@ -293,10 +239,10 @@
 
                     <!-- Tombol Link Sosial & Portfolio Resmi (Icon Only) -->
                     <div class="flex flex-wrap items-center justify-center md:justify-start gap-2 pt-2 w-full sm:w-auto">
-                        <a href="https://rofiqkholid.dyanaf.com" 
+                        <a href="https://rofiq.dyanaf.id" 
                            target="_blank" 
                            rel="noopener noreferrer"
-                           title="Website: rofiqkholid.Dyanaf.com"
+                           title="Website: rofiq.dyanaf.id"
                            class="inline-flex items-center justify-center w-8 h-8 bg-white text-slate-700 hover:text-blue-600 border border-slate-300 rounded-none transition-colors">
                             <i class="fa-solid fa-link text-xs"></i>
                         </a>

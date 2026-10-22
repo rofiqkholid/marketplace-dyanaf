@@ -105,7 +105,39 @@ class OrderController extends Controller
         $products = Product::where('is_active', true)->orderBy('name', 'asc')->get();
         $brands = Brand::where('is_active', true)->orderBy('name', 'asc')->get();
 
-        return view('page.create-order', compact('orders', 'products', 'brands'));
+        $productOptions = $products
+            ->filter(fn($p) => ($p->stock ?? 0) > 0)
+            ->mapWithKeys(fn($p) => [$p->id => $p->name . ' (Rp ' . number_format($p->price, 0, ',', '.') . ')'])
+            ->all();
+
+        $brandOptions = $brands
+            ->filter(fn($b) => ($b->stock ?? 0) > 0)
+            ->mapWithKeys(fn($b) => [$b->id => $b->name . ' (' . $b->category . ')'])
+            ->all();
+
+        $statusOptions = [
+            'pending' => 'Pending (Menunggu Pembayaran / Antrian)',
+            'processing' => 'Diproses (Sedang Dikerjakan / Disiapkan)',
+            'completed' => 'Selesai (Sudah Dikirim / Aktif)',
+            'cancelled' => 'Dibatalkan',
+        ];
+
+        $tableStatusOptions = [
+            'pending' => 'Pending',
+            'processing' => 'Diproses',
+            'completed' => 'Selesai',
+            'cancelled' => 'Dibatalkan',
+        ];
+
+        return view('page.create-order', compact(
+            'orders',
+            'products',
+            'brands',
+            'productOptions',
+            'brandOptions',
+            'statusOptions',
+            'tableStatusOptions'
+        ));
     }
 
     /**

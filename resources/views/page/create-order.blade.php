@@ -17,36 +17,6 @@
         </button>
     </div>
 
-    @php
-    $productOptions = [];
-    foreach($products as $prod) {
-        if (($prod->stock ?? 0) > 0) {
-            $productOptions[$prod->id] = $prod->name . ' (Rp ' . number_format($prod->price, 0, ',', '.') . ')';
-        }
-    }
-
-    $brandOptions = [];
-    foreach($brands as $b) {
-        if (($b->stock ?? 0) > 0) {
-            $brandOptions[$b->id] = $b->name . ' (' . $b->category . ')';
-        }
-    }
-
-    $statusOptions = [
-        'pending' => 'Pending (Menunggu Pembayaran / Antrian)',
-        'processing' => 'Diproses (Sedang Dikerjakan / Disiapkan)',
-        'completed' => 'Selesai (Sudah Dikirim / Aktif)',
-        'cancelled' => 'Dibatalkan',
-    ];
-
-    $tableStatusOptions = [
-        'pending' => 'Pending',
-        'processing' => 'Diproses',
-        'completed' => 'Selesai',
-        'cancelled' => 'Dibatalkan',
-    ];
-@endphp
-
 <!-- Main Order Management Table Card -->
     <div id="table-card-container" class="table-card-container relative bg-white border border-slate-300/80">
         <div class="p-3 bg-white border-b border-slate-300/80 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
@@ -311,7 +281,7 @@
                                 type="text" 
                                 name="customer_phone" 
                                 x-model="formData.customer_phone" 
-                                placeholder="083120791133"
+                                placeholder="085881721193"
                                 class="w-full px-3 py-2 bg-white border border-slate-300 text-xs text-slate-800 focus:outline-none focus:border-blue-500">
                         </div>
                     </div>

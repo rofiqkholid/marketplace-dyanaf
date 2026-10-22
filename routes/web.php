@@ -1,101 +1,20 @@
 <?php
 
 use App\Http\Controllers\Auth\GoogleController;
+use App\Http\Controllers\MarketplaceController;
 use App\Http\Controllers\MenuMasterController;
 use App\Http\Controllers\ProductMasterController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
-    $products = \App\Models\Product::where('is_active', true)
-        ->where('is_trending', true)
-        ->get();
-    $brands = \App\Models\Brand::where('is_active', true)->get()->keyBy('slug');
-    return view('page.marketplace', compact('products', 'brands'));
-});
+// Public Marketplace Routes
+Route::get('/', [MarketplaceController::class, 'index'])->name('marketplace');
+Route::get('/trending', [MarketplaceController::class, 'trending'])->name('trending');
+Route::get('/new-arrival', [MarketplaceController::class, 'newArrival'])->name('new-arrival');
+Route::get('/all-product', [MarketplaceController::class, 'allProducts'])->name('all-product');
+Route::get('/brand/{slug}', [MarketplaceController::class, 'brandDetail'])->name('brand.detail');
+Route::get('/product/{product}', [MarketplaceController::class, 'productDetail'])->name('product.detail');
 
-// Trending Page Route (Filter Produk & Brand dengan is_trending = true dan is_active = true)
-Route::get('/trending', function () {
-    $trendingProducts = \App\Models\Product::where('is_active', true)
-        ->where('is_trending', true)
-        ->orderBy('updated_at', 'desc')
-        ->get();
-
-    $trendingBrands = \App\Models\Brand::where('is_active', true)
-        ->where('is_trending', true)
-        ->orderBy('updated_at', 'desc')
-        ->get();
-
-    return view('page.trending', compact('trendingProducts', 'trendingBrands'));
-})->name('trending');
-
-// New Arrival Page Route
-Route::get('/new-arrival', function () {
-    $newProducts = \App\Models\Product::where('is_active', true)
-        ->orderBy('created_at', 'desc')
-        ->get();
-
-    $newBrands = \App\Models\Brand::where('is_active', true)
-        ->orderBy('created_at', 'desc')
-        ->get();
-
-    return view('page.new-arrival', compact('newProducts', 'newBrands'));
-})->name('new-arrival');
-
-// All Products Page Route (Katalog Semua Produk)
-Route::get('/all-product', function () {
-    $products = \App\Models\Product::where('is_active', true)
-        ->orderBy('name', 'asc')
-        ->get();
-
-    $categories = \App\Models\Product::where('is_active', true)
-        ->whereNotNull('category')
-        ->distinct()
-        ->pluck('category');
-
-    return view('page.all-product', compact('products', 'categories'));
-})->name('all-product');
-
-// Dynamic Brand Details Route (Clean via Database)
-Route::get('/brand/{slug}', function ($slug) {
-    $brand = \App\Models\Brand::where('slug', $slug)->where('is_active', true)->firstOrFail();
-    return view('page.brand-detail', compact('brand', 'slug'));
-})->name('brand.detail');
-
-// Dynamic Product Details Route
-Route::get('/product/{product}', function (\App\Models\Product $product) {
-    if (!$product->is_active) {
-        abort(404);
-    }
-
-    $originalPrices = [
-        'Makalah (Tanpa Materi)' => 140000,
-        'Makalah (Ada Materi)' => 98000,
-        'Jurnal Ilmiah' => 182000,
-        'CV Kreatif' => 35000,
-        'CV ATS-Friendly' => 84000,
-        'Surat Lamaran Kerja' => 28000,
-        'Gabung & Rapikan PDF' => 14000,
-        'Website Landing Page' => 2000000,
-        'Web Operasional & POS' => 10000000,
-        'Desain Grafis & Promo' => 140000,
-        'Data Entry & Spreadsheet' => 210000,
-        'Jasa Ketik Word' => 140000,
-        'Jasa Excel & Analisis Data' => 182000,
-    ];
-    $originalPrice = $originalPrices[$product->name] ?? null;
-
-    $relatedProducts = \App\Models\Product::where('is_active', true)
-        ->where('id', '!=', $product->id)
-        ->where(function($q) use ($product) {
-            $q->where('category', $product->category)
-              ->orWhere('is_trending', true);
-        })
-        ->take(4)
-        ->get();
-
-    return view('page.product-detail', compact('product', 'originalPrice', 'relatedProducts'));
-})->name('product.detail');
 
 // Google OAuth SSO Routes
 Route::get('/auth/google', [GoogleController::class, 'redirectToGoogle'])->name('auth.google');
