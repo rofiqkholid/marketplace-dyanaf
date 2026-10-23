@@ -31,7 +31,7 @@
         
         <div class="flex items-center justify-between pb-3 border-b border-slate-200 mb-3 shrink-0">
             <div class="flex items-center space-x-2">
-                <img src="{{ asset('image/dyanaf-logo-circle.png') }}" alt="Dyanaf Logo" class="w-7 h-7 object-contain">
+                <img src="{{ asset('image/dyanaf-logo-white-bg-500.png') }}" alt="Dyanaf Logo" class="w-7 h-7 object-contain">
                 <span class="text-sm font-bold text-slate-800 font-['Outfit']">Menu Navigasi</span>
             </div>
             <button @click="mobileOpen = false" class="text-slate-400 hover:text-slate-600 p-1 cursor-pointer">

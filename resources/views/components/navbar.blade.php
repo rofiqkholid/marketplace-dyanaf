@@ -8,7 +8,7 @@
             <i class="fa-solid fa-bars text-sm"></i>
         </button>
         <a href="/" class="flex items-center space-x-2 group">
-            <img src="{{ asset('image/dyanaf-logo-circle.png') }}" alt="Dyanaf Logo" class="hidden sm:block w-8 h-8 sm:w-9 sm:h-9 object-contain rounded-none group-hover:scale-105 transition-transform">
+            <img src="{{ asset('image/dyanaf-logo-white-bg-500.png') }}" alt="Dyanaf Logo" class="hidden sm:block w-8 h-8 sm:w-9 sm:h-9 object-contain rounded-none group-hover:scale-105 transition-transform">
             <span class="text-base sm:text-xl font-bold text-[#1e293b] font-['Outfit'] whitespace-nowrap">
                 <span class="sm:hidden">Dyanaf</span>
                 <span class="hidden sm:inline">Dyanaf Creative</span>

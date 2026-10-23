@@ -3,11 +3,11 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Dyanaf Creative — Digital Marketplace</title>
+    <title>Dyanaf Marketplace</title>
     
     <!-- Favicon -->
-    <link rel="icon" type="image/png" href="{{ asset('image/dyanaf-logo-circle.png') }}">
-    <link rel="apple-touch-icon" href="{{ asset('image/dyanaf-logo-circle.png') }}">
+    <link rel="icon" type="image/png" href="{{ asset('image/favicon-32x32.png') }}">
+    <link rel="apple-touch-icon" href="{{ asset('image/apple-touch-icon.png') }}">
     
     <!-- Vite Assets (Tailwind CSS, Outfit Fonts & Font Awesome Icons bundle offline) -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
