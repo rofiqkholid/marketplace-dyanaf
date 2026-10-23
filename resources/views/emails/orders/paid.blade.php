@@ -27,7 +27,7 @@ Cek Progres Pesanan
 </x-mail::button>
 
 Jika tombol di atas tidak dapat diklik, Anda juga dapat menyalin tautan berikut ke browser:  
-<span style="font-family: ui-monospace, monospace; font-size: 12px;">[{{ $trackingUrl }}]({{ $trackingUrl }})</span>
+<span style="font-family: ui-monospace, monospace; font-size: 14px; word-break: break-all;">[{{ $trackingUrl }}]({{ $trackingUrl }})</span>
 
 Jika Anda memiliki pertanyaan seputar pesanan ini, silakan hubungi kami via WhatsApp di [0858-8172-1193](https://wa.me/6285881721193).
 
